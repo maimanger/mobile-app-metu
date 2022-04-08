@@ -43,13 +43,14 @@
                         android:id="@+id/textName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="45dp"
+                        android:layout_marginTop="64dp"
                         android:gravity="center"
                         android:text="@string/monica"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="0dp" />
 
                     <TextView
                         android:id="@+id/textAbout"
@@ -80,15 +81,15 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageProfile"
-            android:layout_width="180dp"
-            android:layout_height="80dp"
+            android:layout_width="216dp"
+            android:layout_height="129dp"
             android:src="@drawable/profile_picture"
             app:layout_constraintBottom_toTopOf="@id/layoutProfile"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/layoutProfile"
-            app:layout_constraintVertical_bias="0.485"
+            app:layout_constraintVertical_bias="0.673"
             app:riv_border_width="1dp"
             app:riv_oval="true" />
 
@@ -128,7 +129,7 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:text="@string/_stylish"
-                android:textColor="#0277BD"
+                android:textColor="#FF3700B3"
                 android:textSize="15sp" />
 
             <TextView
@@ -143,7 +144,7 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:text="@string/skiing"
-                android:textColor="#0277BD"
+                android:textColor="#FF3700B3"
                 android:textSize="15sp" />
 
             <TextView
@@ -158,7 +159,7 @@
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
                 android:text="@string/books"
-                android:textColor="#0277BD"
+                android:textColor="#FF3700B3"
                 android:textSize="15sp" />
 
         </LinearLayout>
