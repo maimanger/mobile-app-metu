@@ -6,8 +6,13 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24256410256410257" />
         <entry key="app/src/main/res/drawable/header_background.xml" value="0.1712962962962963" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.24256410256410257" />
+        <entry key="app/src/main/res/drawable/tags_background.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2210144927536232" />
-        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/story_layout_1.xml" value="0.34556159420289856" />
+        <entry key="app/src/main/res/layout/story_layout_2.xml" value="0.34556159420289856" />
+        <entry key="app/src/main/res/layout/story_layout_3.xml" value="0.34556159420289856" />
+        <entry key="app/src/main/res/layout/story_layout_4.xml" value="0.34556159420289856" />
       </map>
     </option>
   </component>

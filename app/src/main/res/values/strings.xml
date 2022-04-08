@@ -5,6 +5,15 @@
     <string name="_25_years_old">25 years old</string>
     <string name="boston_ma">Boston, MA</string>
     <string name="_25_years">25 years</string>
-    <string name="tags" />
     <string name="_tags">tags</string>
+    <string name="monica">Monica</string>
+    <string name="_stylish">stylish</string>
+    <string name="books">books</string>
+    <string name="skiing">skiing</string>
+    <string name="collection">Collection</string>
+    <string name="story">story</string>
+    <string name="sunset">sunset</string>
+    <string name="road">road</string>
+    <string name="post">post</string>
+    <string name="gone_with_wind">gone_with_wind</string>
 </resources>
