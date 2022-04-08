@@ -2,4 +2,9 @@
     <string name="app_name">MetU</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="_25_years_old">25 years old</string>
+    <string name="boston_ma">Boston, MA</string>
+    <string name="_25_years">25 years</string>
+    <string name="tags" />
+    <string name="_tags">tags</string>
 </resources>
