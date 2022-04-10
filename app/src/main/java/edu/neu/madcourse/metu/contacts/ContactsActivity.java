@@ -57,7 +57,9 @@ public class ContactsActivity extends AppCompatActivity {
                         contactsPagerAdapter = new ContactsPagerAdapter(this);
                         contactsViewPager.setAdapter(contactsPagerAdapter);
                         new TabLayoutMediator(contactsTabs, contactsViewPager,
-                                (tab, position) -> tab.setText(contactsPagerAdapter.getTabTitle(position))).attach();
+                                (tab, position) ->
+                                        tab.setText(contactsPagerAdapter.getTabTitle(position)))
+                                .attach();
                     }
                 });
             }
@@ -108,13 +110,19 @@ public class ContactsActivity extends AppCompatActivity {
         return contactsList;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
+            contactsViewPager.setAdapter(contactsPagerAdapter);
+        }
+    }
+
 
     @Override
     protected void onStop() {
         super.onStop();
-        contactsPagerAdapter = null;
         contactsViewPager.setAdapter(null);
-        contactsViewPager.removeAllViews();
     }
 
 

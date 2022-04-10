@@ -28,13 +28,11 @@ public class ContactsPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                Log.d("Create Fragment", "Creating Friends");
                 return new ContactsFragment(
                         context.getContactsList().stream()
                         .filter(contact -> contact.getConnectionPoint() > 0)
                         .collect(Collectors.toList()));
             default:
-                Log.d("Create Fragment", "Creating Mets");
                 return new ContactsFragment(
                         context.getContactsList().stream()
                         .filter(contact -> contact.getConnectionPoint() == 0)
