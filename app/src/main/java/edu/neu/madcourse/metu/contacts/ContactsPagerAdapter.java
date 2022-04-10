@@ -1,33 +1,53 @@
 package edu.neu.madcourse.metu.contacts;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-public class ContactsPagerAdapter extends FragmentPagerAdapter {
+public class ContactsPagerAdapter extends FragmentStateAdapter {
+    private String[] tabTitles = new String[] {"Friends", "Mets"};
+    private ContactsActivity context;
 
-    public ContactsPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-        super(fm, behavior);
+
+    public ContactsPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
+        context = (ContactsActivity)fragmentActivity;
+    }
+
+    public void setContext(ContactsActivity context) {
+        this.context = context;
     }
 
     @NonNull
     @Override
-    public Fragment getItem(int position) {
-        // TODO: pass contacts list into Fragment
+    public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new FriendFragment();
-            case 1:
-                return new MetFragment();
+                Log.d("Create Fragment", "Creating Friends");
+                return new ContactsFragment(
+                        context.getContactsList().stream()
+                        .filter(contact -> contact.getConnectionPoint() > 0)
+                        .collect(Collectors.toList()));
+            default:
+                Log.d("Create Fragment", "Creating Mets");
+                return new ContactsFragment(
+                        context.getContactsList().stream()
+                        .filter(contact -> contact.getConnectionPoint() == 0)
+                        .collect(Collectors.toList()));
         }
-        return null;
     }
 
     @Override
-    public int getCount() {
-        return 2;
+    public int getItemCount() {
+        return tabTitles.length;
+    }
+
+    public String getTabTitle(int position) {
+        return tabTitles[position];
     }
 }
