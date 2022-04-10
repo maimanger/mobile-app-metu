@@ -25,6 +25,8 @@ public class ContactsActivity extends AppCompatActivity {
     private TabLayout contactsTabs;
     private ProgressBar loadingProgress;
     private Handler handler = new Handler();
+    private int lastPage = 0;
+
 
     private List<Contact> contactsList;
 
@@ -41,11 +43,11 @@ public class ContactsActivity extends AppCompatActivity {
         contactsTabs.getTabAt(1).setText("Mets");
 
         initContactsListFromBundle(savedInstanceState);
-        initContactsPager();
+        initContactsPager(savedInstanceState);
     }
 
 
-    private void initContactsPager() {
+    private void initContactsPager(Bundle savedInstanceState) {
         new Thread(() -> {
             if (contactsList == null) {
                 fetchContactsList();
@@ -60,6 +62,11 @@ public class ContactsActivity extends AppCompatActivity {
                                 (tab, position) ->
                                         tab.setText(contactsPagerAdapter.getTabTitle(position)))
                                 .attach();
+                    }
+                    if (savedInstanceState != null && savedInstanceState.containsKey("PAGE")) {
+                        Log.d("Last page from Bundle", savedInstanceState.getInt("PAGE") + "");
+                        contactsViewPager.setCurrentItem(savedInstanceState.getInt("PAGE"));
+                        Log.d("Current pager", contactsViewPager.getCurrentItem() + "");
                     }
                 });
             }
@@ -115,7 +122,14 @@ public class ContactsActivity extends AppCompatActivity {
         super.onResume();
         if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);
+            contactsViewPager.setCurrentItem(lastPage);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        lastPage = contactsViewPager.getCurrentItem();
     }
 
 
@@ -134,5 +148,6 @@ public class ContactsActivity extends AppCompatActivity {
         for (int i = 0; i < size; i++) {
             outState.putParcelable("CONTACT" + i, contactsList.get(i));
         }
+        outState.putInt("PAGE", lastPage);
     }
 }
