@@ -6,7 +6,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.google.android.material.tabs.TabLayout;
@@ -42,7 +41,7 @@ public class ContactsActivity extends AppCompatActivity {
         contactsTabs.getTabAt(0).setText("Friends");
         contactsTabs.getTabAt(1).setText("Mets");
 
-        initContactsListFromBundle(savedInstanceState);
+        initDataFromBundle(savedInstanceState);
         initContactsPager(savedInstanceState);
     }
 
@@ -63,17 +62,13 @@ public class ContactsActivity extends AppCompatActivity {
                                         tab.setText(contactsPagerAdapter.getTabTitle(position)))
                                 .attach();
                     }
-                    if (savedInstanceState != null && savedInstanceState.containsKey("PAGE")) {
-                        Log.d("Last page from Bundle", savedInstanceState.getInt("PAGE") + "");
-                        contactsViewPager.setCurrentItem(savedInstanceState.getInt("PAGE"));
-                        Log.d("Current pager", contactsViewPager.getCurrentItem() + "");
-                    }
+                    contactsViewPager.setCurrentItem(lastPage);
                 });
             }
         }).start();
     }
 
-    private void initContactsListFromBundle(Bundle savedInstanceState) {
+    private void initDataFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
             int size = savedInstanceState.getInt("SIZE");
             contactsList = new ArrayList<>();
@@ -81,6 +76,7 @@ public class ContactsActivity extends AppCompatActivity {
                 Contact contact = (Contact) savedInstanceState.getParcelable("CONTACT" + i);
                 contactsList.add(contact);
             }
+            lastPage = savedInstanceState.getInt("PAGE");
         }
     }
 
