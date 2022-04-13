@@ -16,13 +16,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button profileButton = (Button) findViewById(R.id.button_profile);
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
-                startActivity(intent);
-            }
+        Button profileButton = findViewById(R.id.button_profile);
+        Button updateProfileButton = findViewById(R.id.button_update_profile);
+
+        profileButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+        });
+
+        updateProfileButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+            startActivity(intent);
         });
     }
 
