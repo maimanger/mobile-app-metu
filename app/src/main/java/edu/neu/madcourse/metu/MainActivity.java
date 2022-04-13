@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
+import edu.neu.madcourse.metu.profile.EditProfileActivity;
+import edu.neu.madcourse.metu.profile.UserProfileActivity;
+
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {

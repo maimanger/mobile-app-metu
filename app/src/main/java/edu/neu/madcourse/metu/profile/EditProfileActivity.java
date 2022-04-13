@@ -1,4 +1,4 @@
-package edu.neu.madcourse.metu;
+package edu.neu.madcourse.metu.profile;
 
 //package com.example.handyopinion;
 
@@ -9,6 +9,8 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import edu.neu.madcourse.metu.R;
 
 public class EditProfileActivity extends AppCompatActivity {
 

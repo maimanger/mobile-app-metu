@@ -1,8 +1,10 @@
-package edu.neu.madcourse.metu;
+package edu.neu.madcourse.metu.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import edu.neu.madcourse.metu.R;
 
 public class UserProfileActivity extends AppCompatActivity {
 
