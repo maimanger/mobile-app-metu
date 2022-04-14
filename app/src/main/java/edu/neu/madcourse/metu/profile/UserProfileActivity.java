@@ -30,13 +30,18 @@ public class UserProfileActivity extends AppCompatActivity {
     private StoryAdapter storyAdapter;
     private List<Story> storyList = new ArrayList<>();
     private Handler handler = new Handler();
+    private List<Tag> tagList = new ArrayList<>();
+    private RecyclerView tagRecyclerView;
+    private TagAdapter tagAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         initItemData(savedInstanceState);
+        initTagPager();
         initStoryPager();
+
 
 //        if (savedInstanceState == null) {
 //            // Add Fragment PrivateProfileFragment to UserProfileActivity.
@@ -80,6 +85,14 @@ public class UserProfileActivity extends AppCompatActivity {
             storyList.add(story2);
             storyList.add(story3);
             storyList.add(story4);
+            Tag tag1 = new Tag("rich");
+            Tag tag2 = new Tag("happy");
+            Tag tag3 = new Tag("sports");
+            Tag tag4 = new Tag("hahah");
+            tagList.add(tag1);
+            tagList.add(tag2);
+            tagList.add(tag3);
+            tagList.add(tag4);
         }
     }
 
@@ -99,6 +112,29 @@ public class UserProfileActivity extends AppCompatActivity {
 
                             storyAdapter = new StoryAdapter(storyList);
                             storyRecyclerView.setAdapter(storyAdapter);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    public void initTagPager() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (tagList == null) {
+                    // TODO(xin): fetch tagList from database
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            tagRecyclerView = findViewById(R.id.tag_recycler_view);
+                            tagRecyclerView.setHasFixedSize(true);
+                            tagRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                            tagAdapter = new TagAdapter(tagList);
+                            tagRecyclerView.setAdapter(tagAdapter);
                         }
                     });
                 }
