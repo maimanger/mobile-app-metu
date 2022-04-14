@@ -23,7 +23,7 @@ import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 
 public class UserProfileActivity extends AppCompatActivity {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String userId = "self";
+    private final String userId = "dsjkhf";
     private final Boolean isFriend = true;
 
     private RecyclerView storyRecyclerView;
@@ -58,6 +58,11 @@ public class UserProfileActivity extends AppCompatActivity {
                     .commit();
         } else if (isFriend) {
             // Show friend profile
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.like_bar,
+                            FriendFragment.newInstance("hello world", "haha"), "f1")
+                    //.addToBackStack("fname")
+                    .commit();
         } else {
             // Show public profile
         }
