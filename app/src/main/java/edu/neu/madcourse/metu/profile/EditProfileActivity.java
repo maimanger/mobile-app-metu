@@ -4,13 +4,17 @@ package edu.neu.madcourse.metu.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -22,6 +26,12 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         viewInitializations();
+        ImageView uploadImageView = findViewById(R.id.edit_profile_image);
+
+        uploadImageView.setOnClickListener(view -> {
+            Intent intent = new Intent(EditProfileActivity.this, UploadActivity.class);
+            startActivity(intent);
+        });
     }
 
     void viewInitializations() {
@@ -95,3 +105,4 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
 }
+

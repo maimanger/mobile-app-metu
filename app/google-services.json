@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1051254796603",
+    "project_id": "mobile-app-metu",
+    "storage_bucket": "mobile-app-metu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051254796603:android:056fe9b0c6a32bff83071e",
+        "android_client_info": {
+          "package_name": "edu.neu.madcourse.metu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051254796603-km28vbpbprau5ib32ak61kbuf7005veo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvoDUnNXplcHkPcWK_qGeomDQU9ngb0xI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051254796603-km28vbpbprau5ib32ak61kbuf7005veo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

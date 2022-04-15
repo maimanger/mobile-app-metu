@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -36,6 +37,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.preference:preference:1.1.1'
+    implementation platform('com.google.firebase:firebase-bom:29.3.0')
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -49,4 +51,14 @@ dependencies {
 
     //GridLayout
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+
+    //okhttp3
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+
+    //firebaseStorage
+    implementation 'com.google.firebase:firebase-storage:20.0.1'
+
+    //Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+
 }

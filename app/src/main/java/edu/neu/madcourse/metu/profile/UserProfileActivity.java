@@ -23,7 +23,7 @@ import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 
 public class UserProfileActivity extends AppCompatActivity {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String userId = "45354";
+    private final String userId = "self";
     private final Boolean isFriend = false;
 
     private RecyclerView storyRecyclerView;
