@@ -255,48 +255,48 @@
             android:layout_height="wrap_content"/>
 
 
-        <LinearLayout
-            android:id="@+id/layoutBottomButtons"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginTop="50dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/like_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:showDividers="middle"
-            android:divider="@drawable/empty_tall_divider">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/layoutBottomButtons"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/like_bar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:showDividers="middle"-->
+<!--            android:divider="@drawable/empty_tall_divider">-->
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/person"
-                app:riv_corner_radius="6dp" />
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/person"-->
+<!--                app:riv_corner_radius="6dp" />-->
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/history"
-                app:riv_corner_radius="6dp" />
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/history"-->
+<!--                app:riv_corner_radius="6dp" />-->
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/community"
-                app:riv_corner_radius="6dp" />
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/community"-->
+<!--                app:riv_corner_radius="6dp" />-->
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/two_chats"
-                app:riv_corner_radius="6dp" />
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/two_chats"-->
+<!--                app:riv_corner_radius="6dp" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <FrameLayout
             android:id="@+id/edit_profile_button_fragment"
@@ -307,5 +307,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
+
+        <FrameLayout
+            android:id="@+id/like_bar_public"
+            app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

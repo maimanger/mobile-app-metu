@@ -23,8 +23,8 @@ import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 
 public class UserProfileActivity extends AppCompatActivity {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String userId = "dsjkhf";
-    private final Boolean isFriend = true;
+    private final String userId = "45354";
+    private final Boolean isFriend = false;
 
     private RecyclerView storyRecyclerView;
     private StoryAdapter storyAdapter;
@@ -55,21 +55,26 @@ public class UserProfileActivity extends AppCompatActivity {
         // TODO(xin): get value of userId and isFriend
 
         if (userId.equals("self")) {
-            // Show private profile
+            // Show private profile, without like bar, but with edit button
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.edit_profile_button_fragment,
                             EditProfileButtonFragment.newInstance("hello world", "haha"), "f1")
                     //.addToBackStack("fname")
                     .commit();
         } else if (isFriend) {
-            // Show friend profile
+            // Show friend profile， with friend's like bar
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.like_bar,
                             FriendFragment.newInstance("hello world", "haha"), "f1")
                     //.addToBackStack("fname")
                     .commit();
         } else {
-            // Show public profile
+            // Show public profile, with public like bar
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.like_bar_public,
+                            PublicFragment.newInstance("hello world", "haha"), "f1")
+                    //.addToBackStack("fname")
+                    .commit();
         }
     }
 
