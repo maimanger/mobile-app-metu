@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.metu">
 
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for internet -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_metu"
@@ -10,13 +13,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MetU">
         <activity
+            android:name=".profile.imageUpload.UploadActivity"
+            android:exported="false" />
+        <activity
             android:name=".contacts.ContactsActivity"
             android:exported="false" />
         <activity
+            android:name=".profile.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.UserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

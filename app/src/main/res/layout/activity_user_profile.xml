@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBackground"
+    android:layout_height="match_parent"
+    tools:context=".profile.UserProfileActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/viewHeader"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/header_background"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <FrameLayout
+            android:id="@+id/layoutProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/viewHeader"
+            app:layout_constraintTop_toBottomOf="@id/viewHeader">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="15dp"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="10dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="70dp"
+                        android:gravity="center"
+                        android:text="@string/monica"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="0dp" />
+
+                    <TextView
+                        android:id="@+id/textAbout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/_25_years"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="15sp"
+                        app:layout_constraintTop_toBottomOf="@id/textName" />
+
+                    <TextView
+                        android:id="@+id/textPlace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/boston_ma"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="15sp"
+                        app:layout_constraintTop_toBottomOf="@id/textAbout" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+        </FrameLayout>
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="238dp"
+            android:layout_height="144dp"
+            android:src="@drawable/profile_picture"
+            app:layout_constraintBottom_toTopOf="@id/layoutProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layoutProfile"
+            app:layout_constraintVertical_bias="0.673"
+            app:riv_border_width="1dp"
+            app:riv_oval="true" />
+
+        <TextView
+            android:id="@+id/textTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/_tags"
+            android:textAllCaps="true"
+            android:textColor="@color/colorTextPrimary"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutProfile"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tag_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textTags"
+            app:layout_constraintStart_toStartOf="parent" />
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/layoutTags"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/textTags"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginEnd="12dp"-->
+<!--                android:background="@drawable/tags_background"-->
+<!--                android:includeFontPadding="false"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="5dp"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:paddingBottom="5dp"-->
+<!--                android:text="@string/_stylish"-->
+<!--                android:textColor="#FF3700B3"-->
+<!--                android:textSize="15sp" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginEnd="12dp"-->
+<!--                android:background="@drawable/tags_background"-->
+<!--                android:includeFontPadding="false"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="5dp"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:paddingBottom="5dp"-->
+<!--                android:text="@string/skiing"-->
+<!--                android:textColor="#FF3700B3"-->
+<!--                android:textSize="15sp" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginEnd="12dp"-->
+<!--                android:background="@drawable/tags_background"-->
+<!--                android:includeFontPadding="false"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="5dp"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:paddingBottom="5dp"-->
+<!--                android:text="@string/books"-->
+<!--                android:textColor="#FF3700B3"-->
+<!--                android:textSize="15sp" />-->
+
+<!--        </LinearLayout>-->
+
+        <TextView
+            android:id="@+id/textStory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/story"
+            android:textAllCaps="true"
+            android:textColor="@color/colorTextPrimary"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tag_recycler_view"/>
+
+<!--        <HorizontalScrollView-->
+<!--            android:id="@+id/layoutStory"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:overScrollMode="never"-->
+<!--            android:scrollbars="none"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/textStory"-->
+<!--            android:layout_marginTop="8dp">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <include layout="@layout/story_layout_1" />-->
+<!--                <include layout="@layout/story_layout_2" />-->
+
+<!--                <include layout="@layout/story_layout_3" />-->
+
+<!--                <include layout="@layout/story_layout_4" />-->
+
+<!--            </LinearLayout>-->
+<!--        </HorizontalScrollView>-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/story_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/textStory"
+            app:layout_constraintStart_toStartOf="parent" />
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/layoutButtons"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/story_recycler_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:showDividers="middle"-->
+<!--            android:divider="@drawable/empty_tall_divider">-->
+
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/like"-->
+<!--                app:riv_corner_radius="6dp" />-->
+
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/chat"-->
+<!--                app:riv_corner_radius="6dp" />-->
+
+
+<!--        </LinearLayout>-->
+        <FrameLayout
+            android:id="@+id/like_bar"
+            app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/layoutBottomButtons"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/like_bar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:showDividers="middle"-->
+<!--            android:divider="@drawable/empty_tall_divider">-->
+
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/person"-->
+<!--                app:riv_corner_radius="6dp" />-->
+
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/history"-->
+<!--                app:riv_corner_radius="6dp" />-->
+
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/community"-->
+<!--                app:riv_corner_radius="6dp" />-->
+
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/two_chats"-->
+<!--                app:riv_corner_radius="6dp" />-->
+
+<!--        </LinearLayout>-->
+
+        <FrameLayout
+            android:id="@+id/edit_profile_button_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <FrameLayout
+            android:id="@+id/like_bar_public"
+            app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
