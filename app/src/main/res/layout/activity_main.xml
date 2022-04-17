@@ -6,13 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/openChatActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="let's chat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="488dp" />
+
+    <Button
+        android:id="@+id/openExploringActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="explore more"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openChatActivity"/>
+
+    <Button
+        android:id="@+id/openRecentConversation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recent chats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openExploringActivity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/sentTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:text="2022-04-06 5:05PM"
+        android:textSize="10sp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/receiverName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Me"
+        android:visibility="gone"
+        android:textColor="@color/chat_text_color"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sentTimestamp" />
+
+    <TextView
+        android:id="@+id/textMessageSent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_sent_message"
+        android:padding="12dp"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:text="I am sending some messagesssssssssssssssssssssssssssssssssssssssssssssssss"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sentTimestamp"
+        android:maxWidth="270dp"
+        android:minWidth="40dp"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/sentTimestamp"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textColor="@color/gray"-->
+<!--        android:text="timestamp"-->
+<!--        android:textSize="10sp"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/textMessageSent"/>-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
