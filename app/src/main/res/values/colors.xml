@@ -20,5 +20,15 @@
     <color name="element_black">#494949</color>
     <color name="element_white">#d3d8e3</color>
 
+    <color name="gray">#7A7A80</color>
+    <color name="chat_background_color">#1E1E20</color>
+    <color name="chat_send_color">#c04065</color>
+    <color name="chat_text_color">#e8d3d6</color>
+    <color name="chat_receive_color">#242b34</color>
+    <color name="chat_background_input_color">#242b34</color>
+    <color name="chat_contact_image_color">#EFF0F4</color>
+
+    <color name="blue">#93D2EF</color>
+    <color name="pink">#E3ABB3</color>
 
 </resources>

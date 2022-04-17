@@ -61,4 +61,15 @@ dependencies {
     //Analytics
     implementation 'com.google.firebase:firebase-analytics'
 
+    // rounded imageview
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    // like button
+    implementation 'com.jackandphantom.android:androidlikebutton:1.2.0'
+
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+
+    // blur image
+    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+
 }

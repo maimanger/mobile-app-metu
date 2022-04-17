@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chat_background_color"
+    tools:context=".chat.RecentConversationActivity">
+
+    <TextView
+        android:id="@+id/chat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Chats"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="15dp"
+        />
+
+    <View
+        android:id="@+id/recentChatBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/recent_conversation_background"
+        app:layout_constraintTop_toBottomOf="@id/chat"
+        android:layout_marginTop="10dp"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBarRecentConversation"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintTop_toTopOf="@+id/recentChatBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/recentChatBackground"
+        app:layout_constraintStart_toStartOf="@+id/recentChatBackground"
+        app:layout_constraintEnd_toEndOf="@+id/recentChatBackground"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recentConversationRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        android:orientation="vertical"
+        android:padding="6dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="@+id/recentChatBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/recentChatBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
