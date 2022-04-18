@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_monterey">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="25dp"
+            android:paddingTop="20dp"
+            android:paddingRight="25dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/metu_word"
+                    android:layout_width="248dp"
+                    android:layout_height="287dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    app:srcCompat="@drawable/ic_metu" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="60dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="horizontal">
+                <Button
+                    android:id="@+id/loginbtn"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_below="@id/metu_word"
+                    android:backgroundTint="#8c09e0"
+                    android:text="LOGIN"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:id="@+id/registerbtn"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:backgroundTint="#cb33aa"
+                    android:layout_marginLeft="40dp"
+                    android:text="Register"
+                    android:textSize="20dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

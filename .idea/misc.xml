@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/background_receive_message.xml" value="0.11944444444444445" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/background_sent_message.xml" value="0.11944444444444445" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/chat_background.xml" value="0.11944444444444445" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/chat_background_input.xml" value="0.11944444444444445" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/ic_baseline_arrow_back_ios_24.xml" value="0.11944444444444445" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/background_image.xml" value="0.16203703703703703" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/chat_background_button.xml" value="0.1649122807017544" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_gender_male.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_like.xml" value="0.1649122807017544" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_more.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_send.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_send_message.xml" value="0.17168949771689498" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_setting.xml" value="0.1649122807017544" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_unlike.xml" value="0.1649122807017544" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/like_toggle_buttom_background.xml" value="0.17168949771689498" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/recent_conversation_background.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/recommend_card_button_background.xml" value="0.17168949771689498" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/toggle_selector.xml" value="0.17407407407407408" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_chat.xml" value="0.165" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_exploring.xml" value="0.1513157894736842" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_recent_chat.xml" value="0.1796875" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_recent_conversation.xml" value="0.1796875" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_user_profile.xml" value="0.335" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card.xml" value="0.165" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card_left.xml" value="0.25" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card_right.xml" value="0.1597222222222222" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_received_message.xml" value="0.25" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_recent_conversation.xml" value="0.2596401028277635" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_sent_message.xml" value="0.21201413427561838" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19583333333333333" />
+        <entry key="app/src/main/res/drawable-hdpi/custom_switch.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.16210739614994935" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.17135416666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

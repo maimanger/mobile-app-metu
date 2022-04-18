@@ -12,10 +12,54 @@
         android:layout_height="wrap_content"
         android:onClick="onClickContacts"
         android:text="Contacts"
-        app:layout_constraintBottom_toTopOf="@+id/button_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openSetting" />
+
+    <Button
+        android:id="@+id/openChatActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="let's chat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="488dp" />
+
+    <Button
+        android:id="@+id/openExploringActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="explore more"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openChatActivity"/>
+
+    <Button
+        android:id="@+id/openRecentConversation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recent chats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openExploringActivity" />
+    <Button
+        android:id="@+id/openSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="splash"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openRecentConversation" />
+    <Button
+        android:id="@+id/openSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/openSplash" />
+
 
     <Button
         android:id="@+id/button_profile"
