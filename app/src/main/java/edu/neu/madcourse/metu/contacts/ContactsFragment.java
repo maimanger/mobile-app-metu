@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.models.Contact;
 
 public class ContactsFragment extends Fragment implements CustomedItemClickListener {
     private RecyclerView contactsRecyclerView;

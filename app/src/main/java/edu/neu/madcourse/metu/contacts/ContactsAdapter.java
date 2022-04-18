@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.Utils;
+import edu.neu.madcourse.metu.models.Contact;
+import edu.neu.madcourse.metu.utils.Utils;
 
 public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.ContactsHolder>{
     private List<Contact> contactsList;

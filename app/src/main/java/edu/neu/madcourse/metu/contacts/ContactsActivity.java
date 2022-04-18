@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.models.Contact;
 
 public class ContactsActivity extends AppCompatActivity {
 

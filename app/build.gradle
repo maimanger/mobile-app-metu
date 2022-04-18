@@ -72,4 +72,7 @@ dependencies {
     // blur image
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
 
+    // Agora RTC
+    implementation 'com.github.agorabuilder:native-full-sdk:3.4.2'
+
 }

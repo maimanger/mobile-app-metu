@@ -17,15 +17,13 @@ import android.widget.Button;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
+import edu.neu.madcourse.metu.video.VideoActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -112,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
     public void onClickContacts(View view) {
         Intent intent = new Intent(this, ContactsActivity.class);
         startActivity(intent);
+    }
 
+    public void onClickVideo(View view) {
+        Intent intent = new Intent(this, VideoActivity.class);
+        startActivity(intent);
     }
 }

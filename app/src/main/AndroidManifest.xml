@@ -4,6 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for internet -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_metu_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MetU">
+        <activity
+            android:name=".video.VideoActivity"
+            android:exported="false" />
         <activity
             android:name=".profile.imageUpload.UploadActivity"
             android:exported="false" />
@@ -30,19 +39,24 @@
         <activity
             android:name=".chat.ChatActivity"
             android:exported="false" />
-        <activity android:name=".chat.RecentConversationActivity"
+        <activity
+            android:name=".chat.RecentConversationActivity"
             android:exported="false" />
-        <activity android:name=".SettingActivity"
+        <activity
+            android:name=".SettingActivity"
             android:exported="false" />
-        <activity android:name=".home.SplashActivity"
+        <activity
+            android:name=".home.SplashActivity"
             android:exported="false" />
-        <activity android:name=".home.HomeActivity"
+        <activity
+            android:name=".home.HomeActivity"
             android:exported="false" />
-        <activity android:name=".home.LoginActivity"
+        <activity
+            android:name=".home.LoginActivity"
             android:exported="false" />
-        <activity android:name=".home.RegisterActivity"
+        <activity
+            android:name=".home.RegisterActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true"

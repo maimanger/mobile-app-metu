@@ -121,4 +121,9 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
+    <string name="agora_app_id">
+        0a7d20050160438ebe4d47e571566f6d
+    </string>
+
 </resources>
