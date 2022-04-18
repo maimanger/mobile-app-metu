@@ -34,6 +34,11 @@
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_recent_conversation.xml" value="0.2596401028277635" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_sent_message.xml" value="0.21201413427561838" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19583333333333333" />
+        <entry key="app/src/main/res/drawable-hdpi/custom_switch.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.17135416666666667" />
       </map>
     </option>
   </component>

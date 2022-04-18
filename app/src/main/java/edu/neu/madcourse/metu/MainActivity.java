@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
+import edu.neu.madcourse.metu.home.SplashActivity;
 import edu.neu.madcourse.metu.profile.EditProfileActivity;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 
@@ -34,6 +35,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button splashButton = (Button) findViewById(R.id.openSplash);
+        splashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button settingButton = (Button) findViewById(R.id.openSetting);
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         Button profileButton = findViewById(R.id.button_profile);

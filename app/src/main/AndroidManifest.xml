@@ -32,6 +32,16 @@
             android:exported="false" />
         <activity android:name=".chat.RecentConversationActivity"
             android:exported="false" />
+        <activity android:name=".SettingActivity"
+            android:exported="false" />
+        <activity android:name=".home.SplashActivity"
+            android:exported="false" />
+        <activity android:name=".home.HomeActivity"
+            android:exported="false" />
+        <activity android:name=".home.LoginActivity"
+            android:exported="false" />
+        <activity android:name=".home.RegisterActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
