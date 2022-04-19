@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class RegisterActivity extends AppCompatActivity {
     private Button mRegister;
     private EditText mUsername, mEmail, mPassword;
-    private RadioGroup mRadioGroup;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
@@ -56,19 +55,14 @@ public class RegisterActivity extends AppCompatActivity {
         mUsername = (EditText) findViewById(R.id.username);
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
-        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int selectID = mRadioGroup.getCheckedRadioButtonId();
-                final RadioButton radioButton = (RadioButton) findViewById(selectID);
                 final String username = mUsername.getText().toString();
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-//                if(radioButton.getText()==null){
-//                    Toast.makeText(RegisterActivity.this, "Please select your gender.", Toast.LENGTH_LONG).show();
-//                }
+
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) ) {
                     Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
@@ -80,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else {
                                 String userID = mAuth.getCurrentUser().getUid();
-                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(radioButton.getText().toString()).child(userID).child("username");
+                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("username");
                                 currentUserDb.setValue(username);
                             }
                         }
