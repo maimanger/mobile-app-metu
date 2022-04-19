@@ -3,6 +3,7 @@ package edu.neu.madcourse.metu.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,50 +11,64 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
-
-    private Context mContext;
+    private Button mLogin;
     private EditText mEmail, mPassword;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mEmail = findViewById(R.id.email_signinact);
-        mPassword = findViewById(R.id.password_signinact);
-        mContext = LoginActivity.this;
-        init();
-    }
 
-    private boolean isStringNull(String string) {
-        Log.d(TAG, "isStringNull: checking string if null.");
-        return string.equals("");
-    }
-
-    //----------------------------------------Firebase----------------------------------------
-
-    private void init() {
-        //initialize the button for logging in
-        Button btnLogin = findViewById(R.id.loginbtn);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-
+        mAuth = FirebaseAuth.getInstance();
+        firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: attempting to log in");
-                String email = mEmail.getText().toString();
-                String password = mPassword.getText().toString();
-                if (isStringNull(email) || isStringNull(password)) {
-                    Toast.makeText(mContext, "You must fill out all the fields", Toast.LENGTH_SHORT).show();
-                } else {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
                     Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
                     startActivity(intent);
+                    finish();
+                    return;
+                }
+            }
+        };
+
+        mLogin = (Button) findViewById(R.id.loginbtn);
+        mEmail = (EditText) findViewById(R.id.email);
+        mPassword = (EditText) findViewById(R.id.password);
+
+        mLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String email = mEmail.getText().toString();
+                final String password = mPassword.getText().toString();
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                    Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_LONG).show();
+                } else {
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Sign in error!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -62,13 +77,24 @@ public class LoginActivity extends AppCompatActivity {
         linkSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating to register screen");
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(firebaseAuthStateListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(firebaseAuthStateListener);
+    }
 }
+
 
 
