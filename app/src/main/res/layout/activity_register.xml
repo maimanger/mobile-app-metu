@@ -54,12 +54,45 @@
                     android:padding="20dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white" />
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#30ffffff"
+                    android:layout_below="@id/username">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/isMale"
+                            android:text="Male"
+                            android:textSize="18dp"
+                            android:textColor="@color/white"
+                            />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/isFemale"
+                            android:text="Female"
+                            android:textSize="18dp"
+                            android:textColor="@color/white"
+                            />
 
+                    </LinearLayout>
+                </RadioGroup>
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/username"
+                    android:layout_below="@id/radioGroup"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
