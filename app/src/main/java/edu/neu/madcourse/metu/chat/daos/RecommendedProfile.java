@@ -1,8 +1,6 @@
-package edu.neu.madcourse.metu.contacts.daos;
+package edu.neu.madcourse.metu.chat.daos;
 
 import java.io.Serializable;
-
-import edu.neu.madcourse.metu.contacts.daos.User;
 
 public class RecommendedProfile implements Serializable {
     private static final long serialVersionUID = 3L;

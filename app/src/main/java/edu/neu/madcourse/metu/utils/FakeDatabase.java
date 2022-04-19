@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.neu.madcourse.metu.models.ChatItem;
-import edu.neu.madcourse.metu.contacts.daos.User;
+import edu.neu.madcourse.metu.chat.daos.User;
 
 public class FakeDatabase {
     private static List<ChatItem> chatItemList;

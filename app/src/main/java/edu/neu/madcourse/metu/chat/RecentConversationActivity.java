@@ -18,10 +18,9 @@ import java.util.concurrent.Executors;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.ChatItem;
-import edu.neu.madcourse.metu.contacts.daos.RecentConversation;
-import edu.neu.madcourse.metu.contacts.daos.User;
+import edu.neu.madcourse.metu.chat.daos.RecentConversation;
+import edu.neu.madcourse.metu.chat.daos.User;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
-import edu.neu.madcourse.metu.utils.FakeDatabase;
 import edu.neu.madcourse.metu.utils.GenderUtils;
 
 public class RecentConversationActivity extends AppCompatActivity {

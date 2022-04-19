@@ -16,7 +16,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.contacts.daos.RecentConversation;
+import edu.neu.madcourse.metu.chat.daos.RecentConversation;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 
 public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConversationAdapter.RecentConversationViewHolder> {

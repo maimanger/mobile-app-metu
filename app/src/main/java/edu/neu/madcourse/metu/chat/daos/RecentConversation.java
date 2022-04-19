@@ -1,8 +1,7 @@
-package edu.neu.madcourse.metu.contacts.daos;
+package edu.neu.madcourse.metu.chat.daos;
 
 import java.io.Serializable;
 
-import edu.neu.madcourse.metu.contacts.daos.User;
 import edu.neu.madcourse.metu.models.ChatItem;
 
 public class RecentConversation implements Serializable {

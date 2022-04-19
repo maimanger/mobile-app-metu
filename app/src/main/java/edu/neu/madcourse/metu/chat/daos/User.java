@@ -1,4 +1,4 @@
-package edu.neu.madcourse.metu.contacts.daos;
+package edu.neu.madcourse.metu.chat.daos;
 
 import java.io.Serializable;
 

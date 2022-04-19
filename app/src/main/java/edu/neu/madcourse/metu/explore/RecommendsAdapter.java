@@ -23,7 +23,7 @@ import java.util.List;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.ChatActivity;
-import edu.neu.madcourse.metu.contacts.daos.RecommendedProfile;
+import edu.neu.madcourse.metu.chat.daos.RecommendedProfile;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.GenderUtils;
 
@@ -99,7 +99,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             recommendUsername.setText(profile.getRecommendUser().getUsername());
             // add text view effect
-            recommendUsername.setShadowLayer(30, 0, 0, ContextCompat.getColor(context, R.color.white));
+            recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
             // todo: more gender identity
             if (profile.getRecommendUser().getGender() == GenderUtils.FEMALE) {
@@ -165,7 +165,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             recommendUsername.setText(profile.getRecommendUser().getUsername());
             // add text effect
-            recommendUsername.setShadowLayer(30, 0, 0, ContextCompat.getColor(context, R.color.white));
+            recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
             // todo: more gender identity
             if (profile.getRecommendUser().getGender() == GenderUtils.FEMALE) {
