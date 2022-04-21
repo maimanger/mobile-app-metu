@@ -5,15 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.text.InputType;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.widget.EditText;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
@@ -30,7 +37,7 @@ import edu.neu.madcourse.metu.contacts.ContactsAdapter;
 import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements AddTagButtonFragment.OnDataPass {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
     private final String userId = "self";
     private final Boolean isFriend = false;
@@ -53,6 +60,41 @@ public class UserProfileActivity extends AppCompatActivity {
         initTagPager();
         initStoryPager();
 
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("New tag name");
+//        // Set up the input
+//        final EditText input = new EditText(this);
+//
+//        FloatingActionButton addTagButton = findViewById(R.id.add_tag_button);
+//        addTagButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                input.setInputType(InputType.TYPE_CLASS_TEXT);
+//                if (input.getParent() != null) {
+//                    ((ViewGroup) input.getParent()).removeView(input);
+//                }
+//                builder.setView(input);
+//
+//                // Set up the buttons
+//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        userInputTagText = input.getText().toString();
+//                        int pos = tagList.size();
+//                        addTag(pos, userInputTagText);
+//                    }
+//                });
+//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                builder.show();
+//            }
+//        });
+
 
 //        if (savedInstanceState == null) {
 //            // Add Fragment PrivateProfileFragment to UserProfileActivity.
@@ -70,8 +112,15 @@ public class UserProfileActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.edit_profile_button_fragment,
                             EditProfileButtonFragment.newInstance("hello world", "haha"), "f1")
+                    .add(R.id.add_tag_button_fragment,
+                            AddTagButtonFragment.newInstance(), "f1")
                     //.addToBackStack("fname")
                     .commit();
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.add_tag_button_fragment,
+//                            AddTagButtonFragment.newInstance(tagList, tagAdapter), "f1")
+//                    //.addToBackStack("fname")
+//                    .commit();
         } else if (isFriend) {
             // Show friend profile， with friend's like bar
             getSupportFragmentManager().beginTransaction()
@@ -119,6 +168,13 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onDataPass(String data) {
+        int position = tagList.size();
+        tagList.add(position, new Tag(data));
+        tagAdapter.notifyItemInserted(position);
     }
 
     public void initItemData(Bundle savedInstanceState) {
@@ -189,4 +245,10 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+    public void addTag(int position, String userInputTagText) {
+        tagList.add(position, new Tag(userInputTagText));
+        tagAdapter.notifyItemInserted(position);
+    }
+
 }
