@@ -46,7 +46,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryHolder>
     @Override
     public void onBindViewHolder(@NonNull StoryHolder holder, int position) {
         Story currentStory = storyList.get(position);
-        holder.storyImage.setImageResource(currentStory.getStoryImageSrc());
+        holder.storyImage.setImageBitmap(currentStory.getStoryImageBitmap());
 
     }
 

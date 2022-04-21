@@ -1,5 +1,6 @@
 package edu.neu.madcourse.metu.profile.imageUpload;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.profile.AddStoryButtonFragment;
 
 public class UploadActivity extends AppCompatActivity {
 
@@ -87,6 +89,7 @@ public class UploadActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 uploadImage();
+                finish();
             }
         });
     }
@@ -185,6 +188,7 @@ public class UploadActivity extends AppCompatActivity {
                                                     Toast.LENGTH_SHORT)
                                             .show();
                                 }
+
                             })
 
                     .addOnFailureListener(new OnFailureListener() {
@@ -219,6 +223,17 @@ public class UploadActivity extends AppCompatActivity {
                                                     + (int)progress + "%");
                                 }
                             });
+            progressDialog.dismiss();
+            Bundle bundle = getIntent().getExtras();
+            String srcClass = "";
+            if (bundle != null) {
+                srcClass = bundle.getString("srcClass");
+                if (srcClass.equals("AddStoryButtonFragment")) {
+                    Intent returnData = new Intent();
+                    returnData.putExtra("imageFilePath", filePath.toString());
+                    this.setResult(Activity.RESULT_OK, returnData);
+                }
+            }
         }
     }
 }

@@ -42,13 +42,14 @@ public class AddTagButtonFragment extends Fragment {
     private String userInputTagText;
     private OnDataPass dataPasser;
 
+    public interface OnDataPass {
+        public void onDataPass(String data);
+    }
+
     public AddTagButtonFragment() {
         // Required empty public constructor
     }
 
-    public interface OnDataPass {
-        public void onDataPass(String data);
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -88,6 +89,7 @@ public class AddTagButtonFragment extends Fragment {
         dataPasser = (OnDataPass) context;
     }
 
+//    //    Adding more tags
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

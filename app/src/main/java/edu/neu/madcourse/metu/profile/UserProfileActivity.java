@@ -8,10 +8,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +28,7 @@ import android.widget.EditText;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +43,7 @@ import edu.neu.madcourse.metu.contacts.ContactsAdapter;
 import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 
-public class UserProfileActivity extends AppCompatActivity implements AddTagButtonFragment.OnDataPass {
+public class UserProfileActivity extends AppCompatActivity implements AddTagButtonFragment.OnDataPass, AddStoryButtonFragment.OnStoryDataPass {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
     private final String userId = "self";
     private final Boolean isFriend = false;
@@ -114,6 +120,7 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
                             EditProfileButtonFragment.newInstance("hello world", "haha"), "f1")
                     .add(R.id.add_tag_button_fragment,
                             AddTagButtonFragment.newInstance(), "f1")
+                    .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance("AddStory", "haha"), "AddTagButtonFragment")
                     //.addToBackStack("fname")
                     .commit();
 //            getSupportFragmentManager().beginTransaction()
@@ -177,18 +184,35 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
         tagAdapter.notifyItemInserted(position);
     }
 
+    @Override
+    public void onStoryDataPass(Uri data) throws IOException {
+        int position = storyList.size();
+        // Setting image on image view using Bitmap
+        Bitmap bitmap = MediaStore
+                .Images
+                .Media
+                .getBitmap(
+                        getContentResolver(),
+                        data);
+        storyList.add(position, new Story(bitmap));
+        storyAdapter.notifyItemInserted(position);
+        Log.e("story", String.valueOf(storyList.size()));
+    }
+
     public void initItemData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             // TODO(xin): recover state from savedInstanceState
         } else {
-            Story story1 = new Story(R.drawable.story1);
-            Story story2 = new Story(R.drawable.story2);
-            Story story3 = new Story(R.drawable.story3);
-            Story story4 = new Story(R.drawable.story4);
+            //TODO(Xin): download image from firebase
+            Story story1 = new Story(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.story1));
+//            Story story2 = new Story(R.drawable.story2);
+//            Story story3 = new Story(R.drawable.story3);
+//            Story story4 = new Story(R.drawable.story4);
             storyList.add(story1);
-            storyList.add(story2);
-            storyList.add(story3);
-            storyList.add(story4);
+//            storyList.add(story2);
+//            storyList.add(story3);
+//            storyList.add(story4);
             Tag tag1 = new Tag("rich");
             Tag tag2 = new Tag("happy");
             Tag tag3 = new Tag("sports");

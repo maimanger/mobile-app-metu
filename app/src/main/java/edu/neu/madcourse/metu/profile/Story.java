@@ -1,20 +1,22 @@
 package edu.neu.madcourse.metu.profile;
 
+import android.graphics.Bitmap;
+
 public class Story {
-    private int storyImageSrc;
+    private Bitmap storyImageBitmap;
 
     public Story() {
     }
 
-    public Story(int storyImageSrc) {
-        this.storyImageSrc = storyImageSrc;
+    public Story(Bitmap storyImageBitmap) {
+        this.storyImageBitmap = storyImageBitmap;
     }
 
-    public int getStoryImageSrc() {
-        return storyImageSrc;
+    public Bitmap getStoryImageBitmap() {
+        return storyImageBitmap;
     }
 
-    public void setStoryImageSrc(int storyImageSrc) {
-        this.storyImageSrc = storyImageSrc;
+    public void setStoryImageBitmap(Bitmap storyImageBitmap) {
+        this.storyImageBitmap = storyImageBitmap;
     }
 }
