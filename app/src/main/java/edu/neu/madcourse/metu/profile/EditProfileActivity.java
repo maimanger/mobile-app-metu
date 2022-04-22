@@ -15,10 +15,11 @@ import android.widget.Toast;
 import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    EditText etName, etEmail, etLocation, etBirthday, etGender;
+    EditText etUsername, etEmail, etLocation, etAge, etGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +36,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     void viewInitializations() {
-        etName = findViewById(R.id.et_name);
+        etUsername = findViewById(R.id.et_username);
         etEmail = findViewById(R.id.et_email);
         etLocation = findViewById(R.id.et_location);
-        etBirthday = findViewById(R.id.et_birthday);
+        etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
 
         // To show back button in actionbar
@@ -47,8 +48,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     // Checking if the input in form is valid
     boolean validateInput() {
-        if (etName.getText().toString().equals("")) {
-            etName.setError("Please Enter Name");
+        if (etUsername.getText().toString().equals("")) {
+            etUsername.setError("Please Enter Username");
             return false;
         }
 
@@ -62,8 +63,8 @@ public class EditProfileActivity extends AppCompatActivity {
             return false;
         }
 
-        if (etBirthday.getText().toString().equals("")) {
-            etBirthday.setError("Please Enter Your Birthday");
+        if (etAge.getText().toString().equals("")) {
+            etAge.setError("Please Enter Your Age");
             return false;
         }
 
@@ -89,20 +90,17 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void performEditProfile (View v) {
         if (validateInput()) {
-
             // Input is valid, here send data to your server
-
-            String name = etName.getText().toString();
+            String username = etUsername.getText().toString();
             String email = etEmail.getText().toString();
             String location = etLocation.getText().toString();
-            String birthday = etBirthday.getText().toString();
+            String age = etAge.getText().toString();
             String gender = etGender.getText().toString();
 
+            // Write user data to firebase
+            FirebaseService.getInstance().updateUserProfile(username, email, location, age, gender);
             Toast.makeText(this,"Profile Update Successfully",Toast.LENGTH_SHORT).show();
-            // Here you can call you API
-
         }
     }
-
 }
 
