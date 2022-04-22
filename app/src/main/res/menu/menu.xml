@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_explore"
-        android:title="Explore"
-        android:icon="@drawable/ic_baseline_explore_24"/>
+        android:id="@+id/menu_me"
+        android:title="Me"
+        android:icon="@drawable/ic_baseline_emoji_emotions_24"/>
 
     <item
         android:id="@+id/menu_contacts"
@@ -11,15 +11,13 @@
         android:icon="@drawable/ic_baseline_people_24"/>
 
     <item
+        android:id="@+id/menu_explore"
+        android:title="Explore"
+        android:icon="@drawable/ic_baseline_explore_24"/>
+
+    <item
         android:id="@+id/menu_chats"
         android:title="Chats"
         android:icon="@drawable/ic_baseline_chat_24"/>
-
-    <item
-        android:id="@+id/menu_me"
-        android:title="Me"
-        android:icon="@drawable/ic_baseline_emoji_emotions_24"/>
-
-
 
 </menu>

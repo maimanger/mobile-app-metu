@@ -1,5 +1,6 @@
 package edu.neu.madcourse.metu.profile;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,9 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
@@ -17,9 +21,14 @@ import java.util.List;
 
 import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.SettingActivity;
+import edu.neu.madcourse.metu.chat.ChatActivity;
+import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.contacts.Contact;
+import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.contacts.ContactsAdapter;
 import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
+import edu.neu.madcourse.metu.explore.ExploringActivity;
 
 public class UserProfileActivity extends AppCompatActivity {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
@@ -33,11 +42,13 @@ public class UserProfileActivity extends AppCompatActivity {
     private List<Tag> tagList = new ArrayList<>();
     private RecyclerView tagRecyclerView;
     private TagAdapter tagAdapter;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
@@ -76,6 +87,34 @@ public class UserProfileActivity extends AppCompatActivity {
                     //.addToBackStack("fname")
                     .commit();
         }
+
+        // bottom navigation
+        bottomNavigationView = findViewById(R.id.bottom_navi);
+        bottomNavigationView.setSelectedItemId(R.id.menu_me);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.menu_explore:
+                        startActivity(new Intent(getApplicationContext(), ExploringActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.menu_contacts:
+                        startActivity(new Intent(getApplicationContext(), ContactsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.menu_chats:
+                        startActivity(new Intent(getApplicationContext(), RecentConversationActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.menu_me:
+                        return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     public void initItemData(Bundle savedInstanceState) {

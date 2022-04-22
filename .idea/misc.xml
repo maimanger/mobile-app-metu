@@ -44,10 +44,12 @@
         <entry key="app/src/main/res/drawable/selector_menu.xml" value="0.1455" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_contacts.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.11865942028985507" />
         <entry key="app/src/main/res/layout/activity_exploring.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16210739614994935" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_recent_conversation.xml" value="0.11865942028985507" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/activity_test_menu.xml" value="0.1" />
