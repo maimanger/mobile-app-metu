@@ -2,6 +2,7 @@ package edu.neu.madcourse.metu.models;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 public class NewUser {
     private String username; // username is used as nickname
@@ -10,10 +11,10 @@ public class NewUser {
     private String location;
     private Integer age;
     private String gender;
-    private List<String> tags;
-    private List<URL> stories;
+    private Map<String, Boolean> tags;
+    private Map<String, Boolean> stories;
     private Boolean isOnline;
-    private URL avatarUrl;
+    private String avatarUrl;
 
     public NewUser() { }
 
@@ -23,7 +24,9 @@ public class NewUser {
         this.email = email;
     }
 
-    public NewUser(String username, String password, String email, String location, Integer age, String gender, List<String> tags, List<URL> stories, Boolean isOnline, URL avatarUrl) {
+    public NewUser(String username, String password, String email, String location, Integer age,
+                   String gender, Map<String, Boolean> tags, Map<String, Boolean> stories,
+                   Boolean isOnline, String avatarUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -84,19 +87,19 @@ public class NewUser {
         this.gender = gender;
     }
 
-    public List<String> getTags() {
+    public Map<String, Boolean> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(Map<String, Boolean> tags) {
         this.tags = tags;
     }
 
-    public List<URL> getStories() {
+    public Map<String, Boolean> getStories() {
         return stories;
     }
 
-    public void setStories(List<URL> stories) {
+    public void setStories(Map<String, Boolean> stories) {
         this.stories = stories;
     }
 
@@ -108,11 +111,11 @@ public class NewUser {
         isOnline = online;
     }
 
-    public URL getAvatarUrl() {
+    public String getAvatarUrl() {
         return avatarUrl;
     }
 
-    public void setAvatarUrl(URL avatarUrl) {
+    public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 

@@ -94,12 +94,13 @@ public class EditProfileActivity extends AppCompatActivity {
             String username = etUsername.getText().toString();
             String email = etEmail.getText().toString();
             String location = etLocation.getText().toString();
-            String age = etAge.getText().toString();
+            Integer age = Integer.parseInt(etAge.getText().toString());
             String gender = etGender.getText().toString();
 
             // Write user data to firebase
             FirebaseService.getInstance().updateUserProfile(username, email, location, age, gender);
             Toast.makeText(this,"Profile Update Successfully",Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }

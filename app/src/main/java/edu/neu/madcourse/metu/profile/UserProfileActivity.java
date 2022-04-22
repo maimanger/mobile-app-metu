@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -42,10 +43,14 @@ import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.contacts.ContactsAdapter;
 import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
+import edu.neu.madcourse.metu.models.NewUser;
+import edu.neu.madcourse.metu.service.DataFetchCallback;
+import edu.neu.madcourse.metu.service.FirebaseService;
 
 public class UserProfileActivity extends AppCompatActivity implements AddTagButtonFragment.OnDataPass, AddStoryButtonFragment.OnStoryDataPass {
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String userId = "self";
+    private final String userId = "tom@tomDOTcom";
+    private final Boolean isSelf = true;
     private final Boolean isFriend = false;
 
     private RecyclerView storyRecyclerView;
@@ -62,72 +67,24 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        initUserProfileData(savedInstanceState);
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
 
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("New tag name");
-//        // Set up the input
-//        final EditText input = new EditText(this);
-//
-//        FloatingActionButton addTagButton = findViewById(R.id.add_tag_button);
-//        addTagButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                input.setInputType(InputType.TYPE_CLASS_TEXT);
-//                if (input.getParent() != null) {
-//                    ((ViewGroup) input.getParent()).removeView(input);
-//                }
-//                builder.setView(input);
-//
-//                // Set up the buttons
-//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        userInputTagText = input.getText().toString();
-//                        int pos = tagList.size();
-//                        addTag(pos, userInputTagText);
-//                    }
-//                });
-//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                builder.show();
-//            }
-//        });
-
-
-//        if (savedInstanceState == null) {
-//            // Add Fragment PrivateProfileFragment to UserProfileActivity.
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.private_profile, PrivateProfileFragment.newInstance("hello
-//                    world", "haha"), "f1")
-//                    .addToBackStack("fname")
-//                    .commit();
-//        }
-
         // TODO(xin): get value of userId and isFriend
 
-        if (userId.equals("self")) {
+        if (isSelf) {
             // Show private profile, without like bar, but with edit button
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.edit_profile_button_fragment,
                             EditProfileButtonFragment.newInstance("hello world", "haha"), "f1")
                     .add(R.id.add_tag_button_fragment,
                             AddTagButtonFragment.newInstance(), "f1")
-                    .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance("AddStory", "haha"), "AddTagButtonFragment")
+                    .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance(
+                            "AddStory", "haha"), "AddTagButtonFragment")
                     //.addToBackStack("fname")
                     .commit();
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.add_tag_button_fragment,
-//                            AddTagButtonFragment.newInstance(tagList, tagAdapter), "f1")
-//                    //.addToBackStack("fname")
-//                    .commit();
         } else if (isFriend) {
             // Show friend profile， with friend's like bar
             getSupportFragmentManager().beginTransaction()
@@ -199,6 +156,23 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
         Log.e("story", String.valueOf(storyList.size()));
     }
 
+    public void initUserProfileData(Bundle savedInstanceState) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FirebaseService.getInstance().fetchUserProfileData(userId,
+                        new DataFetchCallback<NewUser>() {
+                            @Override
+                            public void onCallback(NewUser user) {
+                                ((TextView) findViewById(R.id.text_username)).setText(user.getUsername());
+                                ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
+                                ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                            }
+                        });
+            }
+        }).start();
+    }
+
     public void initItemData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             // TODO(xin): recover state from savedInstanceState
@@ -206,13 +180,7 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
             //TODO(Xin): download image from firebase
             Story story1 = new Story(BitmapFactory.decodeResource(getResources(),
                     R.drawable.story1));
-//            Story story2 = new Story(R.drawable.story2);
-//            Story story3 = new Story(R.drawable.story3);
-//            Story story4 = new Story(R.drawable.story4);
             storyList.add(story1);
-//            storyList.add(story2);
-//            storyList.add(story3);
-//            storyList.add(story4);
             Tag tag1 = new Tag("rich");
             Tag tag2 = new Tag("happy");
             Tag tag3 = new Tag("sports");
@@ -269,10 +237,4 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
             }
         }).start();
     }
-
-    public void addTag(int position, String userInputTagText) {
-        tagList.add(position, new Tag(userInputTagText));
-        tagAdapter.notifyItemInserted(position);
-    }
-
 }
