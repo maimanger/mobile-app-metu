@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".explore.ExploringActivity">
+    <include layout="@layout/layout_top" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageSetting"
@@ -34,6 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageSetting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 <!--    <ProgressBar-->
 <!--        android:id="@+id/progressBarExploringActivity"-->

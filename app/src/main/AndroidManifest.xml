@@ -30,19 +30,24 @@
         <activity
             android:name=".chat.ChatActivity"
             android:exported="false" />
-        <activity android:name=".chat.RecentConversationActivity"
+        <activity
+            android:name=".chat.RecentConversationActivity"
             android:exported="false" />
-        <activity android:name=".SettingActivity"
+        <activity
+            android:name=".SettingActivity"
             android:exported="false" />
-        <activity android:name=".home.SplashActivity"
+        <activity
+            android:name=".home.SplashActivity"
             android:exported="false" />
-        <activity android:name=".home.HomeActivity"
+        <activity
+            android:name=".home.HomeActivity"
             android:exported="false" />
-        <activity android:name=".home.LoginActivity"
+        <activity
+            android:name=".home.LoginActivity"
             android:exported="false" />
-        <activity android:name=".home.RegisterActivity"
+        <activity
+            android:name=".home.RegisterActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true"

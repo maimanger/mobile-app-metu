@@ -35,11 +35,27 @@
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_sent_message.xml" value="0.21201413427561838" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19583333333333333" />
         <entry key="app/src/main/res/drawable-hdpi/custom_switch.xml" value="0.18" />
+        <entry key="app/src/main/res/drawable-hdpi/ic_switch_select.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable-hdpi/ic_switch_unselect.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_baseline_chat_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_baseline_emoji_emotions_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_baseline_explore_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/selector_menu.xml" value="0.1455" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_contacts.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_exploring.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16210739614994935" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.17135416666666667" />
+        <entry key="app/src/main/res/layout/activity_test_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_public.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/layout_top.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/layout_top_navigation_back.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.2421875" />
       </map>
     </option>
   </component>

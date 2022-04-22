@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,9 @@ public class ExploringActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exploring);
+
+        TextView toolbar = findViewById(R.id.toolbartag);
+        toolbar.setText("Explore more");
 
         // initialize the executor service
         executorService = Executors.newFixedThreadPool(1);
