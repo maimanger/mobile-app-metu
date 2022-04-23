@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorBackground"
+    android:background="#ffffff"
     android:layout_height="match_parent"
     tools:context=".profile.UserProfileActivity">
     <include layout="@layout/layout_top" />
@@ -20,7 +20,7 @@
             android:id="@+id/viewHeader"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@drawable/header_background"
+            android:background="@drawable/background_monterey"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <FrameLayout
@@ -35,15 +35,54 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="15dp"
-                app:cardBackgroundColor="@color/colorWhite"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="10dp">
+                android:layout_marginBottom="25dp"
+                app:cardBackgroundColor="#ffffff"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/user_info_constraint_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:id="@+id/star_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="32dp"
+                        app:layout_constraintStart_toStartOf="@id/user_info_constraint_layout"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout" />
+
+                    <FrameLayout
+                        android:id="@+id/like_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="80dp"
+                        android:layout_marginTop="32dp"
+                        app:layout_constraintStart_toStartOf="@id/user_info_constraint_layout"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout" />
+
+                    <FrameLayout
+                        android:id="@+id/chat_button"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="80dp"
+                        android:layout_marginTop="32dp"
+                        />
+
+                    <FrameLayout
+                        android:id="@+id/video_button"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="32dp"
+                        />
 
                     <TextView
                         android:id="@+id/text_username"
@@ -96,8 +135,8 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageProfile"
-            android:layout_width="238dp"
-            android:layout_height="144dp"
+            android:layout_width="252dp"
+            android:layout_height="138dp"
             android:src="@drawable/profile_picture"
             app:layout_constraintBottom_toTopOf="@id/layoutProfile"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,6 +147,17 @@
             app:riv_border_width="1dp"
             app:riv_oval="true" />
 
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/image_contactAvatar"-->
+<!--            android:layout_width="65dp"-->
+<!--            android:layout_height="65dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:shapeAppearanceOverlay="@style/Circular"-->
+<!--            tools:srcCompat="@tools:sample/avatars" />-->
+
         <TextView
             android:id="@+id/textTags"
             android:layout_width="wrap_content"
@@ -116,7 +166,7 @@
             android:layout_marginTop="5dp"
             android:text="@string/_tags"
             android:textAllCaps="true"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="@color/purple_500"
             android:textStyle="bold"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -223,7 +273,7 @@
             android:layout_marginTop="20dp"
             android:text="@string/story"
             android:textAllCaps="true"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="@color/purple_500"
             android:textStyle="bold"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -269,90 +319,48 @@
             app:layout_constraintTop_toBottomOf="@id/textStory"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/layoutButtons"-->
-        <!--            android:layout_marginStart="25dp"-->
-        <!--            android:layout_marginEnd="25dp"-->
-        <!--            android:layout_marginTop="50dp"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/story_recycler_view"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:gravity="center"-->
-        <!--            android:showDividers="middle"-->
-        <!--            android:divider="@drawable/empty_tall_divider">-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/layoutButtons"-->
+<!--            android:layout_marginStart="25dp"-->
+<!--            android:layout_marginEnd="25dp"-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/story_recycler_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:showDividers="middle"-->
+<!--            android:divider="@drawable/empty_tall_divider">-->
 
-        <!--            <com.makeramen.roundedimageview.RoundedImageView-->
-        <!--                android:layout_width="50dp"-->
-        <!--                android:layout_height="50dp"-->
-        <!--                android:scaleType="centerCrop"-->
-        <!--                android:src="@drawable/like"-->
-        <!--                app:riv_corner_radius="6dp" />-->
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/like"-->
+<!--                app:riv_corner_radius="6dp" />-->
 
-        <!--            <com.makeramen.roundedimageview.RoundedImageView-->
-        <!--                android:layout_width="50dp"-->
-        <!--                android:layout_height="50dp"-->
-        <!--                android:scaleType="centerCrop"-->
-        <!--                android:src="@drawable/chat"-->
-        <!--                app:riv_corner_radius="6dp" />-->
+<!--            <com.makeramen.roundedimageview.RoundedImageView-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/chat"-->
+<!--                app:riv_corner_radius="6dp" />-->
 
 
-        <!--        </LinearLayout>-->
+<!--        </LinearLayout>-->
+
+
+
+
         <FrameLayout
-            android:id="@+id/like_bar"
+            android:id="@+id/videoo_button"
             app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/layoutBottomButtons"-->
-        <!--            android:layout_marginStart="25dp"-->
-        <!--            android:layout_marginEnd="25dp"-->
-        <!--            android:layout_marginTop="50dp"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/like_bar"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:gravity="center"-->
-        <!--            android:showDividers="middle"-->
-        <!--            android:divider="@drawable/empty_tall_divider">-->
-
-        <!--            <com.makeramen.roundedimageview.RoundedImageView-->
-        <!--                android:layout_width="30dp"-->
-        <!--                android:layout_height="30dp"-->
-        <!--                android:scaleType="centerCrop"-->
-        <!--                android:src="@drawable/person"-->
-        <!--                app:riv_corner_radius="6dp" />-->
-
-        <!--            <com.makeramen.roundedimageview.RoundedImageView-->
-        <!--                android:layout_width="30dp"-->
-        <!--                android:layout_height="30dp"-->
-        <!--                android:scaleType="centerCrop"-->
-        <!--                android:src="@drawable/history"-->
-        <!--                app:riv_corner_radius="6dp" />-->
-
-        <!--            <com.makeramen.roundedimageview.RoundedImageView-->
-        <!--                android:layout_width="30dp"-->
-        <!--                android:layout_height="30dp"-->
-        <!--                android:scaleType="centerCrop"-->
-        <!--                android:src="@drawable/community"-->
-        <!--                app:riv_corner_radius="6dp" />-->
-
-        <!--            <com.makeramen.roundedimageview.RoundedImageView-->
-        <!--                android:layout_width="30dp"-->
-        <!--                android:layout_height="30dp"-->
-        <!--                android:scaleType="centerCrop"-->
-        <!--                android:src="@drawable/two_chats"-->
-        <!--                app:riv_corner_radius="6dp" />-->
-
-        <!--        </LinearLayout>-->
-
-
-
         <FrameLayout
-            android:id="@+id/like_bar_public"
+            android:id="@+id/chatt_button"
             app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"

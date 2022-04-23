@@ -91,30 +91,25 @@ public class UserProfileActivity extends AppCompatActivity implements
         // TODO(xin): get value of userId and isFriend
 
         if (isSelf) {
-            // Show private profile, without like bar, but with edit button
+            // Show private profile
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.edit_profile_button_fragment,
-                            EditProfileButtonFragment.newInstance("hello world", "haha", userId),
-                            "f1")
-                    .add(R.id.add_tag_button_fragment,
-                            AddTagButtonFragment.newInstance(), "f1")
-                    .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance(
-                            "AddStory", "haha"), "AddTagButtonFragment")
-                    //.addToBackStack("fname")
+                    .add(R.id.edit_profile_button_fragment, EditProfileButtonFragment.newInstance("hello world", "haha", userId), "f1")
+                    .add(R.id.add_tag_button_fragment, AddTagButtonFragment.newInstance(), "f1")
+                    .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance("AddStory", "haha"), "AddTagButtonFragment")
                     .commit();
         } else if (isFriend) {
-            // Show friend profile， with friend's like bar
+            // Show friend profile
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.like_bar,
-                            FriendFragment.newInstance("hello world", "haha"), "f1")
-                    //.addToBackStack("fname")
+                    .add(R.id.like_button, LikeButtonFragment.newInstance("hello world", "haha"), "f1")
+                    .add(R.id.star_button, StarButtonFragment.newInstance("a", "b"), "f")
+                    .add(R.id.chat_button, ChatButtonFragment.newInstance("a", "b"), "f")
+                    .add(R.id.video_button, VideoButtonFragment.newInstance("a", "b"), "f")
                     .commit();
         } else {
-            // Show public profile, with public like bar
+            // Show public profile
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.like_bar_public,
-                            PublicFragment.newInstance("hello world", "haha"), "f1")
-                    //.addToBackStack("fname")
+                    .add(R.id.like_button, LikeButtonFragment.newInstance("hello world", "haha"), "f1")
+                    .add(R.id.chat_button, ChatButtonFragment.newInstance("a", "b"), "f")
                     .commit();
         }
 
