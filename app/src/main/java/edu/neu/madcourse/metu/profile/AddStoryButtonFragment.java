@@ -101,9 +101,9 @@ public class AddStoryButtonFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), UploadActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("srcClass", "AddStoryButtonFragment");
-                intent.putExtras(bundle);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("srcClass", "AddStoryButtonFragment");
+//                intent.putExtras(bundle);
 //                startActivity(intent);
                 uploadActivityResultLauncher.launch(intent);
             }
@@ -133,11 +133,6 @@ public class AddStoryButtonFragment extends Fragment {
                     }
                 });
     }
-
-//    public void setImageFilePath(Uri imageFilePath) {
-//        this.imageFilePath = imageFilePath;
-//        Log.e("imageFilePath: ", imageFilePath.toString());
-//    }
 }
 
 

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 //import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,8 +21,11 @@ import androidx.annotation.NonNull;
 //import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -34,10 +38,6 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.AddStoryButtonFragment;
 
 public class UploadActivity extends AppCompatActivity {
-
-    // views for button
-    private Button btnUpload;
-    private TextView textViewPickImage;
 
     // view for image view
     private ImageView imageView;
@@ -52,22 +52,18 @@ public class UploadActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
 
+    private Uri imageFirebaseUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
-//        ActionBar actionBar;
-//        actionBar = getSupportActionBar();
-//        ColorDrawable colorDrawable
-//                = new ColorDrawable(
-//                Color.parseColor("#0F9D58"));
-//        actionBar.setBackgroundDrawable(colorDrawable);
-
         // initialise views
-        textViewPickImage = findViewById(R.id.item_img);
-        btnUpload = findViewById(R.id.create_item);
+        TextView textViewPickImage = findViewById(R.id.item_img);
+        // views for button
+        Button btnUpload = findViewById(R.id.create_item);
         imageView = findViewById(R.id.img);
 
         // get the Firebase storage reference
@@ -89,7 +85,7 @@ public class UploadActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 uploadImage();
-                finish();
+//                finish();
             }
         });
     }
@@ -102,6 +98,7 @@ public class UploadActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+//        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(
                 Intent.createChooser(
                         intent,
@@ -134,12 +131,7 @@ public class UploadActivity extends AppCompatActivity {
             try {
 
                 // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore
-                        .Images
-                        .Media
-                        .getBitmap(
-                                getContentResolver(),
-                                filePath);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
             }
 
@@ -162,16 +154,41 @@ public class UploadActivity extends AppCompatActivity {
             progressDialog.show();
 
             // Defining the child of storageReference
-            StorageReference ref
-                    = storageReference
-                    .child(
-                            "images/"
-                                    + UUID.randomUUID().toString());
+            String firebaseStoragePath = "images/" + UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child(firebaseStoragePath);
 
-            // adding listeners on upload
-            // or failure of image
-            ref.putFile(filePath)
-                    .addOnSuccessListener(
+            // adding listeners on upload or failure of image
+            UploadTask uploadTask = ref.putFile(filePath);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,
+                    Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        imageFirebaseUri = task.getResult();
+                        Intent returnData = new Intent();
+                        returnData.putExtra("imageFilePath", filePath.toString());
+                        returnData.putExtra("firebaseStoragePath", firebaseStoragePath);
+                        returnData.putExtra("imageFirebaseUri", imageFirebaseUri.toString());
+                        setResult(Activity.RESULT_OK, returnData);
+                        finish();
+                    } else {
+                        // Handle failures
+                        Log.e("uploadImage", "Failed to get image url");
+                    }
+                }
+            });
+
+            uploadTask.addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
                                 @Override
@@ -224,16 +241,18 @@ public class UploadActivity extends AppCompatActivity {
                                 }
                             });
             progressDialog.dismiss();
-            Bundle bundle = getIntent().getExtras();
-            String srcClass = "";
-            if (bundle != null) {
-                srcClass = bundle.getString("srcClass");
-                if (srcClass.equals("AddStoryButtonFragment")) {
-                    Intent returnData = new Intent();
-                    returnData.putExtra("imageFilePath", filePath.toString());
-                    this.setResult(Activity.RESULT_OK, returnData);
-                }
-            }
+//            Bundle bundle = getIntent().getExtras();
+//            String srcClass = "";
+//            if (bundle != null) {
+//                srcClass = bundle.getString("srcClass");
+//                if (srcClass.equals("AddStoryButtonFragment")) {
+//            Intent returnData = new Intent();
+//            returnData.putExtra("imageFilePath", filePath.toString());
+//            returnData.putExtra("firebaseStoragePath", firebaseStoragePath);
+//            returnData.putExtra("imageFirebaseUri", imageFirebaseUri.toString());
+//            setResult(Activity.RESULT_OK, returnData);
+//                }
+//            }
         }
     }
 }

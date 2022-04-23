@@ -1,16 +1,28 @@
 package edu.neu.madcourse.metu.profile;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.io.IOException;
 
 import edu.neu.madcourse.metu.R;
 
@@ -43,11 +55,12 @@ public class EditProfileButtonFragment extends Fragment {
      * @return A new instance of fragment EditProfileButtonFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EditProfileButtonFragment newInstance(String param1, String param2) {
+    public static EditProfileButtonFragment newInstance(String param1, String param2, String userId) {
         EditProfileButtonFragment fragment = new EditProfileButtonFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString("userId", userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +87,9 @@ public class EditProfileButtonFragment extends Fragment {
         Button edit = view.findViewById(R.id.edit_profile_button);
         edit.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("userId", getArguments().getString("userId"));
+            intent.putExtras(bundle);
             startActivity(intent);
         });
     }

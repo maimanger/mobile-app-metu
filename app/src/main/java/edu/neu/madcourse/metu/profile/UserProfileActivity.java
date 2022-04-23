@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
@@ -24,12 +26,17 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +54,10 @@ import edu.neu.madcourse.metu.models.NewUser;
 import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
-public class UserProfileActivity extends AppCompatActivity implements AddTagButtonFragment.OnDataPass, AddStoryButtonFragment.OnStoryDataPass {
+public class UserProfileActivity extends AppCompatActivity implements
+        AddTagButtonFragment.OnDataPass,
+        AddStoryButtonFragment.OnStoryDataPass {
+    public static Bitmap avatarBitmap;
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
     private final String userId = "tom@tomDOTcom";
     private final Boolean isSelf = true;
@@ -61,6 +71,32 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
     private RecyclerView tagRecyclerView;
     private TagAdapter tagAdapter;
     BottomNavigationView bottomNavigationView;
+    private String avatarStoragePath;
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +114,7 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
             // Show private profile, without like bar, but with edit button
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.edit_profile_button_fragment,
-                            EditProfileButtonFragment.newInstance("hello world", "haha"), "f1")
+                            EditProfileButtonFragment.newInstance("hello world", "haha", userId), "f1")
                     .add(R.id.add_tag_button_fragment,
                             AddTagButtonFragment.newInstance(), "f1")
                     .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance(
@@ -145,12 +181,7 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
     public void onStoryDataPass(Uri data) throws IOException {
         int position = storyList.size();
         // Setting image on image view using Bitmap
-        Bitmap bitmap = MediaStore
-                .Images
-                .Media
-                .getBitmap(
-                        getContentResolver(),
-                        data);
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data);
         storyList.add(position, new Story(bitmap));
         storyAdapter.notifyItemInserted(position);
         Log.e("story", String.valueOf(storyList.size()));
@@ -167,6 +198,12 @@ public class UserProfileActivity extends AppCompatActivity implements AddTagButt
                                 ((TextView) findViewById(R.id.text_username)).setText(user.getUsername());
                                 ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
                                 ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                                String avatarUri = user.getAvatarUri();
+                                if (avatarUri != null && !avatarUri.isEmpty()) {
+                                    Log.e("initUserProfileData", avatarUri);
+                                    new DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
+                                }
+
                             }
                         });
             }

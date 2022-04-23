@@ -1,12 +1,18 @@
 package edu.neu.madcourse.metu.service;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +22,11 @@ import edu.neu.madcourse.metu.models.NewUser;
 public class FirebaseService {
     private static FirebaseService singleton_instance = null;
     private final DatabaseReference databaseRef;
+    private final StorageReference storageRef;
 
     private FirebaseService() {
         databaseRef = FirebaseDatabase.getInstance().getReference();
+        storageRef = FirebaseStorage.getInstance().getReference();
     }
 
     public static FirebaseService getInstance() {
@@ -43,6 +51,10 @@ public class FirebaseService {
         childUpdates.put("/users/" + key, userValues);
 
         databaseRef.updateChildren(childUpdates);
+    }
+
+    public void updateUserAvatar(String userId, String imageFirebaseUri) {
+        databaseRef.child("users").child(userId).child("avatarUri").setValue(imageFirebaseUri);
     }
 
     public void fetchUserProfileData(String userId, DataFetchCallback<NewUser> callback) {

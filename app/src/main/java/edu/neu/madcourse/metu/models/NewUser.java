@@ -14,7 +14,7 @@ public class NewUser {
     private Map<String, Boolean> tags;
     private Map<String, Boolean> stories;
     private Boolean isOnline;
-    private String avatarUrl;
+    private String avatarUri;
 
     public NewUser() { }
 
@@ -26,7 +26,7 @@ public class NewUser {
 
     public NewUser(String username, String password, String email, String location, Integer age,
                    String gender, Map<String, Boolean> tags, Map<String, Boolean> stories,
-                   Boolean isOnline, String avatarUrl) {
+                   Boolean isOnline, String avatarUri) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -36,7 +36,7 @@ public class NewUser {
         this.tags = tags;
         this.stories = stories;
         this.isOnline = isOnline;
-        this.avatarUrl = avatarUrl;
+        this.avatarUri = avatarUri;
     }
 
     public String getUsername() {
@@ -111,12 +111,12 @@ public class NewUser {
         isOnline = online;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatarUri() {
+        return avatarUri;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatarUri(String avatarUri) {
+        this.avatarUri = avatarUri;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class NewUser {
                 ", tags=" + tags +
                 ", stories=" + stories +
                 ", isOnline=" + isOnline +
-                ", avatarUrl=" + avatarUrl +
+                ", avatarUri='" + avatarUri + '\'' +
                 '}';
     }
 }
