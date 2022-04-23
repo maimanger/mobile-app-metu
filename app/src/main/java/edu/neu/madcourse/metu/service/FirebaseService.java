@@ -17,6 +17,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.neu.madcourse.metu.contacts.daos.User;
 import edu.neu.madcourse.metu.models.NewUser;
 
 public class FirebaseService {
@@ -106,5 +107,21 @@ public class FirebaseService {
     public void addStory(String userId, String storyImageUri) {
         String key = databaseRef.child("users").child(userId).child("stories").push().getKey();
         databaseRef.child("users").child(userId).child("stories").child(key).setValue(storyImageUri);
+    }
+
+    public void fetchAvatarUri(String userId, DataFetchCallback<Uri> callback) {
+        databaseRef.child("users").child(userId).child("avatarUri").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onCallback(Uri.parse(snapshot.getValue(String.class)));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                throw error.toException();
+            }
+        });
+
+
     }
 }
