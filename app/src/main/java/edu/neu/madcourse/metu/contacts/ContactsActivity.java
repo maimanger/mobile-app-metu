@@ -53,6 +53,10 @@ public class ContactsActivity extends AppCompatActivity {
         initDataFromBundle(savedInstanceState);
         initContactsPager(savedInstanceState);
 
+        // actionbar
+        TextView toolbar = findViewById(R.id.toolbartag);
+        toolbar.setText("Contacts");
+
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
         bottomNavigationView.setSelectedItemId(R.id.menu_contacts);

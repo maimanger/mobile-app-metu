@@ -6,6 +6,7 @@
     android:background="@color/colorBackground"
     android:layout_height="match_parent"
     tools:context=".profile.UserProfileActivity">
+    <include layout="@layout/layout_top" />
 
 <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"

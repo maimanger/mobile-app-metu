@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/chat_background_color"
     tools:context=".chat.RecentConversationActivity">
+    <include layout="@layout/layout_top" />
 
     <TextView
         android:id="@+id/chat"

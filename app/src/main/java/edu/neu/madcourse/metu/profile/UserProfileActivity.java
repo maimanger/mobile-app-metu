@@ -88,6 +88,10 @@ public class UserProfileActivity extends AppCompatActivity {
                     .commit();
         }
 
+        // actionbar
+        TextView toolbar = findViewById(R.id.toolbartag);
+        toolbar.setText("Profile");
+
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
         bottomNavigationView.setSelectedItemId(R.id.menu_me);

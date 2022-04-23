@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -69,6 +70,10 @@ public class RecentConversationActivity extends AppCompatActivity {
 
         // initialize data view
         init(savedInstanceState);
+
+        // actionbar
+        TextView toolbar = findViewById(R.id.toolbartag);
+        toolbar.setText("Chats");
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
