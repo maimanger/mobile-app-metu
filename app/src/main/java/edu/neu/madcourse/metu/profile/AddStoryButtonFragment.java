@@ -43,11 +43,12 @@ public class AddStoryButtonFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Uri imageFilePath;
+    private String imageFirebaseUri;
     private ActivityResultLauncher<Intent> uploadActivityResultLauncher;
     private OnStoryDataPass dataPasser;
 
     public interface OnStoryDataPass {
-        public void onStoryDataPass(Uri data) throws IOException;
+        public void onStoryDataPass(Uri localPath, String storyImageUri) throws IOException;
     }
 
     public AddStoryButtonFragment() {
@@ -123,9 +124,10 @@ public class AddStoryButtonFragment extends Fragment {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
                             imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
+                            imageFirebaseUri = data.getStringExtra("imageFirebaseUri");
                             Log.e("imageFilePath: ", imageFilePath.toString());
                             try {
-                                dataPasser.onStoryDataPass(imageFilePath);
+                                dataPasser.onStoryDataPass(imageFilePath, imageFirebaseUri);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

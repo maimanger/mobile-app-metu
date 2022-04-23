@@ -48,6 +48,7 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
+import edu.neu.madcourse.metu.Utils;
 import edu.neu.madcourse.metu.contacts.Contact;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.contacts.ContactsAdapter;
@@ -76,30 +77,6 @@ public class UserProfileActivity extends AppCompatActivity implements
     BottomNavigationView bottomNavigationView;
     private String avatarStoragePath;
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,12 +160,13 @@ public class UserProfileActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onStoryDataPass(Uri data) throws IOException {
+    public void onStoryDataPass(Uri localPath, String storyImageUri) throws IOException {
         int position = storyList.size();
         // Setting image on image view using Bitmap
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data);
-        storyList.add(position, new Story(bitmap));
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), localPath);
+        storyList.add(position, new Story(storyImageUri));
         storyAdapter.notifyItemInserted(position);
+        FirebaseService.getInstance().addStory(userId, storyImageUri.toString());
         Log.e("story", String.valueOf(storyList.size()));
     }
 
@@ -206,7 +184,7 @@ public class UserProfileActivity extends AppCompatActivity implements
                                 String avatarUri = user.getAvatarUri();
                                 if (avatarUri != null && !avatarUri.isEmpty()) {
                                     Log.e("initUserProfileData", avatarUri);
-                                    new DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
+                                    new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
                                 }
 
                             }
@@ -218,19 +196,6 @@ public class UserProfileActivity extends AppCompatActivity implements
     public void initItemData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             // TODO(xin): recover state from savedInstanceState
-        } else {
-
-            Story story1 = new Story(BitmapFactory.decodeResource(getResources(),
-                    R.drawable.story1));
-            storyList.add(story1);
-//            Tag tag1 = new Tag("rich");
-//            Tag tag2 = new Tag("happy");
-//            Tag tag3 = new Tag("sports");
-//            Tag tag4 = new Tag("hahah");
-//            tagList.add(tag1);
-//            tagList.add(tag2);
-//            tagList.add(tag3);
-//            tagList.add(tag4);
         }
     }
 
@@ -238,21 +203,31 @@ public class UserProfileActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (storyList == null) {
-                    // TODO(xin): fetch storyList from database
-                } else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            storyRecyclerView = findViewById(R.id.story_recycler_view);
-                            storyRecyclerView.setHasFixedSize(true);
-                            storyRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                FirebaseService.getInstance().fetchStoryList(userId,
+                        new DataFetchCallback<Map<String, String>>() {
+                            @Override
+                            public void onCallback(Map<String, String> map) {
+                                if (map != null) {
+                                    storyList.clear();
+                                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                                        String storyUri = entry.getValue();
+                                        storyList.add(new Story(storyUri));
+                                    }
+                                }
 
-                            storyAdapter = new StoryAdapter(storyList);
-                            storyRecyclerView.setAdapter(storyAdapter);
-                        }
-                    });
-                }
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        storyRecyclerView = findViewById(R.id.story_recycler_view);
+                                        storyRecyclerView.setHasFixedSize(true);
+                                        storyRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                                        storyAdapter = new StoryAdapter(storyList);
+                                        storyRecyclerView.setAdapter(storyAdapter);
+                                    }
+                                });
+                            }
+                        });
             }
         }).start();
     }
@@ -263,26 +238,29 @@ public class UserProfileActivity extends AppCompatActivity implements
             public void run() {
                 FirebaseService.getInstance().fetchTagList(userId,
                         new DataFetchCallback<Map<String, Boolean>>() {
-                    @Override
-                    public void onCallback(Map<String, Boolean> map) {
-                        tagList.clear();
-                        for (Map.Entry<String, Boolean> entry : map.entrySet()) {
-                            String key = entry.getKey();
-                            tagList.add(new Tag(key));
-                        }
-                        handler.post(new Runnable() {
                             @Override
-                            public void run() {
-                                tagRecyclerView = findViewById(R.id.tag_recycler_view);
-                                tagRecyclerView.setHasFixedSize(true);
-                                tagRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                            public void onCallback(Map<String, Boolean> map) {
+                                if (map != null) {
+                                    tagList.clear();
+                                    for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+                                        String key = entry.getKey();
+                                        tagList.add(new Tag(key));
+                                    }
+                                }
 
-                                tagAdapter = new TagAdapter(tagList);
-                                tagRecyclerView.setAdapter(tagAdapter);
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tagRecyclerView = findViewById(R.id.tag_recycler_view);
+                                        tagRecyclerView.setHasFixedSize(true);
+                                        tagRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                                        tagAdapter = new TagAdapter(tagList);
+                                        tagRecyclerView.setAdapter(tagAdapter);
+                                    }
+                                });
                             }
                         });
-                    }
-                });
             }
         }).start();
     }

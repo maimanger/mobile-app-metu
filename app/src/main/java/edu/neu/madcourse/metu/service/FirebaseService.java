@@ -88,4 +88,23 @@ public class FirebaseService {
     public void addTag(String userId, String tagContent) {
         databaseRef.child("users").child(userId).child("tags").child(tagContent).setValue(true);
     }
+
+    public void fetchStoryList(String userId, DataFetchCallback<Map<String, String>> callback) {
+        databaseRef.child("users").child(userId).child("stories").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onCallback((Map<String, String>) snapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                throw error.toException();
+            }
+        });
+    }
+
+    public void addStory(String userId, String storyImageUri) {
+        String key = databaseRef.child("users").child(userId).child("stories").push().getKey();
+        databaseRef.child("users").child(userId).child("stories").child(key).setValue(storyImageUri);
+    }
 }

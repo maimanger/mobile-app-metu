@@ -12,7 +12,7 @@ public class NewUser {
     private Integer age;
     private String gender;
     private Map<String, Boolean> tags;
-    private Map<String, Boolean> stories;
+    private Map<String, String> stories;
     private Boolean isOnline;
     private String avatarUri;
 
@@ -25,7 +25,7 @@ public class NewUser {
     }
 
     public NewUser(String username, String password, String email, String location, Integer age,
-                   String gender, Map<String, Boolean> tags, Map<String, Boolean> stories,
+                   String gender, Map<String, Boolean> tags, Map<String, String> stories,
                    Boolean isOnline, String avatarUri) {
         this.username = username;
         this.password = password;
@@ -95,11 +95,11 @@ public class NewUser {
         this.tags = tags;
     }
 
-    public Map<String, Boolean> getStories() {
+    public Map<String, String> getStories() {
         return stories;
     }
 
-    public void setStories(Map<String, Boolean> stories) {
+    public void setStories(Map<String, String> stories) {
         this.stories = stories;
     }
 

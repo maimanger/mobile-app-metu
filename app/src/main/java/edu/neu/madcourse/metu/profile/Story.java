@@ -1,22 +1,23 @@
 package edu.neu.madcourse.metu.profile;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 public class Story {
-    private Bitmap storyImageBitmap;
+    private String storyImageUri;
 
     public Story() {
     }
 
-    public Story(Bitmap storyImageBitmap) {
-        this.storyImageBitmap = storyImageBitmap;
+    public Story(String storyImageUri) {
+        this.storyImageUri = storyImageUri;
     }
 
-    public Bitmap getStoryImageBitmap() {
-        return storyImageBitmap;
+    public String getStoryImageUri() {
+        return storyImageUri;
     }
 
-    public void setStoryImageBitmap(Bitmap storyImageBitmap) {
-        this.storyImageBitmap = storyImageBitmap;
+    public void setStoryImageUri(String storyImageUri) {
+        this.storyImageUri = storyImageUri;
     }
 }
