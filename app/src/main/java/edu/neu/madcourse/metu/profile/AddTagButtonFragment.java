@@ -35,10 +35,6 @@ public class AddTagButtonFragment extends Fragment {
 //    private static final String ARG_PARAM1 = "param1";
 //    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-//    private List<Tag> tagList;
-//    private TagAdapter tagAdapter;
-//    private String mParam2;
     private String userInputTagText;
     private OnDataPass dataPasser;
 
@@ -114,8 +110,6 @@ public class AddTagButtonFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         userInputTagText = input.getText().toString();
-//                        int pos = tagList.size();
-//                        addTag(pos, userInputTagText);
                         dataPasser.onDataPass(userInputTagText);
                     }
                 });
@@ -129,13 +123,5 @@ public class AddTagButtonFragment extends Fragment {
                 builder.show();
             }
         });
-
-//        Button edit = view.findViewById(R.id.edit_profile_button);
-//        edit.setOnClickListener(view1 -> {
-//            Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-//            startActivity(intent);
-//        });
     }
-
-
 }

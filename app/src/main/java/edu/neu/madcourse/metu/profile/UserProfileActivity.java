@@ -2,6 +2,7 @@ package edu.neu.madcourse.metu.profile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
@@ -114,7 +117,8 @@ public class UserProfileActivity extends AppCompatActivity implements
             // Show private profile, without like bar, but with edit button
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.edit_profile_button_fragment,
-                            EditProfileButtonFragment.newInstance("hello world", "haha", userId), "f1")
+                            EditProfileButtonFragment.newInstance("hello world", "haha", userId),
+                            "f1")
                     .add(R.id.add_tag_button_fragment,
                             AddTagButtonFragment.newInstance(), "f1")
                     .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance(
@@ -175,6 +179,7 @@ public class UserProfileActivity extends AppCompatActivity implements
         int position = tagList.size();
         tagList.add(position, new Tag(data));
         tagAdapter.notifyItemInserted(position);
+        FirebaseService.getInstance().addTag(userId, data);
     }
 
     @Override
@@ -214,18 +219,18 @@ public class UserProfileActivity extends AppCompatActivity implements
         if (savedInstanceState != null) {
             // TODO(xin): recover state from savedInstanceState
         } else {
-            //TODO(Xin): download image from firebase
+
             Story story1 = new Story(BitmapFactory.decodeResource(getResources(),
                     R.drawable.story1));
             storyList.add(story1);
-            Tag tag1 = new Tag("rich");
-            Tag tag2 = new Tag("happy");
-            Tag tag3 = new Tag("sports");
-            Tag tag4 = new Tag("hahah");
-            tagList.add(tag1);
-            tagList.add(tag2);
-            tagList.add(tag3);
-            tagList.add(tag4);
+//            Tag tag1 = new Tag("rich");
+//            Tag tag2 = new Tag("happy");
+//            Tag tag3 = new Tag("sports");
+//            Tag tag4 = new Tag("hahah");
+//            tagList.add(tag1);
+//            tagList.add(tag2);
+//            tagList.add(tag3);
+//            tagList.add(tag4);
         }
     }
 
@@ -256,21 +261,28 @@ public class UserProfileActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (tagList == null) {
-                    // TODO(xin): fetch tagList from database
-                } else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            tagRecyclerView = findViewById(R.id.tag_recycler_view);
-                            tagRecyclerView.setHasFixedSize(true);
-                            tagRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
-
-                            tagAdapter = new TagAdapter(tagList);
-                            tagRecyclerView.setAdapter(tagAdapter);
+                FirebaseService.getInstance().fetchTagList(userId,
+                        new DataFetchCallback<Map<String, Boolean>>() {
+                    @Override
+                    public void onCallback(Map<String, Boolean> map) {
+                        tagList.clear();
+                        for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            tagList.add(new Tag(key));
                         }
-                    });
-                }
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                tagRecyclerView = findViewById(R.id.tag_recycler_view);
+                                tagRecyclerView.setHasFixedSize(true);
+                                tagRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                                tagAdapter = new TagAdapter(tagList);
+                                tagRecyclerView.setAdapter(tagAdapter);
+                            }
+                        });
+                    }
+                });
             }
         }).start();
     }

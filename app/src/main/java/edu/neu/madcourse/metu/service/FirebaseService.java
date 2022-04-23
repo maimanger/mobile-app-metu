@@ -70,4 +70,22 @@ public class FirebaseService {
             }
         });
     }
+
+    public void fetchTagList(String userId, DataFetchCallback<Map<String, Boolean>> callback) {
+        databaseRef.child("users").child(userId).child("tags").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onCallback((Map<String, Boolean>) snapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                throw error.toException();
+            }
+        });
+    }
+
+    public void addTag(String userId, String tagContent) {
+        databaseRef.child("users").child(userId).child("tags").child(tagContent).setValue(true);
+    }
 }
