@@ -9,6 +9,7 @@ import android.view.View;
 
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.home.SplashActivity;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.EditProfileActivity;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 
@@ -17,10 +18,13 @@ import android.widget.Button;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.TextView;
 
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
+import edu.neu.madcourse.metu.service.DataFetchCallback;
+import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
 import edu.neu.madcourse.metu.video.VideoActivity;
@@ -115,5 +119,14 @@ public class MainActivity extends AppCompatActivity {
     public void onClickVideo(View view) {
         Intent intent = new Intent(this, VideoActivity.class);
         startActivity(intent);
+    }
+
+    public void onClickRtmLogin(View view) {
+        String userId = ((TextView)findViewById(R.id.editText_fakeUserId)).getText().toString();
+        ((App)getApplication()).rtmLogin(userId);
+        new Thread(() -> {
+            FirebaseService.getInstance().fetchUserProfileData(userId,
+                    (User user) -> ((App)getApplication()).setLoginUser(user));
+        }).start();
     }
 }

@@ -25,11 +25,14 @@ import androidx.core.content.res.ResourcesCompat;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.video.DismissCanceledCallNotifReceiver;
 import edu.neu.madcourse.metu.video.RefuseVideoCallReceiver;
 import edu.neu.madcourse.metu.video.VideoActivity;
+import edu.neu.madcourse.metu.utils.Utils;
 import io.agora.rtm.ErrorInfo;
 import io.agora.rtm.LocalInvitation;
 import io.agora.rtm.RemoteInvitation;
@@ -59,10 +62,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private AgoraEventListener agoraEventListener;
 
     // TODO: Add other global members, like User, Connection list...
+    private User loginUser;
+
     private String userId;
     private String userNickname;
     private String userAvatarUrl = "https://" + userNickname + ".png";
     private Map<String, Integer> peersOnlineStatus;
+
 
 
     class AgoraEventListener implements RtmClientListener, RtmCallEventListener {
@@ -464,6 +470,30 @@ public class App extends Application implements Application.ActivityLifecycleCal
         }
     }
 
+    public void rtmLogin(String userId) {
+        rtmClient.login(null, userId, new ResultCallback<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("App", "onSuccess: RTM login " + userId);
+            }
+
+            @Override
+            public void onFailure(ErrorInfo errorInfo) {
+            }
+        });
+    }
+
+
+    public void rtmSubscribePeer(Set<String> peersId, ResultCallback<Void> callback) {
+        rtmClient.subscribePeersOnlineStatus(peersId, callback);
+    }
+
+    public void queryPeerOnlineStatus(Set<String> peersId, ResultCallback<Map<String, Boolean>> callback) {
+        rtmClient.queryPeersOnlineStatus(peersId, callback);
+    }
+
+
+
     public RemoteInvitation getRemoteInvitation() {
         return remoteInvitation;
     }
@@ -511,6 +541,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public int getCallNotificationId() {
         return callNotificationId;
+    }
+
+    public User getLoginUser() {
+        return loginUser;
+    }
+
+    public void setLoginUser(User loginUser) {
+        this.loginUser = loginUser;
     }
 }
 

@@ -18,7 +18,9 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.chat.ChatActivity;
@@ -27,7 +29,7 @@ import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 
 
-public class ContactsActivity extends AppCompatActivity {
+public class ContactsActivity extends BaseCalleeActivity {
 
     private ContactsPagerAdapter contactsPagerAdapter;
     private ViewPager2 contactsViewPager;
@@ -86,6 +88,8 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
     private void initContactsPager(Bundle savedInstanceState) {
@@ -192,5 +196,11 @@ public class ContactsActivity extends AppCompatActivity {
             outState.putParcelable("CONTACT" + i, contactsList.get(i));
         }
         outState.putInt("PAGE", lastPage);
+    }
+
+
+    @Override
+    public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
+        super.onPeersOnlineStatusChanged(map);
     }
 }

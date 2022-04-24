@@ -2,61 +2,35 @@ package edu.neu.madcourse.metu.profile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
 import android.view.MenuItem;
 import android.provider.MediaStore;
-import android.text.InputType;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.makeramen.roundedimageview.RoundedImageView;
+import android.widget.ImageView;
 
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.SettingActivity;
-import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
-import edu.neu.madcourse.metu.Utils;
-import edu.neu.madcourse.metu.models.Contact;
+import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
-import edu.neu.madcourse.metu.contacts.ContactsAdapter;
-import edu.neu.madcourse.metu.contacts.ContactsPagerAdapter;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
-import edu.neu.madcourse.metu.models.NewUser;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
@@ -173,10 +147,10 @@ public class UserProfileActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 FirebaseService.getInstance().fetchUserProfileData(userId,
-                        new DataFetchCallback<NewUser>() {
+                        new DataFetchCallback<User>() {
                             @Override
-                            public void onCallback(NewUser user) {
-                                ((TextView) findViewById(R.id.text_username)).setText(user.getUsername());
+                            public void onCallback(User user) {
+                                ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
                                 ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
                                 ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
                                 String avatarUri = user.getAvatarUri();

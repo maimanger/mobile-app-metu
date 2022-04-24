@@ -2,14 +2,14 @@ package edu.neu.madcourse.metu.models;
 
 public class ConnectionUser {
     private String userId;
-    private String nickName;
-    private String avatarUrl;
+    private String nickname;
+    private String avatarUri;
 
 
     public ConnectionUser(String username, String nickname, String avatarUrl) {
         this.userId = username;
-        this.nickName = nickname;
-        this.avatarUrl = avatarUrl;
+        this.nickname = nickname;
+        this.avatarUri = avatarUrl;
     }
 
     public String getUserId() {
@@ -20,20 +20,20 @@ public class ConnectionUser {
         this.userId = userId;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatarUri() {
+        return avatarUri;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatarUri(String avatarUri) {
+        this.avatarUri = avatarUri;
     }
 
 
@@ -42,8 +42,8 @@ public class ConnectionUser {
     public String toString() {
         return "ConnectionUser{" +
                 "username='" + userId + '\'' +
-                ", nickname='" + nickName + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", avatarUrl='" + avatarUri + '\'' +
                 '}';
     }
 }

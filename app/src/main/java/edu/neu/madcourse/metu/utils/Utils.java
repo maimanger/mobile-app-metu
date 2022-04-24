@@ -1,12 +1,24 @@
 package edu.neu.madcourse.metu.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ImageView;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
+import io.agora.rtm.RemoteInvitation;
 
 public class Utils {
+    public static int CALLER_NAME = 0;
+    public static int CALLER_AVATAR = 1;
+    public static int CALL_CONNECTION_POINT = 2;
+    public static int CALL_CONNECTION_ID = 3;
 
     private static Integer[] filterId = new Integer[]{
             R.drawable.church_window,
@@ -54,6 +66,41 @@ public class Utils {
             return 2;
         } else {
             return 3;
+        }
+    }
+
+    public static String createCallInvitationContent(String callerName, String callerAvatarUrl,
+                                                     int connectionPoint, String connectionId) {
+        return callerName + "-&-" + callerAvatarUrl + "-&-"
+                + connectionPoint + "-&-" + connectionId;
+    }
+
+    public static String getRemoteInvitationContent(RemoteInvitation remoteInvitation, int contentIdx) {
+        return remoteInvitation.getContent().split("-&-")[contentIdx];
+    }
+
+    public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
         }
     }
 }
