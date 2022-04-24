@@ -27,6 +27,7 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
@@ -38,7 +39,6 @@ public class ContactsActivity extends BaseCalleeActivity {
     private TabLayout contactsTabs;
     private ProgressBar loadingProgress;
     private Handler handler = new Handler();
-    private int lastPage = 0;
     BottomNavigationView bottomNavigationView;
 
     private List<Contact> contactsList;
@@ -58,6 +58,8 @@ public class ContactsActivity extends BaseCalleeActivity {
         if (!initFromBundle(savedInstanceState)) {
             initFromFetching();
         }
+
+        initFromBundle(savedInstanceState);
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -107,8 +109,6 @@ public class ContactsActivity extends BaseCalleeActivity {
             } else {
                 contactsViewPager.setAdapter(contactsPagerAdapter);
             }
-            // Make sure scroll to the last viewing page before rotation
-            contactsViewPager.setCurrentItem(lastPage);
         });
     }
 
@@ -121,7 +121,6 @@ public class ContactsActivity extends BaseCalleeActivity {
                 Contact contact = (Contact) savedInstanceState.getParcelable("CONTACT" + i);
                 contactsList.add(contact);
             }
-            lastPage = savedInstanceState.getInt("PAGE");
             renderContactsPager();
             return true;
         }
@@ -129,31 +128,33 @@ public class ContactsActivity extends BaseCalleeActivity {
     }
 
     private void initFromFetching() {
-        String myUserId = ((App)getApplication()).getLoginUser().getUserId();
-        Map<String, Boolean> myConnections = ((App)getApplication()).getLoginUser().getConnections();
+        User loginUser = ((App)getApplication()).getLoginUser();
+        if (loginUser != null) {
+            String myUserId = loginUser.getUserId();
+            Map<String, Boolean> myConnections = loginUser.getConnections();
 
-        new Thread(() -> {
-            // Fetch Contacts from Firebase
-            FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
-                    (List<Contact> fetchedContacts) -> {
-                        Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
+            new Thread(() -> {
+                // Fetch Contacts from Firebase
+                FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
+                        (List<Contact> fetchedContacts) -> {
+                            Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
 
-                        // Initialize contactsList member
-                        synchronized (this) {
-                            contactsList = new ArrayList<>();
-                            for (Contact c : fetchedContacts) {
-                                contactsList.add(c);
+                            // Initialize contactsList member
+                            synchronized (this) {
+                                contactsList = new ArrayList<>();
+                                for (Contact c : fetchedContacts) {
+                                    contactsList.add(c);
+                                }
                             }
-                        }
-                        renderContactsPager();
+                            renderContactsPager();
 
-                        Set<String> contactsId = fetchedContacts.stream()
-                                .map(Contact::getContactUserId).collect(Collectors.toSet());
+                            Set<String> contactsId = fetchedContacts.stream()
+                                    .map(Contact::getContactUserId).collect(Collectors.toSet());
 
-                        // Subscribe contacts online status from Agora Rtm (Realtime update)
-                        ((App)getApplication()).rtmSubscribePeer(contactsId);
+                            // Subscribe contacts online status from Agora Rtm (Realtime update)
+                            ((App)getApplication()).rtmSubscribePeer(contactsId);
 
-                        // Query contacts online status from Agora Rtm (one time)
+                            // Query contacts online status from Agora Rtm (one time)
                         /*((App)getApplication()).queryPeerOnlineStatus(contactsId,
                                 new ResultCallback<Map<String, Boolean>>() {
                                     @Override
@@ -173,8 +174,9 @@ public class ContactsActivity extends BaseCalleeActivity {
                                     @Override
                                     public void onFailure(ErrorInfo errorInfo) { }
                                 });*/
-                    });
-        }).start();
+                        });
+            }).start();
+        }
     }
 
     public List<Contact> getContactsList() {
@@ -186,16 +188,7 @@ public class ContactsActivity extends BaseCalleeActivity {
         super.onResume();
         if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);
-            // Make sure scroll to the last viewing page before rotation
-            contactsViewPager.setCurrentItem(lastPage);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Store the last viewing page before rotation
-        lastPage = contactsViewPager.getCurrentItem();
     }
 
 
@@ -206,7 +199,6 @@ public class ContactsActivity extends BaseCalleeActivity {
     }
 
 
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -215,7 +207,6 @@ public class ContactsActivity extends BaseCalleeActivity {
         for (int i = 0; i < size; i++) {
             outState.putParcelable("CONTACT" + i, contactsList.get(i));
         }
-        outState.putInt("PAGE", lastPage);
     }
 
 
