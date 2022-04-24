@@ -18,7 +18,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        bgLayout = findViewById(R.id.layout_homeBackground);
+        bgLayout = findViewById(R.id.frame_homeBackground);
         bgLayout.addView(new GifView(this));
 
         Button loginButton = (Button) findViewById(R.id.loginbtn);
