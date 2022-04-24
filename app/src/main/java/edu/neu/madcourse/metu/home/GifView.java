@@ -27,7 +27,7 @@ public class GifView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(0x00000000);
         super.onDraw(canvas);
         long now = System.currentTimeMillis();
         if (startTime == 0) {
