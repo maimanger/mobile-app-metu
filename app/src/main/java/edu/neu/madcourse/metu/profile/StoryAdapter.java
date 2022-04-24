@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.Utils;
+import edu.neu.madcourse.metu.utils.Utils;
 
 public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryHolder> {
     private List<Story> storyList;
