@@ -14,6 +14,9 @@ public class Connection {
         this.lastMessage = lastMessage;
     }
 
+    public Connection() {
+    }
+
     public ConnectionUser getUser1() {
         return user1;
     }

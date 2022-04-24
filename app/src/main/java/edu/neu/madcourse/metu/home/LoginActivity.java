@@ -2,6 +2,7 @@ package edu.neu.madcourse.metu.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -75,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         TextView linkSignUp = findViewById(R.id.register);
+        linkSignUp.setPaintFlags(linkSignUp.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         linkSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

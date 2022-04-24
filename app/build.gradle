@@ -84,6 +84,8 @@ dependencies {
 
     // Agora RTM
     implementation 'com.github.agorabuilder:rtm-sdk:1.4.1'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
 
 apply plugin: 'com.android.application'

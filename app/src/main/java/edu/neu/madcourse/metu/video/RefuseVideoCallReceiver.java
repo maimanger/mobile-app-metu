@@ -12,9 +12,11 @@ public class RefuseVideoCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int notifId = intent.getIntExtra("NOTIFICATION_ID", 0);
-        NotificationManagerCompat.from(context.getApplicationContext()).cancel(
+        Context appContext = context.getApplicationContext();
+        NotificationManagerCompat.from(appContext).cancel(
                 "VideoCall" + notifId, notifId);
-        ((App)context.getApplicationContext()).refuseCallInvitation();
+        ((App)appContext).refuseCallInvitation();
+        ((App)appContext).setCallNotificationId(-1);
 
     }
 }

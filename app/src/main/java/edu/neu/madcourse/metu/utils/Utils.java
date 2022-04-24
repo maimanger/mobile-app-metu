@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +23,7 @@ public class Utils {
     public static int CALL_CONNECTION_POINT = 2;
     public static int CALL_CONNECTION_ID = 3;
 
-    private static Integer[] filterId = new Integer[]{
+    private static Integer[] filterIdHigh = new Integer[]{
             R.drawable.church_window,
             R.drawable.blue_mosaic,
             R.drawable.bubbles,
@@ -39,21 +42,60 @@ public class Utils {
             R.drawable.light_blue_mosaic,
             -9999};
 
+    private static Integer[] filterIdMid = new Integer[]{
+            R.drawable.church_window,
+            R.drawable.blue_mosaic,
+            R.drawable.bubbles,
+            R.drawable.sparkling,
+            R.drawable.mosaic,
+            R.drawable.symbols_frame,
+            R.drawable.purple_ink_splash,
+            R.drawable.yellow_ink_splash,
+            R.drawable.cherry_blossom,
+            R.drawable.smoke,
+            R.drawable.rainy_window,
+            R.drawable.blue_brush,
+            R.drawable.purple_brush,
+            R.drawable.yellow_brush,
+            R.drawable.yellow_watercolor,
+            R.drawable.light_blue_mosaic};
 
-    private static List<Integer> FILTERS_SET = new ArrayList<>(Arrays.asList(filterId));
+    private static Integer[] filterIdStart = new Integer[] {
+            R.drawable.church_window,
+            R.drawable.blue_mosaic,
+            R.drawable.bubbles,
+            R.drawable.sparkling,
+            R.drawable.mosaic,
+            R.drawable.symbols_frame,
+            R.drawable.purple_ink_splash,
+            R.drawable.yellow_ink_splash,
+    };
+
+    private static List<Integer> FILTERS_SET_HIGH = new ArrayList<>(Arrays.asList(filterIdHigh));
+    private static List<Integer> FILTERS_SET_MID = new ArrayList<>(Arrays.asList(filterIdMid));
+    private static List<Integer> FILTERS_SET_START =  new ArrayList<>(Arrays.asList(filterIdStart));
+
 
     public static int getFiltersSize(int friendLevel) {
-        if (friendLevel > 0 && friendLevel < 2) {
-            return 8;
-        } else if (friendLevel >= 2 && friendLevel < 3) {
-            return FILTERS_SET.size() - 1;
-        } else {
-            return FILTERS_SET.size();
+        switch (friendLevel) {
+            case 1 :
+                return FILTERS_SET_START.size();
+            case 2 :
+                return FILTERS_SET_MID.size();
+            default:
+                return FILTERS_SET_HIGH.size();
         }
     }
 
-    public static int getCurrentFilter(int currentFilterIdx) {
-        return FILTERS_SET.get(currentFilterIdx);
+    public static int getCurrentFilter(int friendLevel, int currentFilterIdx) {
+        switch (friendLevel) {
+            case 1 :
+                return FILTERS_SET_START.get(currentFilterIdx);
+            case 2 :
+                return FILTERS_SET_MID.get(currentFilterIdx);
+            default:
+                return FILTERS_SET_HIGH.get(currentFilterIdx);
+        }
     }
 
 
@@ -102,5 +144,19 @@ public class Utils {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+
+    public static void loadImgUri(String uri, ImageView imageView) {
+        Picasso.get().load(uri).into(imageView);
+    }
+
+    public static Bitmap getBitmapFromUri(String uri) {
+        Bitmap mBitmap = null;
+        try {
+            mBitmap = Picasso.get().load(uri).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mBitmap;
     }
 }

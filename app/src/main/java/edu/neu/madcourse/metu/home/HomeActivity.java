@@ -2,24 +2,24 @@ package edu.neu.madcourse.metu.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.SettingActivity;
 
 public class HomeActivity extends AppCompatActivity {
+    FrameLayout bgLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        bgLayout = findViewById(R.id.layout_homeBackground);
+        bgLayout.addView(new GifView(this));
 
         Button loginButton = (Button) findViewById(R.id.loginbtn);
         loginButton.setOnClickListener(new View.OnClickListener() {

@@ -1,12 +1,12 @@
 package edu.neu.madcourse.metu.contacts;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,18 +15,21 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.Contact;
-import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
 
 
 public class ContactsActivity extends BaseCalleeActivity {
@@ -36,9 +39,7 @@ public class ContactsActivity extends BaseCalleeActivity {
     private TabLayout contactsTabs;
     private ProgressBar loadingProgress;
     private Handler handler = new Handler();
-    private int lastPage = 0;
     BottomNavigationView bottomNavigationView;
-
 
     private List<Contact> contactsList;
 
@@ -54,8 +55,11 @@ public class ContactsActivity extends BaseCalleeActivity {
         contactsTabs.getTabAt(0).setText("Friends");
         contactsTabs.getTabAt(1).setText("Mets");
 
-        initDataFromBundle(savedInstanceState);
-        initContactsPager(savedInstanceState);
+        if (!initFromBundle(savedInstanceState)) {
+            initFromFetching();
+        }
+
+        initFromBundle(savedInstanceState);
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -92,30 +96,24 @@ public class ContactsActivity extends BaseCalleeActivity {
 
 
 
-    private void initContactsPager(Bundle savedInstanceState) {
-        new Thread(() -> {
-            if (contactsList == null) {
-                fetchContactsList();
+    private void renderContactsPager() {
+        runOnUiThread(() -> {
+            loadingProgress.setVisibility(ProgressBar.INVISIBLE);
+            if (contactsPagerAdapter == null) {
+                contactsPagerAdapter = new ContactsPagerAdapter(ContactsActivity.this);
+                contactsViewPager.setAdapter(contactsPagerAdapter);
+                new TabLayoutMediator(contactsTabs, contactsViewPager,
+                        (tab, position) ->
+                                tab.setText(contactsPagerAdapter.getTabTitle(position)))
+                        .attach();
+            } else {
+                contactsViewPager.setAdapter(contactsPagerAdapter);
             }
-            if (contactsList != null) {
-                handler.post(() -> {
-                    loadingProgress.setVisibility(ProgressBar.INVISIBLE);
-                    if (contactsPagerAdapter == null) {
-                        contactsPagerAdapter = new ContactsPagerAdapter(this);
-                        contactsViewPager.setAdapter(contactsPagerAdapter);
-                        new TabLayoutMediator(contactsTabs, contactsViewPager,
-                                (tab, position) ->
-                                        tab.setText(contactsPagerAdapter.getTabTitle(position)))
-                                .attach();
-                    }
-                    // Make sure scroll to the last viewing page before rotation
-                    contactsViewPager.setCurrentItem(lastPage);
-                });
-            }
-        }).start();
+        });
     }
 
-    private void initDataFromBundle(Bundle savedInstanceState) {
+
+    private boolean initFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
             int size = savedInstanceState.getInt("SIZE");
             contactsList = new ArrayList<>();
@@ -123,38 +121,61 @@ public class ContactsActivity extends BaseCalleeActivity {
                 Contact contact = (Contact) savedInstanceState.getParcelable("CONTACT" + i);
                 contactsList.add(contact);
             }
-            lastPage = savedInstanceState.getInt("PAGE");
+            renderContactsPager();
+            return true;
         }
+        return false;
     }
 
-    // TODO: Implement database fetching
-    private void fetchContactsList() {
-        contactsList = new ArrayList<>();
-        for (int i = 1; i < 21; i++) {
-            Contact newFriend = new Contact(
-                    new Timestamp(System.currentTimeMillis()).toString(),
-                    i + "@abc.com",
-                    "Friend Name" + i,
-                    i % 2 == 0,
-                    i,
-                    "friendavatar.png");
-            contactsList.add(newFriend);
-        }
-        for (int i = 0; i < 20; i++) {
-            Contact newMet = new Contact(
-                    new Timestamp(System.currentTimeMillis()).toString(),
-                    i + "@abc.com",
-                    "Met Name" + i,
-                    i % 2 == 0,
-                    0,
-                    "metavatar.png");
-            contactsList.add(newMet);
-        }
-        // TODO: Only for testing, will be deleted after implementing database fetching
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void initFromFetching() {
+        User loginUser = ((App)getApplication()).getLoginUser();
+        if (loginUser != null) {
+            String myUserId = loginUser.getUserId();
+            Map<String, Boolean> myConnections = loginUser.getConnections();
+
+            new Thread(() -> {
+                // Fetch Contacts from Firebase
+                FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
+                        (List<Contact> fetchedContacts) -> {
+                            Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
+
+                            // Initialize contactsList member
+                            synchronized (this) {
+                                contactsList = new ArrayList<>();
+                                for (Contact c : fetchedContacts) {
+                                    contactsList.add(c);
+                                }
+                            }
+                            renderContactsPager();
+
+                            Set<String> contactsId = fetchedContacts.stream()
+                                    .map(Contact::getContactUserId).collect(Collectors.toSet());
+
+                            // Subscribe contacts online status from Agora Rtm (Realtime update)
+                            ((App)getApplication()).rtmSubscribePeer(contactsId);
+
+                            // Query contacts online status from Agora Rtm (one time)
+                        /*((App)getApplication()).queryPeerOnlineStatus(contactsId,
+                                new ResultCallback<Map<String, Boolean>>() {
+                                    @Override
+                                    public void onSuccess(Map<String, Boolean> peerOnlineStatus) {
+                                        Log.d(TAG, "onSuccess: query peers online status");
+
+                                        // Initialize contactsList member
+                                        contactsList = new ArrayList<>();
+                                        for (Contact c : fetchedContacts) {
+                                            c.setOnline(peerOnlineStatus.getOrDefault(
+                                                    c.getContactUserId(), false));
+                                            contactsList.add(c);
+                                        }
+                                        renderContactsPager();
+                                    }
+
+                                    @Override
+                                    public void onFailure(ErrorInfo errorInfo) { }
+                                });*/
+                        });
+            }).start();
         }
     }
 
@@ -167,16 +188,7 @@ public class ContactsActivity extends BaseCalleeActivity {
         super.onResume();
         if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);
-            // Make sure scroll to the last viewing page before rotation
-            contactsViewPager.setCurrentItem(lastPage);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Store the last viewing page before rotation
-        lastPage = contactsViewPager.getCurrentItem();
     }
 
 
@@ -195,12 +207,26 @@ public class ContactsActivity extends BaseCalleeActivity {
         for (int i = 0; i < size; i++) {
             outState.putParcelable("CONTACT" + i, contactsList.get(i));
         }
-        outState.putInt("PAGE", lastPage);
     }
 
 
     @Override
     public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
         super.onPeersOnlineStatusChanged(map);
+        boolean changed = false;
+        synchronized (this) {
+            for (Contact contact : contactsList) {
+                if (map.containsKey(contact.getContactUserId())) {
+                    contact.setOnline(map.get(contact.getContactUserId()) == 0);
+                    changed = true;
+                }
+            }
+        }
+        if (changed) {
+            runOnUiThread(() -> {
+                contactsViewPager.setAdapter(null);
+                contactsViewPager.setAdapter(contactsPagerAdapter);
+            });
+        }
     }
 }
