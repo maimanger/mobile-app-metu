@@ -63,6 +63,7 @@ public class ContactsActivity extends AppCompatActivity {
                                         tab.setText(contactsPagerAdapter.getTabTitle(position)))
                                 .attach();
                     }
+                    // Make sure scroll to the last viewing page before rotation
                     contactsViewPager.setCurrentItem(lastPage);
                 });
             }
@@ -119,6 +120,7 @@ public class ContactsActivity extends AppCompatActivity {
         super.onResume();
         if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);
+            // Make sure scroll to the last viewing page before rotation
             contactsViewPager.setCurrentItem(lastPage);
         }
     }
@@ -126,6 +128,7 @@ public class ContactsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        // Store the last viewing page before rotation
         lastPage = contactsViewPager.getCurrentItem();
     }
 

@@ -37,7 +37,6 @@ public class VideoActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
 
-    private FloatingActionButton leaveBtn;
     private FloatingActionButton muteBtn;
     private FloatingActionButton unmuteBtn;
     private ShapeableImageView videoAvatar;
