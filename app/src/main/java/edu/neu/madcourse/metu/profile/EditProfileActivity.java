@@ -2,53 +2,93 @@ package edu.neu.madcourse.metu.profile;
 
 //package com.example.handyopinion;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    EditText etName, etEmail, etLocation, etBirthday, etGender;
+    EditText etUsername, etEmail, etLocation, etAge, etGender;
+    private Uri imageFilePath;
+    private Uri imageFirebaseUri;
+    private Bitmap avatarBitmap;
+    private ActivityResultLauncher<Intent> uploadActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        String userId = getIntent().getExtras().getString("userId");
         viewInitializations();
+
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
+//        ImageView avatarImageView = findViewById(R.id.imageProfile);
+        uploadActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
+                            imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
+
+                            Log.e("onCreate", userId);
+                            FirebaseService.getInstance().updateUserAvatar(userId, imageFirebaseUri.toString());
+                            try {
+                                avatarBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageFilePath);
+                                uploadImageView.setImageBitmap(avatarBitmap);
+                                Log.e("imageFilePath_: ", "avatar updated");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
 
         uploadImageView.setOnClickListener(view -> {
             Intent intent = new Intent(EditProfileActivity.this, UploadActivity.class);
-            startActivity(intent);
+            uploadActivityResultLauncher.launch(intent);
+
         });
     }
 
     void viewInitializations() {
-        etName = findViewById(R.id.et_name);
+        etUsername = findViewById(R.id.et_username);
         etEmail = findViewById(R.id.et_email);
         etLocation = findViewById(R.id.et_location);
-        etBirthday = findViewById(R.id.et_birthday);
+        etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
-
-        // To show back button in actionbar
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     // Checking if the input in form is valid
     boolean validateInput() {
-        if (etName.getText().toString().equals("")) {
-            etName.setError("Please Enter Name");
+        if (etUsername.getText().toString().equals("")) {
+            etUsername.setError("Please Enter Username");
             return false;
         }
 
@@ -62,8 +102,8 @@ public class EditProfileActivity extends AppCompatActivity {
             return false;
         }
 
-        if (etBirthday.getText().toString().equals("")) {
-            etBirthday.setError("Please Enter Your Birthday");
+        if (etAge.getText().toString().equals("")) {
+            etAge.setError("Please Enter Your Age");
             return false;
         }
 
@@ -87,22 +127,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
     // Hook Click Event
 
-    public void performEditProfile (View v) {
+    public void performEditProfile(View v) {
         if (validateInput()) {
-
             // Input is valid, here send data to your server
-
-            String name = etName.getText().toString();
+            String username = etUsername.getText().toString();
             String email = etEmail.getText().toString();
             String location = etLocation.getText().toString();
-            String birthday = etBirthday.getText().toString();
+            Integer age = Integer.parseInt(etAge.getText().toString());
             String gender = etGender.getText().toString();
 
-            Toast.makeText(this,"Profile Update Successfully",Toast.LENGTH_SHORT).show();
-            // Here you can call you API
-
+            // Write user data to firebase
+            FirebaseService.getInstance().updateUserProfile(username, email, location, age, gender);
+            Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
-
 }
 

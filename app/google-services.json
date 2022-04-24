@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1051254796603",
+    "firebase_url": "https://mobile-app-metu-default-rtdb.firebaseio.com",
     "project_id": "mobile-app-metu",
     "storage_bucket": "mobile-app-metu.appspot.com"
   },

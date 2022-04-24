@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.Utils;
 
 public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryHolder> {
     private List<Story> storyList;
@@ -46,8 +47,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryHolder>
     @Override
     public void onBindViewHolder(@NonNull StoryHolder holder, int position) {
         Story currentStory = storyList.get(position);
-        holder.storyImage.setImageResource(currentStory.getStoryImageSrc());
-
+        new Utils.DownloadImageTask(holder.storyImage).execute(currentStory.getStoryImageUri());
     }
 
     @Override

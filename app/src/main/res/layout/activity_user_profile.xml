@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorBackground"
+    android:background="#ffffff"
     android:layout_height="match_parent"
     tools:context=".profile.UserProfileActivity">
+    <include layout="@layout/layout_top" />
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,7 +20,7 @@
             android:id="@+id/viewHeader"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@drawable/header_background"
+            android:background="@drawable/background_monterey"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <FrameLayout
@@ -30,17 +35,57 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="15dp"
-                app:cardBackgroundColor="@color/colorWhite"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="10dp">
+                android:layout_marginBottom="25dp"
+                app:cardBackgroundColor="#ffffff"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                >
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/user_info_constraint_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <FrameLayout
+                        android:id="@+id/star_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="32dp"
+                        app:layout_constraintStart_toStartOf="@id/user_info_constraint_layout"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout" />
+
+                    <FrameLayout
+                        android:id="@+id/like_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="80dp"
+                        android:layout_marginTop="32dp"
+                        app:layout_constraintStart_toStartOf="@id/user_info_constraint_layout"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout" />
+
+                    <FrameLayout
+                        android:id="@+id/chat_button"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="80dp"
+                        android:layout_marginTop="32dp"
+                        />
+
+                    <FrameLayout
+                        android:id="@+id/video_button"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="32dp"
+                        />
+
                     <TextView
-                        android:id="@+id/textName"
+                        android:id="@+id/text_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="70dp"
@@ -53,24 +98,33 @@
                         tools:layout_editor_absoluteX="0dp" />
 
                     <TextView
-                        android:id="@+id/textAbout"
+                        android:id="@+id/text_age"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/_25_years"
                         android:textColor="@color/colorTextSecondary"
                         android:textSize="15sp"
-                        app:layout_constraintTop_toBottomOf="@id/textName" />
+                        app:layout_constraintTop_toBottomOf="@id/text_username" />
 
                     <TextView
-                        android:id="@+id/textPlace"
+                        android:id="@+id/text_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/boston_ma"
                         android:textColor="@color/colorTextSecondary"
                         android:textSize="15sp"
-                        app:layout_constraintTop_toBottomOf="@id/textAbout" />
+                        app:layout_constraintTop_toBottomOf="@id/text_age" />
+
+                    <FrameLayout
+                        android:id="@+id/edit_profile_button_fragment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/text_location"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -81,17 +135,28 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageProfile"
-            android:layout_width="238dp"
-            android:layout_height="144dp"
+            android:layout_width="252dp"
+            android:layout_height="138dp"
             android:src="@drawable/profile_picture"
             app:layout_constraintBottom_toTopOf="@id/layoutProfile"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/layoutProfile"
             app:layout_constraintVertical_bias="0.673"
             app:riv_border_width="1dp"
             app:riv_oval="true" />
+
+<!--        <com.google.android.material.imageview.ShapeableImageView-->
+<!--            android:id="@+id/image_contactAvatar"-->
+<!--            android:layout_width="65dp"-->
+<!--            android:layout_height="65dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:shapeAppearanceOverlay="@style/Circular"-->
+<!--            tools:srcCompat="@tools:sample/avatars" />-->
 
         <TextView
             android:id="@+id/textTags"
@@ -101,21 +166,31 @@
             android:layout_marginTop="5dp"
             android:text="@string/_tags"
             android:textAllCaps="true"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="@color/purple_500"
             android:textStyle="bold"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutProfile"/>
 
+        <FrameLayout
+            android:id="@+id/add_tag_button_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="256dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textTags"
+            app:layout_constraintTop_toTopOf="@id/textTags" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tag_recycler_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal"
             app:layout_constraintTop_toBottomOf="@id/textTags"
             app:layout_constraintStart_toStartOf="parent" />
 
-<!--        <LinearLayout-->
+        <!--        <LinearLayout-->
 <!--            android:id="@+id/layoutTags"-->
 <!--            android:layout_marginStart="25dp"-->
 <!--            android:layout_marginEnd="25dp"-->
@@ -172,6 +247,24 @@
 
 <!--        </LinearLayout>-->
 
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/add_tag_button"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tag_recycler_view"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.91"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/tag_recycler_view"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintVertical_bias="0.612"-->
+<!--            app:srcCompat="@android:drawable/ic_input_add" />-->
+
+
+
         <TextView
             android:id="@+id/textStory"
             android:layout_width="wrap_content"
@@ -180,11 +273,19 @@
             android:layout_marginTop="20dp"
             android:text="@string/story"
             android:textAllCaps="true"
-            android:textColor="@color/colorTextPrimary"
+            android:textColor="@color/purple_500"
             android:textStyle="bold"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tag_recycler_view"/>
+
+        <FrameLayout
+            android:id="@+id/add_story_button_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textStory"
+            app:layout_constraintTop_toTopOf="@id/textStory"/>
 
 <!--        <HorizontalScrollView-->
 <!--            android:id="@+id/layoutStory"-->
@@ -195,24 +296,24 @@
 <!--            app:layout_constraintTop_toBottomOf="@id/textStory"-->
 <!--            android:layout_marginTop="8dp">-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal">-->
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:orientation="horizontal">-->
 
-<!--                <include layout="@layout/story_layout_1" />-->
-<!--                <include layout="@layout/story_layout_2" />-->
+        <!--                <include layout="@layout/story_layout_1" />-->
+        <!--                <include layout="@layout/story_layout_2" />-->
 
-<!--                <include layout="@layout/story_layout_3" />-->
+        <!--                <include layout="@layout/story_layout_3" />-->
 
-<!--                <include layout="@layout/story_layout_4" />-->
+        <!--                <include layout="@layout/story_layout_4" />-->
 
-<!--            </LinearLayout>-->
-<!--        </HorizontalScrollView>-->
+        <!--            </LinearLayout>-->
+        <!--        </HorizontalScrollView>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/story_recycler_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal"
             app:layout_constraintTop_toBottomOf="@id/textStory"
@@ -247,69 +348,19 @@
 
 
 <!--        </LinearLayout>-->
+
+
+
+
         <FrameLayout
-            android:id="@+id/like_bar"
+            android:id="@+id/videoo_button"
             app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/layoutBottomButtons"-->
-<!--            android:layout_marginStart="25dp"-->
-<!--            android:layout_marginEnd="25dp"-->
-<!--            android:layout_marginTop="50dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/like_bar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:gravity="center"-->
-<!--            android:showDividers="middle"-->
-<!--            android:divider="@drawable/empty_tall_divider">-->
-
-<!--            <com.makeramen.roundedimageview.RoundedImageView-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:src="@drawable/person"-->
-<!--                app:riv_corner_radius="6dp" />-->
-
-<!--            <com.makeramen.roundedimageview.RoundedImageView-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:src="@drawable/history"-->
-<!--                app:riv_corner_radius="6dp" />-->
-
-<!--            <com.makeramen.roundedimageview.RoundedImageView-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:src="@drawable/community"-->
-<!--                app:riv_corner_radius="6dp" />-->
-
-<!--            <com.makeramen.roundedimageview.RoundedImageView-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:src="@drawable/two_chats"-->
-<!--                app:riv_corner_radius="6dp" />-->
-
-<!--        </LinearLayout>-->
-
         <FrameLayout
-            android:id="@+id/edit_profile_button_fragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="300dp"
-            android:layout_marginTop="200dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-        <FrameLayout
-            android:id="@+id/like_bar_public"
+            android:id="@+id/chatt_button"
             app:layout_constraintTop_toBottomOf="@id/story_recycler_view"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
@@ -317,4 +368,16 @@
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@drawable/selector_menu"
+        app:itemTextColor="@drawable/selector_menu"
+        app:menu="@menu/menu" />
+
+</RelativeLayout>

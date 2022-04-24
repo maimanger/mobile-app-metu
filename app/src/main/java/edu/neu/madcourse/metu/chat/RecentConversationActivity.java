@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +22,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.contacts.ContactsActivity;
+import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.models.ChatItem;
 import edu.neu.madcourse.metu.contacts.daos.RecentConversation;
 import edu.neu.madcourse.metu.contacts.daos.User;
+import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
 import edu.neu.madcourse.metu.utils.GenderUtils;
@@ -37,6 +45,8 @@ public class RecentConversationActivity extends AppCompatActivity {
 
     // for multi threading
     private ExecutorService executorService;
+
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +70,37 @@ public class RecentConversationActivity extends AppCompatActivity {
 
         // initialize data view
         init(savedInstanceState);
+
+        // actionbar
+        TextView toolbar = findViewById(R.id.toolbartag);
+        toolbar.setText("Chats");
+
+        // bottom navigation
+        bottomNavigationView = findViewById(R.id.bottom_navi);
+        bottomNavigationView.setSelectedItemId(R.id.menu_chats);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.menu_explore:
+                        startActivity(new Intent(getApplicationContext(), ExploringActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.menu_contacts:
+                        startActivity(new Intent(getApplicationContext(), ContactsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.menu_chats:
+                        return true;
+                    case R.id.menu_me:
+                        startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
 
     }
 
