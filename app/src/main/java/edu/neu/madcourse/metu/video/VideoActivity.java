@@ -56,29 +56,34 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
     private TextView loadingMsg;
 
     private boolean isPeerJoined = false;
+    private boolean isCaller = false;
     private Integer currentFilterIdx;
 
     // TODO: channelName should be the Connection Id,
     //  and connectionPoint, nickname, avatarUrl should be fetched from database
     private String connectionId;
     private int connectionPoint;
+    private int connectionLevel;
     private String friendNickname;
     private String friendAvatarUrl;
+
 
     private RtcEngine mRtcEngine;
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         @Override
         // Listen for the remote user joining the channel to get the uid of the user.
         public void onUserJoined(int uid, int elapsed) {
+            // TODO: caller must update video chat history and connection point in Firebase
             isPeerJoined = true;
             // Set up filters
-            int filterId = Utils.getCurrentFilter(currentFilterIdx);
+            Log.d(TAG, "onUserJoined: currentFilterIdx = " + currentFilterIdx);
+            int filterId = Utils.getCurrentFilter(connectionLevel, currentFilterIdx);
             runOnUiThread(() -> {
                 setupRemoteVideo(uid);
                 loadingVideoProgress.setVisibility(View.INVISIBLE);
                 loadingMsg.setVisibility(View.INVISIBLE);
                 if (filterId == -9999) {
-                    // Transparent
+                    // Transparent filter
                     filterFrame.setBackgroundColor(0x00000000);
                 } else {
                     filterFrame.setBackgroundResource(filterId);
@@ -118,29 +123,34 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
     }
 
     private void setupLocalVideo() {
-        FrameLayout videoContainer = findViewById(R.id.local_video_view_container);
-        videoContainer.setClipToOutline(true);
+        runOnUiThread(() -> {
+            FrameLayout videoContainer = findViewById(R.id.local_video_view_container);
+            videoContainer.setClipToOutline(true);
 
-        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
-        SurfaceView localVideoSurface = RtcEngine.CreateRendererView(getBaseContext());
-        localVideoSurface.setBackgroundResource(R.drawable.rounded_shape_transparent);
-        localVideoSurface.setZOrderMediaOverlay(true);
-        localVideoSurface.setClipToOutline(true);
-        videoContainer.addView(localVideoSurface);
-        localVideoSurface.setLayoutParams(new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        // Pass the SurfaceView object to Agora so that it renders the local video.
-        // leave the uid parameter blank so that the SDK can handle creating a dynamic ID for each user
-        mRtcEngine.setupLocalVideo(new VideoCanvas(localVideoSurface, VideoCanvas.RENDER_MODE_FILL, 0));
+            // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
+            SurfaceView localVideoSurface = RtcEngine.CreateRendererView(getBaseContext());
+            localVideoSurface.setBackgroundResource(R.drawable.rounded_shape_transparent);
+            localVideoSurface.setZOrderMediaOverlay(true);
+            localVideoSurface.setClipToOutline(true);
+            videoContainer.addView(localVideoSurface);
+            localVideoSurface.setLayoutParams(new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            // Pass the SurfaceView object to Agora so that it renders the local video.
+            // leave the uid parameter blank so that the SDK can handle creating a dynamic ID for each user
+            mRtcEngine.setupLocalVideo(new VideoCanvas(localVideoSurface, VideoCanvas.RENDER_MODE_FILL, 0));
+        });
+
     }
 
     private void setupRemoteVideo(int uid) {
-        FrameLayout container = findViewById(R.id.remote_video_view_container);
-        SurfaceView remoteVideoView = RtcEngine.CreateRendererView(getBaseContext());
-        container.addView(remoteVideoView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(remoteVideoView, VideoCanvas.RENDER_MODE_FIT, uid));
-        //If the video degrades, the engine reverts to audio only
-        mRtcEngine.setRemoteSubscribeFallbackOption(io.agora.rtc.Constants.STREAM_FALLBACK_OPTION_AUDIO_ONLY);
+        runOnUiThread(() -> {
+            FrameLayout container = findViewById(R.id.remote_video_view_container);
+            SurfaceView remoteVideoView = RtcEngine.CreateRendererView(getBaseContext());
+            container.addView(remoteVideoView);
+            mRtcEngine.setupRemoteVideo(new VideoCanvas(remoteVideoView, VideoCanvas.RENDER_MODE_FIT, uid));
+            //If the video degrades, the engine reverts to audio only
+            mRtcEngine.setRemoteSubscribeFallbackOption(io.agora.rtc.Constants.STREAM_FALLBACK_OPTION_AUDIO_ONLY);
+        });
     }
 
 
@@ -161,8 +171,8 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         if (requestCode == PERMISSION_REQ_ID) {
             if (grantResults.length < 2 || grantResults[0] != PackageManager.PERMISSION_GRANTED ||
                     grantResults[1] != PackageManager.PERMISSION_GRANTED) {
-                showLongToast("Need permissions " + Manifest.permission.RECORD_AUDIO +
-                        "/" + Manifest.permission.CAMERA);
+                showLongToast("Sorry, MetU needs your permissions to continue video chat.");
+                // TODO: cancel localInvitation, if exits any
                 finish();
                 return;
             }
@@ -202,7 +212,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     public void onClickChangeFilter(View view) {
         currentFilterIdx = (currentFilterIdx + 1) % (Utils.getFiltersSize(connectionPoint));
-        int filterId = Utils.getCurrentFilter(currentFilterIdx);
+        int filterId = Utils.getCurrentFilter(connectionLevel, currentFilterIdx);
         if (filterId != -9999) {
             filterFrame.setBackgroundResource(filterId);
         } else {
@@ -237,7 +247,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         initVideoUI();
 
         // Create random filter based on friendLevel
-        if (Utils.calculateFriendLevel(connectionPoint) > 2) {
+        if (connectionLevel > 2) {
             currentFilterIdx = Utils.getFiltersSize(connectionPoint) - 1;
         } else {
             currentFilterIdx = new Random().nextInt(Utils.getFiltersSize(connectionPoint));
@@ -258,6 +268,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             new Thread(() -> {
                 int notifId = getIntent().getIntExtra("NOTIFICATION_ID", 0);
                 NotificationManagerCompat.from(this).cancel("VideoCall" + notifId, notifId);
+                ((App) getApplication()).setCallNotificationId(-1);
             }).start();
         }
 
@@ -267,18 +278,23 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             friendAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
             connectionPoint = Integer.parseInt(Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_POINT));
             connectionId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_ID);
+            connectionPoint = Utils.calculateFriendLevel(connectionPoint);
             ((App) getApplication()).acceptCallInvitation();
+            Log.d(TAG, "calleeRoleInit: connectionPoint = " + connectionPoint);
         }
     }
 
     private void callerRoleInit() {
         if (getIntent().hasExtra("CALLEE_ID")) {
+            isCaller = true;
             String calleeId = getIntent().getStringExtra("CALLEE_ID");
             friendNickname = getIntent().getStringExtra("CALLEE_NAME");
             friendAvatarUrl = getIntent().getStringExtra("CALLEE_AVATAR");
             connectionPoint = getIntent().getIntExtra("CONNECTION_POINT", 1);
             connectionId = getIntent().getStringExtra("CONNECTION_ID");
+            connectionPoint = Utils.calculateFriendLevel(connectionPoint);
             ((App)getApplication()).sendCallInvitation(calleeId, connectionPoint, connectionId);
+            Log.d(TAG, "callerRoleInit: connectionPoint = " + connectionPoint);
         }
     }
 
@@ -287,7 +303,8 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             videoNickName.setText(friendNickname);
             videoFriendLevel.setText(Integer.toString(Utils.calculateFriendLevel(connectionPoint)));
             // TODO: VideoAvatar should be fetched from Firebase
-            videoAvatar.setImageResource(R.drawable.user_avatar);
+            Utils.loadImgUri(friendAvatarUrl, videoAvatar);
+            //videoAvatar.setImageResource(R.drawable.user_avatar);
         });
     }
 
@@ -311,6 +328,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             while (wait - start <= 40000 && !isPeerJoined) {
                 wait = System.currentTimeMillis();
             }
+
             runOnUiThread(() -> {
                 loadingMsg.setText("No answer...");
             });
@@ -335,7 +353,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     @Override
     public void onLocalInvitationAccepted(LocalInvitation localInvitation, String s) {
-        // TODO: update video chat history and connection point in Firebase
+
         ((App) getApplication()).setLocalInvitation(null);
     }
 
@@ -371,7 +389,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         // Currently in a video chat, refuse the remote invitation automatically
         ((App) getApplication()).getRtmCallManager().refuseRemoteInvitation(remoteInvitation, null);
         // Send notification to remind of missed call
-        /*((App)getApplication()).sendCanceledCallNotification(remoteInvitation);*/
+        ((App)getApplication()).sendCanceledCallNotification(remoteInvitation);
     }
 
     @Override
@@ -386,7 +404,8 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     @Override
     public void onRemoteInvitationCanceled(RemoteInvitation remoteInvitation) {
-
+        ((App)getApplication()).setRemoteInvitation(null);
+        finish();
     }
 
     @Override

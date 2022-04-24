@@ -67,12 +67,13 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
     protected void setupRefuseDialogBtn() {
         FloatingActionButton btnRefuse = callInvitationDialog.findViewById(R.id.btn_callDialog_refuse);
         btnRefuse.setOnClickListener((View view) -> {
+            Log.d(TAG, "dialog refuse");
             dismissDialogAndVibrator();
             ((App) getApplication()).refuseCallInvitation();
         });
     }
 
-    protected void showCallDialogAndVibrator(String callerName, String callerAvatarUrl) {
+    protected void showCallDialogAndVibrator(String callerName, String callerAvatarUri) {
         runOnUiThread(() -> {
             callInvitationVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             callInvitationDialog = new Dialog(this, R.style.DialogStyle);
@@ -91,7 +92,8 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
 
             // TODO: update callerAvatar based on image url
             ShapeableImageView callerAvatarImg = callInvitationDialog.findViewById(R.id.image_callDialog_callerAvatar);
-            callerAvatarImg.setImageResource(R.drawable.user_avatar);
+            Utils.loadImgUri(callerAvatarUri, callerAvatarImg);
+            //callerAvatarImg.setImageResource(R.drawable.user_avatar);
             TextView callerNameText = callInvitationDialog.findViewById(R.id.text_callDialog_callerName);
             callerNameText.setText(callerName);
 
@@ -112,7 +114,6 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
             });
         }
     }
-
 
 
     @Override
@@ -149,8 +150,8 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
         // Otherwise show incoming call dialog
         if (!app.sendCallNotification()) {
             String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
-            String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
-            showCallDialogAndVibrator(callerName, callerAvatarUrl);
+            String callerAvatarUri = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
+            showCallDialogAndVibrator(callerName, callerAvatarUri);
         }
     }
 
@@ -177,7 +178,10 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
         dismissDialogAndVibrator();
 
         // Send missed call notification
-        ((App) getApplication()).sendCanceledCallNotification(remoteInvitation);
+        if (remoteInvitation.getState() == 5) {
+            ((App) getApplication()).sendCanceledCallNotification(remoteInvitation);
+        }
+
 
         ((App) getApplication()).setRemoteInvitation(null);
     }

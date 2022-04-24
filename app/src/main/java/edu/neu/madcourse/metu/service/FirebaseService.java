@@ -128,8 +128,7 @@ public class FirebaseService {
 
     public void fetchContacts(String userId, Map<String, Boolean> connections,
                               DataFetchCallback<List<Contact>> callback) {
-
-        ValueEventListener eventListener = new ValueEventListener() {
+        databaseRef.child("connections").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Contact> fetchedContacts = new ArrayList<>();
@@ -158,10 +157,8 @@ public class FirebaseService {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-        };
-        databaseRef.child("connections").addValueEventListener(eventListener);
+        });
     }
 
 

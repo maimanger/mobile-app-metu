@@ -9,8 +9,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,8 +52,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private boolean isActivityChangingConfigurations = false;
     private String currActivityName;
 
+
+
     // Call invitation function members
     private int callNotificationId = -1;
+    private List<Integer> canceledCallNotificationIds = new ArrayList<>();
     private RemoteInvitation remoteInvitation;
     private LocalInvitation localInvitation;
     private RtmClient rtmClient;
@@ -67,7 +69,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private String userId;
     private String userNickname;
     private String userAvatarUrl = "https://" + userNickname + ".png";
-    private Map<String, Integer> peersOnlineStatus;
+    /*private Map<String, Integer> peersOnlineStatus;*/
 
 
 
@@ -209,7 +211,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         registerActivityLifecycleCallbacks(this);
 
         agoraEventListener = new AgoraEventListener();
-        peersOnlineStatus = new HashMap<>();
+        //peersOnlineStatus = new HashMap<>();
 
         try {
             rtmClient = RtmClient.createInstance(
@@ -299,10 +301,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void sendCanceledCallNotification(RemoteInvitation remoteInvitation) {
         String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
-        // TODO: Fetch avatar bitmap from Firebase
         String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
-        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bubbles, null);
-        Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+        Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
 
         // Register the new channel with the system
         NotificationChannel channel = new NotificationChannel(
@@ -320,27 +320,30 @@ public class App extends Application implements Application.ActivityLifecycleCal
         Intent dismissIntent = new Intent(this, DismissCanceledCallNotifReceiver.class);
         dismissIntent.putExtra("NOTIFICATION_ID", notifId);
         PendingIntent pendingDismissIntent =PendingIntent.getBroadcast(
-                this, 0, dismissIntent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+                this, notifId, dismissIntent, 0);
 
-        // TODO: Go to caller Profile (LIU XIN: How to enter friend's profile?)
+        // TODO: Go to caller Profile (REMEMBER: App.removeCanceledCallNotificationId(notifId))
         Intent contentIntent = new Intent(this, UserProfileActivity.class);
-        contentIntent.putExtra("NOTIFICATION_ID", notifId);
+        //contentIntent.putExtra("NOTIFICATION_ID", notifId);
         PendingIntent pendingContentIntent =PendingIntent.getActivity(
-                this, 0, contentIntent, 0);
+                this, notifId * 2, contentIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 this,
                 "CanceledVideoCallNotification")
                 .setContentTitle("Missed video call")
-                .setContentText(callerName + " sent you a video chat invitation")
-                .setSmallIcon(R.drawable.metu_icon)
+                .setContentText("You have a missed video invitation")
+                .setSmallIcon(R.drawable.ic_launcher_metu_foreground)
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
+                .setGroup("CanceledVideoCallNotification")
+                .setGroupSummary(canceledCallNotificationIds.isEmpty())
                 .setContentIntent(pendingContentIntent)
-                .addAction(R.drawable.metu_icon, "Dismiss", pendingDismissIntent);
+                .addAction(R.drawable.ic_launcher_metu_foreground, "Dismiss", pendingDismissIntent);
 
         Notification notif = builder.build();
         NotificationManagerCompat.from(this).notify("CanceledVideoCall" + notifId, notifId, notif);
+        canceledCallNotificationIds.add(notifId);
     }
 
 
@@ -349,10 +352,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public boolean sendCallNotification() {
         if (foregroundActivityCount == 0) {
             String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
-            // TODO: Fetch avatar bitmap from Firebase
             String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
-            Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bubbles, null);
-            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+            Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
 
             // Register the new channel with the system
             NotificationChannel channel = new NotificationChannel(
@@ -371,33 +372,31 @@ public class App extends Application implements Application.ActivityLifecycleCal
             Intent refuseIntent = new Intent(this, RefuseVideoCallReceiver.class);
             refuseIntent.putExtra("NOTIFICATION_ID", notifId);
             PendingIntent pendingRefuseIntent =PendingIntent.getBroadcast(
-                    this, 0, refuseIntent,
-                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+                    this, notifId, refuseIntent, 0);
 
             Intent acceptIntent = new Intent(this, VideoActivity.class);
             acceptIntent.putExtra("NOTIFICATION_ID", notifId);
             PendingIntent pendingAcceptIntent =PendingIntent.getActivity(
-                    this, 0, acceptIntent,
-                    PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+                    this, notifId * 2, acceptIntent, 0);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(
                     this,
                     "VideoCallNotification")
                     .setContentTitle(callerName)
                     .setContentText("is inviting you for a video chat")
-                    .setSmallIcon(R.drawable.metu_icon)
+                    .setSmallIcon(R.drawable.ic_launcher_metu_foreground)
                     .setLargeIcon(bitmap)
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE)
-                    .addAction(R.drawable.metu_icon, "Refuse", pendingRefuseIntent)
-                    .addAction(R.drawable.metu_icon, "Accept", pendingAcceptIntent);
+                    .addAction(R.drawable.ic_launcher_metu_foreground, "Refuse", pendingRefuseIntent)
+                    .addAction(R.drawable.ic_launcher_metu_foreground, "Accept", pendingAcceptIntent);
 
             Notification notif = builder.build();
             Log.d("App", "sent notification: " + channel.toString());
             NotificationManagerCompat.from(this).notify("VideoCall" + notifId, notifId, notif);
-
+            // Mark the callNotificationId
             callNotificationId = notifId;
             return true;
         }
@@ -405,11 +404,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-    // TODO: userNickname, userAvatar, connectionPoint, connectionId should be fetched from Firebase after login
     public void sendCallInvitation(String calleeId, int connectionPoint, String connectionId) {
+        if (loginUser != null) {
             localInvitation = rtmCallManager.createLocalInvitation(calleeId);
-            String userAvatarUrl = "https://" + userNickname + ".png";
-            localInvitation.setContent(Utils.createCallInvitationContent(userNickname, userAvatarUrl,
+
+            localInvitation.setContent(Utils.createCallInvitationContent(
+                    loginUser.getNickname(), loginUser.getAvatarUri(),
                     connectionPoint, connectionId));
 
             rtmCallManager.sendLocalInvitation(localInvitation, new ResultCallback<Void>() {
@@ -422,6 +422,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 public void onFailure(ErrorInfo errorInfo) {
                 }
             });
+        }
     }
 
 
@@ -462,6 +463,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             rtmCallManager.cancelLocalInvitation(localInvitation, new ResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    Log.d("App", "onSuccess: cancel localInvitation");
                     localInvitation = null;
                 }
 
@@ -530,9 +532,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
         return rtmCallManager;
     }
 
-    public boolean getPeerOnlineStatus(String peerId) {
+/*    public boolean getPeerOnlineStatus(String peerId) {
         return peersOnlineStatus != null ? peersOnlineStatus.get(peerId) == 0 : false;
-    }
+    }*/
 
     public String getUserId() {
         return userId;
@@ -552,6 +554,19 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public int getCallNotificationId() {
         return callNotificationId;
+    }
+
+    public void setCallNotificationId(int callNotificationId) {
+        this.callNotificationId = callNotificationId;
+    }
+
+
+    public void removeCanceledCallNotificationId(int canceledCallNotificationId) {
+        canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
+    }
+
+    public void addCanceledCallNotificationId(int canceledCallNotificationId) {
+        canceledCallNotificationIds.add(canceledCallNotificationId);
     }
 
     public User getLoginUser() {
