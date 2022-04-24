@@ -1,32 +1,31 @@
 package edu.neu.madcourse.metu.models;
 
 public class ConnectionUser {
-    private String username;
-    private String nickname;
+    private String userId;
+    private String nickName;
     private String avatarUrl;
-    private boolean isOnline;
 
-    public ConnectionUser(String username, String nickname, String avatarUrl, boolean isOnline) {
-        this.username = username;
-        this.nickname = nickname;
+
+    public ConnectionUser(String username, String nickname, String avatarUrl) {
+        this.userId = username;
+        this.nickName = nickname;
         this.avatarUrl = avatarUrl;
-        this.isOnline = isOnline;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getAvatarUrl() {
@@ -37,21 +36,14 @@ public class ConnectionUser {
         this.avatarUrl = avatarUrl;
     }
 
-    public boolean isOnline() {
-        return isOnline;
-    }
 
-    public void setOnline(boolean online) {
-        this.isOnline = online;
-    }
 
     @Override
     public String toString() {
         return "ConnectionUser{" +
-                "username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
+                "username='" + userId + '\'' +
+                ", nickname='" + nickName + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
-                ", online=" + isOnline +
                 '}';
     }
 }

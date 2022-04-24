@@ -132,7 +132,8 @@ public class ContactsActivity extends AppCompatActivity {
                     i + "@abc.com",
                     "Friend Name" + i,
                     i % 2 == 0,
-                    i);
+                    i,
+                    "friendavatar.png");
             contactsList.add(newFriend);
         }
         for (int i = 0; i < 20; i++) {
@@ -141,7 +142,8 @@ public class ContactsActivity extends AppCompatActivity {
                     i + "@abc.com",
                     "Met Name" + i,
                     i % 2 == 0,
-                    0);
+                    0,
+                    "metavatar.png");
             contactsList.add(newMet);
         }
         // TODO: Only for testing, will be deleted after implementing database fetching

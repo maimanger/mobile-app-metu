@@ -7,8 +7,56 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import io.agora.rtm.RemoteInvitation;
 
 public class Utils {
+    public static int CALLER_NAME = 0;
+    public static int CALLER_AVATAR = 1;
+    public static int CALL_CONNECTION_POINT = 2;
+    public static int CALL_CONNECTION_ID = 3;
+
+
+    private static Integer[] filterId = new Integer[]{
+            R.drawable.church_window,
+            R.drawable.blue_mosaic,
+            R.drawable.bubbles,
+            R.drawable.sparkling,
+            R.drawable.mosaic,
+            R.drawable.symbols_frame,
+            R.drawable.purple_ink_splash,
+            R.drawable.yellow_ink_splash,
+            R.drawable.cherry_blossom,
+            R.drawable.smoke,
+            R.drawable.rainy_window,
+            R.drawable.blue_brush,
+            R.drawable.purple_brush,
+            R.drawable.yellow_brush,
+            R.drawable.yellow_watercolor,
+            R.drawable.light_blue_mosaic,
+            -9999};
+
+    private static List<Integer> FILTERS_SET = new ArrayList<>(Arrays.asList(filterId));
+
+    public static int getFiltersSize(int connectionPoint) {
+        int friendLevel = calculateFriendLevel(connectionPoint);
+        if (friendLevel > 0 && friendLevel < 2) {
+            return 8;
+        } else if (friendLevel >= 2 && friendLevel < 3) {
+            return FILTERS_SET.size() - 1;
+        } else {
+            return FILTERS_SET.size();
+        }
+    }
+
+    public static int getCurrentFilter(int currentFilterIdx) {
+        return FILTERS_SET.get(currentFilterIdx);
+    }
+
+
     public static int calculateFriendLevel(int connectionPoint) {
         if (connectionPoint == 0) {
             return 0;
@@ -20,6 +68,19 @@ public class Utils {
             return 3;
         }
     }
+
+    public static String createCallInvitationContent(String callerName, String callerAvatarUrl,
+                                                     int connectionPoint, String connectionId) {
+        return callerName + "-&-" + callerAvatarUrl + "-&-"
+                + connectionPoint + "-&-" + connectionId;
+    }
+
+    public static String getRemoteInvitationContent(RemoteInvitation remoteInvitation, int contentIdx) {
+        return remoteInvitation.getContent().split("-&-")[contentIdx];
+    }
+
+
+
 
     public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;

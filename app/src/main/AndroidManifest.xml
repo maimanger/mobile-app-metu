@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="edu.neu.madcourse.metu">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for internet -->
@@ -10,17 +11,29 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_metu"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_metu_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MetU">
+
+        <receiver android:name=".video.RefuseVideoCallReceiver" />
+        <receiver android:name=".video.DismissCanceledCallNotifReceiver" />
+
+        <activity
+            android:name=".BaseCalleeActivity"
+            android:exported="false" />
+
         <activity
             android:name=".video.VideoActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".profile.imageUpload.UploadActivity"
             android:exported="false" />
