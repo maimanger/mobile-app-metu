@@ -1,7 +1,6 @@
 package edu.neu.madcourse.metu.contacts;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,7 +15,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,15 +24,11 @@ import java.util.stream.Collectors;
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.Contact;
-import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.service.FirebaseService;
-import io.agora.rtm.ErrorInfo;
-import io.agora.rtm.ResultCallback;
 
 
 public class ContactsActivity extends BaseCalleeActivity {
@@ -62,10 +55,9 @@ public class ContactsActivity extends BaseCalleeActivity {
         contactsTabs.getTabAt(0).setText("Friends");
         contactsTabs.getTabAt(1).setText("Mets");
 
-        initDataFromBundle(savedInstanceState);
-        fetchContactsList();
-
-        //initContactsPager();
+        if (!initFromBundle(savedInstanceState)) {
+            initFromFetching();
+        }
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -112,13 +104,16 @@ public class ContactsActivity extends BaseCalleeActivity {
                         (tab, position) ->
                                 tab.setText(contactsPagerAdapter.getTabTitle(position)))
                         .attach();
+            } else {
+                contactsViewPager.setAdapter(contactsPagerAdapter);
             }
             // Make sure scroll to the last viewing page before rotation
             contactsViewPager.setCurrentItem(lastPage);
         });
     }
 
-    private void initDataFromBundle(Bundle savedInstanceState) {
+
+    private boolean initFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
             int size = savedInstanceState.getInt("SIZE");
             contactsList = new ArrayList<>();
@@ -127,16 +122,19 @@ public class ContactsActivity extends BaseCalleeActivity {
                 contactsList.add(contact);
             }
             lastPage = savedInstanceState.getInt("PAGE");
+            renderContactsPager();
+            return true;
         }
+        return false;
     }
 
-    private void fetchContactsList() {
+    private void initFromFetching() {
         String myUserId = ((App)getApplication()).getLoginUser().getUserId();
         Map<String, Boolean> myConnections = ((App)getApplication()).getLoginUser().getConnections();
 
         new Thread(() -> {
             // Fetch Contacts from Firebase
-            FirebaseService.getInstance().fetchConnections(myUserId, myConnections,
+            FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
                     (List<Contact> fetchedContacts) -> {
                         Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
 
@@ -208,6 +206,7 @@ public class ContactsActivity extends BaseCalleeActivity {
     }
 
 
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -223,15 +222,20 @@ public class ContactsActivity extends BaseCalleeActivity {
     @Override
     public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
         super.onPeersOnlineStatusChanged(map);
+        boolean changed = false;
         synchronized (this) {
             for (Contact contact : contactsList) {
-                contact.setOnline(map.getOrDefault(contact.getContactUserId(), 2) == 0);
+                if (map.containsKey(contact.getContactUserId())) {
+                    contact.setOnline(map.get(contact.getContactUserId()) == 0);
+                    changed = true;
+                }
             }
         }
-        runOnUiThread(() -> {
-            contactsViewPager.setAdapter(null);
-            contactsViewPager.setAdapter(contactsPagerAdapter);
-        });
-
+        if (changed) {
+            runOnUiThread(() -> {
+                contactsViewPager.setAdapter(null);
+                contactsViewPager.setAdapter(contactsPagerAdapter);
+            });
+        }
     }
 }

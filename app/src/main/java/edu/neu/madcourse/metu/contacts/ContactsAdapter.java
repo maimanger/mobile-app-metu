@@ -61,7 +61,6 @@ public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.Conta
         Contact currContact = contactsList.get(position);
         holder.contactName.setText(currContact.getContactName());
         holder.onlineStatus.setVisibility(currContact.isOnline() ? View.VISIBLE : View.INVISIBLE);
-        // TODO: Initialize contact avatar based on current Contact (Currently using default image)
         //holder.contactAvatar.setImageResource(R.drawable.ic_user_avatar);
         //new Utils.DownloadImageTask(holder.contactAvatar).execute(currContact.getContactAvatarUri());
         Utils.loadImgUri(currContact.getContactAvatarUri(), holder.contactAvatar);

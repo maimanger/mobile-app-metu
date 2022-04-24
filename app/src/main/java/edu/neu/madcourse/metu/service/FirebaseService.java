@@ -3,9 +3,7 @@ package edu.neu.madcourse.metu.service;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -128,8 +126,9 @@ public class FirebaseService {
         });
     }
 
-    public void fetchConnections(String userId, Map<String, Boolean> connections,
-                                 DataFetchCallback<List<Contact>> callback) {
+    public void fetchContacts(String userId, Map<String, Boolean> connections,
+                              DataFetchCallback<List<Contact>> callback) {
+
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -162,8 +161,10 @@ public class FirebaseService {
 
             }
         };
-        databaseRef.child("connections").addListenerForSingleValueEvent(eventListener);
+        databaseRef.child("connections").addValueEventListener(eventListener);
     }
+
+
 
 
 

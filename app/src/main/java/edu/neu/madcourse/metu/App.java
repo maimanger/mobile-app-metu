@@ -126,11 +126,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
         @Override
         public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
             // Update local subscribed peers status
-            new Thread(() -> {
+            /*new Thread(() -> {
                 for (Map.Entry<String, Integer> peerStatus : map.entrySet()) {
                     peersOnlineStatus.put(peerStatus.getKey(), peerStatus.getValue());
                 }
-            }).start();
+            }).start();*/
+
             // Trigger current activity listener's method to update corresponding UI
             Log.d("App", "onPeersOnlineStatusChanged: " + currActivityName);
             RtmClientListener activityListener = activityClientListeners.get(currActivityName);

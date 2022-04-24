@@ -39,6 +39,13 @@ public class ContactsFragment extends Fragment implements CustomedItemClickListe
 
         contactsAdapter = new ContactsAdapter(contactsList, this);
         contactsRecyclerView.setAdapter(contactsAdapter);
+
+        if (contactsList == null || contactsList.isEmpty()) {
+            view.findViewById(R.id.text_noContactMsg).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.text_noContactMsg).setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 
