@@ -12,6 +12,9 @@ public class ConnectionUser {
         this.avatarUri = avatarUrl;
     }
 
+    public ConnectionUser() {
+    }
+
     public String getUserId() {
         return userId;
     }

@@ -7,7 +7,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,14 +21,21 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
+import io.agora.rtm.ErrorInfo;
+import io.agora.rtm.ResultCallback;
 
 
 public class ContactsActivity extends BaseCalleeActivity {
@@ -38,7 +47,6 @@ public class ContactsActivity extends BaseCalleeActivity {
     private Handler handler = new Handler();
     private int lastPage = 0;
     BottomNavigationView bottomNavigationView;
-
 
     private List<Contact> contactsList;
 
@@ -55,7 +63,9 @@ public class ContactsActivity extends BaseCalleeActivity {
         contactsTabs.getTabAt(1).setText("Mets");
 
         initDataFromBundle(savedInstanceState);
-        initContactsPager(savedInstanceState);
+        fetchContactsList();
+
+        //initContactsPager();
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -92,27 +102,20 @@ public class ContactsActivity extends BaseCalleeActivity {
 
 
 
-    private void initContactsPager(Bundle savedInstanceState) {
-        new Thread(() -> {
-            if (contactsList == null) {
-                fetchContactsList();
+    private void renderContactsPager() {
+        runOnUiThread(() -> {
+            loadingProgress.setVisibility(ProgressBar.INVISIBLE);
+            if (contactsPagerAdapter == null) {
+                contactsPagerAdapter = new ContactsPagerAdapter(ContactsActivity.this);
+                contactsViewPager.setAdapter(contactsPagerAdapter);
+                new TabLayoutMediator(contactsTabs, contactsViewPager,
+                        (tab, position) ->
+                                tab.setText(contactsPagerAdapter.getTabTitle(position)))
+                        .attach();
             }
-            if (contactsList != null) {
-                handler.post(() -> {
-                    loadingProgress.setVisibility(ProgressBar.INVISIBLE);
-                    if (contactsPagerAdapter == null) {
-                        contactsPagerAdapter = new ContactsPagerAdapter(this);
-                        contactsViewPager.setAdapter(contactsPagerAdapter);
-                        new TabLayoutMediator(contactsTabs, contactsViewPager,
-                                (tab, position) ->
-                                        tab.setText(contactsPagerAdapter.getTabTitle(position)))
-                                .attach();
-                    }
-                    // Make sure scroll to the last viewing page before rotation
-                    contactsViewPager.setCurrentItem(lastPage);
-                });
-            }
-        }).start();
+            // Make sure scroll to the last viewing page before rotation
+            contactsViewPager.setCurrentItem(lastPage);
+        });
     }
 
     private void initDataFromBundle(Bundle savedInstanceState) {
@@ -127,35 +130,53 @@ public class ContactsActivity extends BaseCalleeActivity {
         }
     }
 
-    // TODO: Implement database fetching
     private void fetchContactsList() {
-        contactsList = new ArrayList<>();
-        for (int i = 1; i < 21; i++) {
-            Contact newFriend = new Contact(
-                    new Timestamp(System.currentTimeMillis()).toString(),
-                    i + "@abc.com",
-                    "Friend Name" + i,
-                    i % 2 == 0,
-                    i,
-                    "friendavatar.png");
-            contactsList.add(newFriend);
-        }
-        for (int i = 0; i < 20; i++) {
-            Contact newMet = new Contact(
-                    new Timestamp(System.currentTimeMillis()).toString(),
-                    i + "@abc.com",
-                    "Met Name" + i,
-                    i % 2 == 0,
-                    0,
-                    "metavatar.png");
-            contactsList.add(newMet);
-        }
-        // TODO: Only for testing, will be deleted after implementing database fetching
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        String myUserId = ((App)getApplication()).getLoginUser().getUserId();
+        Map<String, Boolean> myConnections = ((App)getApplication()).getLoginUser().getConnections();
+
+        new Thread(() -> {
+            // Fetch Contacts from Firebase
+            FirebaseService.getInstance().fetchConnections(myUserId, myConnections,
+                    (List<Contact> fetchedContacts) -> {
+                        Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
+
+                        // Initialize contactsList member
+                        synchronized (this) {
+                            contactsList = new ArrayList<>();
+                            for (Contact c : fetchedContacts) {
+                                contactsList.add(c);
+                            }
+                        }
+                        renderContactsPager();
+
+                        Set<String> contactsId = fetchedContacts.stream()
+                                .map(Contact::getContactUserId).collect(Collectors.toSet());
+
+                        // Subscribe contacts online status from Agora Rtm (Realtime update)
+                        ((App)getApplication()).rtmSubscribePeer(contactsId);
+
+                        // Query contacts online status from Agora Rtm (one time)
+                        /*((App)getApplication()).queryPeerOnlineStatus(contactsId,
+                                new ResultCallback<Map<String, Boolean>>() {
+                                    @Override
+                                    public void onSuccess(Map<String, Boolean> peerOnlineStatus) {
+                                        Log.d(TAG, "onSuccess: query peers online status");
+
+                                        // Initialize contactsList member
+                                        contactsList = new ArrayList<>();
+                                        for (Contact c : fetchedContacts) {
+                                            c.setOnline(peerOnlineStatus.getOrDefault(
+                                                    c.getContactUserId(), false));
+                                            contactsList.add(c);
+                                        }
+                                        renderContactsPager();
+                                    }
+
+                                    @Override
+                                    public void onFailure(ErrorInfo errorInfo) { }
+                                });*/
+                    });
+        }).start();
     }
 
     public List<Contact> getContactsList() {
@@ -202,5 +223,15 @@ public class ContactsActivity extends BaseCalleeActivity {
     @Override
     public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
         super.onPeersOnlineStatusChanged(map);
+        synchronized (this) {
+            for (Contact contact : contactsList) {
+                contact.setOnline(map.getOrDefault(contact.getContactUserId(), 2) == 0);
+            }
+        }
+        runOnUiThread(() -> {
+            contactsViewPager.setAdapter(null);
+            contactsViewPager.setAdapter(contactsPagerAdapter);
+        });
+
     }
 }

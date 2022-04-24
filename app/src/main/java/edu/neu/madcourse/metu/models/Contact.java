@@ -9,21 +9,29 @@ public class Contact implements Parcelable {
     private String contactName;
     private boolean isOnline;
     private int connectionPoint;
-    private String contactAvatarUrl;
-    // TODO: add user avatar image
-
-
+    private String contactAvatarUri;
     public Contact() {
     }
 
+
     public Contact(String connectionId, String contactUserId, String contactName,
-                   boolean contactOnlineStatus, int connectionPoint, String contactAvatarUrl) {
+                   String contactAvatarUri, boolean contactOnlineStatus, int connectionPoint) {
         this.connectionId = connectionId;
         this.contactUserId = contactUserId;
         this.contactName = contactName;
         this.isOnline = contactOnlineStatus;
         this.connectionPoint = connectionPoint;
-        this.contactAvatarUrl = contactAvatarUrl;
+        this.contactAvatarUri = contactAvatarUri;
+    }
+
+    public Contact(String connectionId, String contactUserId, String contactName,
+                   String contactAvatarUri, int connectionPoint) {
+        this.connectionId = connectionId;
+        this.contactUserId = contactUserId;
+        this.contactName = contactName;
+        this.connectionPoint = connectionPoint;
+        this.contactAvatarUri = contactAvatarUri;
+        this.isOnline = false;
     }
 
 
@@ -80,7 +88,7 @@ public class Contact implements Parcelable {
         dest.writeString(this.contactName);
         dest.writeInt(this.isOnline ? 1 : 0);
         dest.writeInt(this.connectionPoint);
-        dest.writeString(this.contactAvatarUrl);
+        dest.writeString(this.contactAvatarUri);
     }
 
     public static final Parcelable.Creator<Contact> CREATOR
@@ -100,6 +108,10 @@ public class Contact implements Parcelable {
         this.contactName = in.readString();
         this.isOnline = in.readInt() == 1;
         this.connectionPoint = in.readInt();
-        this.contactAvatarUrl = in.readString();
+        this.contactAvatarUri = in.readString();
+    }
+
+    public String getContactAvatarUri() {
+        return contactAvatarUri;
     }
 }

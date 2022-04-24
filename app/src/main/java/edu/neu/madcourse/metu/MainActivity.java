@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
@@ -126,7 +127,10 @@ public class MainActivity extends AppCompatActivity {
         ((App)getApplication()).rtmLogin(userId);
         new Thread(() -> {
             FirebaseService.getInstance().fetchUserProfileData(userId,
-                    (User user) -> ((App)getApplication()).setLoginUser(user));
+                    (User user) -> {
+                        Log.d("MainActivity", "login profile fetched ");
+                ((App)getApplication()).setLoginUser(user);
+                    });
         }).start();
     }
 }

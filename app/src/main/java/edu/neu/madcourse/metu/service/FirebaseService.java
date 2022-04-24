@@ -3,7 +3,9 @@ package edu.neu.madcourse.metu.service;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -12,9 +14,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import edu.neu.madcourse.metu.models.Connection;
+import edu.neu.madcourse.metu.models.ConnectionUser;
+import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
 
 public class FirebaseService {
@@ -101,6 +108,7 @@ public class FirebaseService {
         });
     }
 
+
     public void addStory(String userId, String storyImageUri) {
         String key = databaseRef.child("users").child(userId).child("stories").push().getKey();
         databaseRef.child("users").child(userId).child("stories").child(key).setValue(storyImageUri);
@@ -118,7 +126,45 @@ public class FirebaseService {
                 throw error.toException();
             }
         });
-
-
     }
+
+    public void fetchConnections(String userId, Map<String, Boolean> connections,
+                                 DataFetchCallback<List<Contact>> callback) {
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Contact> fetchedContacts = new ArrayList<>();
+
+                for(DataSnapshot child : snapshot.getChildren()) {
+                    String connectionId = child.getKey();
+
+                    if (connections.containsKey(connectionId)) {
+                        Connection fetchedConnection = child.getValue(Connection.class);
+                        ConnectionUser connectionContact =
+                                fetchedConnection.getUser1().getUserId().equals(userId) ?
+                                        child.child("user2").getValue(ConnectionUser.class) :
+                                        child.child("user1").getValue(ConnectionUser.class);
+                        Contact fetchedContact = new Contact(
+                                connectionId,
+                                connectionContact.getUserId(),
+                                connectionContact.getNickname(),
+                                connectionContact.getAvatarUri(),
+                                fetchedConnection.getConnectionPoint());
+                        fetchedContacts.add(fetchedContact);
+                    }
+                }
+
+                callback.onCallback(fetchedContacts);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        databaseRef.child("connections").addListenerForSingleValueEvent(eventListener);
+    }
+
+
+
 }

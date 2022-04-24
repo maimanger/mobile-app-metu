@@ -484,8 +484,18 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-    public void rtmSubscribePeer(Set<String> peersId, ResultCallback<Void> callback) {
-        rtmClient.subscribePeersOnlineStatus(peersId, callback);
+    public void rtmSubscribePeer(Set<String> peersId) {
+        rtmClient.subscribePeersOnlineStatus(peersId, new ResultCallback<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("App", "onSuccess: subscribe peersOnlineStatus");
+            }
+
+            @Override
+            public void onFailure(ErrorInfo errorInfo) {
+
+            }
+        });
     }
 
     public void queryPeerOnlineStatus(Set<String> peersId, ResultCallback<Map<String, Boolean>> callback) {

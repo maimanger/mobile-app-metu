@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,5 +105,19 @@ public class Utils {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+
+    public static void loadImgUri(String uri, ImageView imageView) {
+        Picasso.get().load(uri).into(imageView);
+    }
+
+    public static Bitmap getBitmapFromUri(String uri) {
+        Bitmap mBitmap = null;
+        try {
+            mBitmap = Picasso.get().load(uri).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mBitmap;
     }
 }

@@ -14,8 +14,11 @@ public class User {
     private Map<String, String> stories;
     private Boolean isOnline;
     private String avatarUri;
+    private Map<String, Boolean> connections;
 
-    public User() { }
+
+    public User() {
+    }
 
     public User(String username, String password, String email) {
         this.nickname = username;
@@ -36,6 +39,23 @@ public class User {
         this.stories = stories;
         this.isOnline = isOnline;
         this.avatarUri = avatarUri;
+    }
+
+    public User(String userId, String nickname, String password, String email, String location,
+                Integer age, String gender, Map<String, Boolean> tags, Map<String, String> stories,
+                Boolean isOnline, String avatarUri, Map<String, Boolean> connections) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+        this.location = location;
+        this.age = age;
+        this.gender = gender;
+        this.tags = tags;
+        this.stories = stories;
+        this.isOnline = isOnline;
+        this.avatarUri = avatarUri;
+        this.connections = connections;
     }
 
     public String getNickname() {
@@ -132,5 +152,21 @@ public class User {
                 ", isOnline=" + isOnline +
                 ", avatarUri='" + avatarUri + '\'' +
                 '}';
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public Map<String, Boolean> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(Map<String, Boolean> connections) {
+        this.connections = connections;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
