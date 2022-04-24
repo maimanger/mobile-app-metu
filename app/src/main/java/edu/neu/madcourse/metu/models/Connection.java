@@ -3,14 +3,14 @@ package edu.neu.madcourse.metu.models;
 public class Connection {
     private ConnectionUser user1;
     private ConnectionUser user2;
-    private int connectPoint;
+    private int connectionPoint;
 
     private ChatItem lastMessage;
 
     public Connection(ConnectionUser user1, ConnectionUser user2, int connectPoint, ChatItem lastMessage) {
         this.user1 = user1;
         this.user2 = user2;
-        this.connectPoint = connectPoint;
+        this.connectionPoint = connectPoint;
         this.lastMessage = lastMessage;
     }
 
@@ -30,12 +30,12 @@ public class Connection {
         this.user2 = user2;
     }
 
-    public int getConnectPoint() {
-        return connectPoint;
+    public int getConnectionPoint() {
+        return connectionPoint;
     }
 
-    public void setConnectPoint(int connectPoint) {
-        this.connectPoint = connectPoint;
+    public void setConnectionPoint(int connectionPoint) {
+        this.connectionPoint = connectionPoint;
     }
 
     public ChatItem getLastMessage() {
@@ -51,7 +51,7 @@ public class Connection {
         return "Connection{" +
                 "user1=" + user1 +
                 ", user2=" + user2 +
-                ", connectPoint=" + connectPoint +
+                ", connectPoint=" + connectionPoint +
                 ", lastMessage=" + lastMessage +
                 '}';
     }

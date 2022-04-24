@@ -21,6 +21,7 @@
         android:id="@+id/tabLayout_contacts"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         app:layout_constraintBottom_toTopOf="@+id/viewpager_contacts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

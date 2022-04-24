@@ -18,14 +18,18 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 
-public class ContactsActivity extends AppCompatActivity {
+
+public class ContactsActivity extends BaseCalleeActivity {
 
     private ContactsPagerAdapter contactsPagerAdapter;
     private ViewPager2 contactsViewPager;
@@ -86,6 +90,8 @@ public class ContactsActivity extends AppCompatActivity {
     }
 
 
+
+
     private void initContactsPager(Bundle savedInstanceState) {
         new Thread(() -> {
             if (contactsList == null) {
@@ -102,6 +108,7 @@ public class ContactsActivity extends AppCompatActivity {
                                         tab.setText(contactsPagerAdapter.getTabTitle(position)))
                                 .attach();
                     }
+                    // Make sure scroll to the last viewing page before rotation
                     contactsViewPager.setCurrentItem(lastPage);
                 });
             }
@@ -129,7 +136,8 @@ public class ContactsActivity extends AppCompatActivity {
                     i + "@abc.com",
                     "Friend Name" + i,
                     i % 2 == 0,
-                    i);
+                    i,
+                    "friendavatar.png");
             contactsList.add(newFriend);
         }
         for (int i = 0; i < 20; i++) {
@@ -138,7 +146,8 @@ public class ContactsActivity extends AppCompatActivity {
                     i + "@abc.com",
                     "Met Name" + i,
                     i % 2 == 0,
-                    0);
+                    0,
+                    "metavatar.png");
             contactsList.add(newMet);
         }
         // TODO: Only for testing, will be deleted after implementing database fetching
@@ -158,6 +167,7 @@ public class ContactsActivity extends AppCompatActivity {
         super.onResume();
         if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);
+            // Make sure scroll to the last viewing page before rotation
             contactsViewPager.setCurrentItem(lastPage);
         }
     }
@@ -165,6 +175,7 @@ public class ContactsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        // Store the last viewing page before rotation
         lastPage = contactsViewPager.getCurrentItem();
     }
 
@@ -185,5 +196,11 @@ public class ContactsActivity extends AppCompatActivity {
             outState.putParcelable("CONTACT" + i, contactsList.get(i));
         }
         outState.putInt("PAGE", lastPage);
+    }
+
+
+    @Override
+    public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
+        super.onPeersOnlineStatusChanged(map);
     }
 }

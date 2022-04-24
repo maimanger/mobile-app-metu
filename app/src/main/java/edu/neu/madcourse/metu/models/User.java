@@ -1,11 +1,10 @@
 package edu.neu.madcourse.metu.models;
 
-import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
-public class NewUser {
-    private String username; // username is used as nickname
+public class User {
+    private String userId;
+    private String nickname; // username is used as nickname
     private String password;
     private String email; // email is used as id
     private String location;
@@ -16,18 +15,18 @@ public class NewUser {
     private Boolean isOnline;
     private String avatarUri;
 
-    public NewUser() { }
+    public User() { }
 
-    public NewUser(String username, String password, String email) {
-        this.username = username;
+    public User(String username, String password, String email) {
+        this.nickname = username;
         this.password = password;
         this.email = email;
     }
 
-    public NewUser(String username, String password, String email, String location, Integer age,
-                   String gender, Map<String, Boolean> tags, Map<String, String> stories,
-                   Boolean isOnline, String avatarUri) {
-        this.username = username;
+    public User(String username, String password, String email, String location, Integer age,
+                String gender, Map<String, Boolean> tags, Map<String, String> stories,
+                Boolean isOnline, String avatarUri) {
+        this.nickname = username;
         this.password = password;
         this.email = email;
         this.location = location;
@@ -39,12 +38,12 @@ public class NewUser {
         this.avatarUri = avatarUri;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {
@@ -122,7 +121,7 @@ public class NewUser {
     @Override
     public String toString() {
         return "NewUser{" +
-                "username='" + username + '\'' +
+                "username='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", location='" + location + '\'' +

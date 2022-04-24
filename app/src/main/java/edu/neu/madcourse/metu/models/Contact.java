@@ -1,10 +1,7 @@
-package edu.neu.madcourse.metu.contacts;
+package edu.neu.madcourse.metu.models;
 
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import androidx.annotation.RequiresApi;
 
 public class Contact implements Parcelable {
     private String connectionId;
@@ -12,6 +9,7 @@ public class Contact implements Parcelable {
     private String contactName;
     private boolean isOnline;
     private int connectionPoint;
+    private String contactAvatarUrl;
     // TODO: add user avatar image
 
 
@@ -19,12 +17,13 @@ public class Contact implements Parcelable {
     }
 
     public Contact(String connectionId, String contactUserId, String contactName,
-                   boolean contactOnlineStatus, int connectionPoint) {
+                   boolean contactOnlineStatus, int connectionPoint, String contactAvatarUrl) {
         this.connectionId = connectionId;
         this.contactUserId = contactUserId;
         this.contactName = contactName;
         this.isOnline = contactOnlineStatus;
         this.connectionPoint = connectionPoint;
+        this.contactAvatarUrl = contactAvatarUrl;
     }
 
 
@@ -68,16 +67,6 @@ public class Contact implements Parcelable {
         this.connectionPoint = connectionPoint;
     }
 
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "connectionId='" + connectionId + '\'' +
-                ", contactUserId='" + contactUserId + '\'' +
-                ", contactName='" + contactName + '\'' +
-                ", contactOnlineStatus=" + isOnline +
-                ", connectionPoint=" + connectionPoint +
-                '}';
-    }
 
     @Override
     public int describeContents() {
@@ -91,6 +80,7 @@ public class Contact implements Parcelable {
         dest.writeString(this.contactName);
         dest.writeInt(this.isOnline ? 1 : 0);
         dest.writeInt(this.connectionPoint);
+        dest.writeString(this.contactAvatarUrl);
     }
 
     public static final Parcelable.Creator<Contact> CREATOR
@@ -110,5 +100,6 @@ public class Contact implements Parcelable {
         this.contactName = in.readString();
         this.isOnline = in.readInt() == 1;
         this.connectionPoint = in.readInt();
+        this.contactAvatarUrl = in.readString();
     }
 }

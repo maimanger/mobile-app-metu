@@ -4,8 +4,6 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,8 +15,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.neu.madcourse.metu.contacts.daos.User;
-import edu.neu.madcourse.metu.models.NewUser;
+import edu.neu.madcourse.metu.models.User;
 
 public class FirebaseService {
     private static FirebaseService singleton_instance = null;
@@ -58,11 +55,11 @@ public class FirebaseService {
         databaseRef.child("users").child(userId).child("avatarUri").setValue(imageFirebaseUri);
     }
 
-    public void fetchUserProfileData(String userId, DataFetchCallback<NewUser> callback) {
+    public void fetchUserProfileData(String userId, DataFetchCallback<User> callback) {
         databaseRef.child("users").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                callback.onCallback(snapshot.getValue(NewUser.class));
+                callback.onCallback(snapshot.getValue(User.class));
             }
 
             @Override
