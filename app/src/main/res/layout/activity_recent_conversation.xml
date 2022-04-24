@@ -11,7 +11,7 @@
         android:id="@+id/chat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Chats"
+        android:text="Messages"
         android:textColor="@color/white"
         android:textSize="32sp"
         android:fontFamily="sans-serif-black"

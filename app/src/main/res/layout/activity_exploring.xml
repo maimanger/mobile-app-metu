@@ -7,19 +7,19 @@
     android:background="#5E872CD6"
     tools:context=".explore.ExploringActivity">
 
-    <TextView
-        android:id="@+id/exploreText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Explore"
-        android:textSize="32sp"
-        android:textColor="@color/chat_background_input_color"
-        android:fontFamily="sans-serif-black"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/exploreText"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Explore"-->
+<!--        android:textSize="32sp"-->
+<!--        android:textColor="@color/chat_background_input_color"-->
+<!--        android:fontFamily="sans-serif-black"-->
+<!--        android:layout_marginStart="18dp"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        />-->
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageSetting"
@@ -31,8 +31,8 @@
         android:padding="1dp"
         android:src="@drawable/ic_setting"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/exploreText"
-        app:layout_constraintBottom_toBottomOf="@id/exploreText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/exploringPageBackground"
         android:tint="@color/chat_background_input_color"/>
 
     <View

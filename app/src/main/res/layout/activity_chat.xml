@@ -16,6 +16,18 @@
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
         app:layout_constraintTop_toTopOf="@id/viewSupporter" />
 
+    <ImageView
+        android:id="@+id/onlineStatus"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:elevation="10dp"
+        android:background="@drawable/ic_not_online"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@id/contactName"
+        app:layout_constraintTop_toTopOf="@+id/contactName"
+        app:layout_constraintBottom_toBottomOf="@+id/contactName"
+        />
+
     <View
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
@@ -39,7 +51,7 @@
 
     <TextView
         android:id="@+id/contactName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -52,20 +64,20 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imageBack"
         app:layout_constraintStart_toEndOf="@id/imageBack"
-        app:layout_constraintEnd_toStartOf="@id/imageMore"
+        app:layout_constraintEnd_toStartOf="@id/startVideoChatWithContact"
         app:layout_constraintTop_toTopOf="@id/imageBack" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imageMore"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:id="@+id/startVideoChatWithContact"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="12dp"
         android:padding="5dp"
         android:src="@drawable/ic_start_chat"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageBack"
+        app:layout_constraintBottom_toBottomOf="@+id/imageBack"
         android:tint="@color/white"/>
 
     <View

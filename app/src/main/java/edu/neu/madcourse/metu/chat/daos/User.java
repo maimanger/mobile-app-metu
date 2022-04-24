@@ -6,9 +6,18 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String username;
-    private String avatar;
+    private String avatarUrl;
     private int gender;
+
     private String profilePhoto;
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
 
     public String getUsername() {
         return username;
@@ -18,12 +27,12 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public int getGender() {
@@ -34,19 +43,11 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public String getProfilePhoto() {
-        return profilePhoto;
-    }
-
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
+                ", avatar='" + avatarUrl + '\'' +
                 '}';
     }
 

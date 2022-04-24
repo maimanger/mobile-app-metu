@@ -13,18 +13,22 @@
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/background_image.xml" value="0.16203703703703703" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/chat_background_button.xml" value="0.1649122807017544" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/file_upload_round_button.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_available_status.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_gender_male.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_like.xml" value="0.1649122807017544" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_more.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_new_msg_notification.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_send.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_send_message.xml" value="0.17168949771689498" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_setting.xml" value="0.1649122807017544" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_start_chat.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_unlike.xml" value="0.1649122807017544" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_unread.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/like_toggle_buttom_background.xml" value="0.17168949771689498" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/recent_conversation_background.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/recommend_card_button_background.xml" value="0.17168949771689498" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/toggle_selector.xml" value="0.17407407407407408" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_chat.xml" value="0.165" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_chat.xml" value="0.375" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_exploring.xml" value="0.1513157894736842" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_recent_chat.xml" value="0.1796875" />

@@ -3,14 +3,26 @@ package edu.neu.madcourse.metu.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.graphics.RenderNode;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Base64;
+import android.util.Log;
+import android.widget.ImageView;
+
+import com.jgabrielfreitas.core.BlurImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class BitmapUtils {
     public static Bitmap getBitmapFromString(String encodedImage) {
@@ -19,6 +31,9 @@ public class BitmapUtils {
     }
 
     public static String encodeImage(Bitmap bitmap, int previewWidth) {
+        if (bitmap == null) {
+            return "";
+        }
 //        int previewWidth = 150;
         int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
 
@@ -31,6 +46,10 @@ public class BitmapUtils {
     }
 
     public static Bitmap blurBitmap(Context context, Bitmap bitmap, float radius) {
+
+        if (bitmap == null) {
+            return null;
+        }
 
         Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
         Bitmap outputBitmap = Bitmap.createBitmap(previewBitmap);
@@ -49,4 +68,53 @@ public class BitmapUtils {
 
         return outputBitmap;
     }
+
+    public static Bitmap getBitmapFromUri(String src) {
+        Bitmap result = null;
+        if (src == null) {
+            return null;
+        }
+
+        try {
+            URL url = new URL(src);
+            InputStream inputStream = url.openStream();
+            result = BitmapFactory.decodeStream(inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return result;
+        }
+
+        return result;
+
+    }
+
+    public static class DownloadBlurredImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+        Context context;
+        int radius;
+
+        public DownloadBlurredImageTask(ImageView bmImage, Context context, int radius) {
+            this.bmImage = bmImage;
+            this.context = context;
+            this.radius = radius;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap bitmap = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                bitmap = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return blurBitmap(context, bitmap, radius);
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
 }

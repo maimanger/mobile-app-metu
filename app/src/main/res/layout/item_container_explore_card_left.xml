@@ -16,25 +16,37 @@
         android:layout_marginEnd="20dp"
         android:background="@drawable/recommend_card_button_background"
         android:elevation="15dp">
-        <com.like.LikeButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon_type="heart"
-            app:icon_size="7dp"
-            android:id="@+id/likeToggleLeft"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            />
+<!--        <com.like.LikeButton-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:icon_type="heart"-->
+<!--            app:icon_size="7dp"-->
+<!--            android:id="@+id/likeToggleLeft"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            />-->
 <!--        <ToggleButton-->
 <!--            android:layout_centerHorizontal="true"-->
 <!--            android:id="@+id/likeToggleLeft"-->
-<!--            android:layout_width="60dp"-->
-<!--            android:layout_height="60dp"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
 <!--            android:textOff=""-->
 <!--            android:textOn=""-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            android:elevation="40dp"-->
 <!--            android:background="@drawable/toggle_selector" />-->
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_unlike"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:elevation="40dp"
+            android:id="@+id/likeToggleLeft"
+            />
 
     </FrameLayout>
 

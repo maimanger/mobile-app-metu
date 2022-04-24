@@ -1,6 +1,7 @@
 package edu.neu.madcourse.metu.models;
 
 public class Connection {
+
     private ConnectionUser user1;
     private ConnectionUser user2;
     private int connectPoint;

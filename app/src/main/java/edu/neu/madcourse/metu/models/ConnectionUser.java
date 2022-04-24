@@ -1,24 +1,31 @@
 package edu.neu.madcourse.metu.models;
 
-public class ConnectionUser {
-    private String username;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ConnectionUser implements Parcelable {
+    private String userId;
     private String nickname;
-    private String avatarUrl;
-    private boolean isOnline;
+    private String avatarUri;
+    private boolean isLiked;
 
-    public ConnectionUser(String username, String nickname, String avatarUrl, boolean isOnline) {
-        this.username = username;
+    public ConnectionUser(String userId, String nickname, String avatarUri, boolean isLiked) {
+        this.userId = userId;
         this.nickname = nickname;
-        this.avatarUrl = avatarUrl;
-        this.isOnline = isOnline;
+        this.avatarUri = avatarUri;
+        this.isLiked = isLiked;
     }
 
-    public String getUsername() {
-        return username;
+    public ConnectionUser() {
+
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getNickname() {
@@ -29,29 +36,62 @@ public class ConnectionUser {
         this.nickname = nickname;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatarUri() {
+        return avatarUri;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatarUri(String avatarUri) {
+        this.avatarUri = avatarUri;
     }
 
-    public boolean isOnline() {
-        return isOnline;
+    public boolean getIsLiked() {
+        return isLiked;
     }
 
-    public void setOnline(boolean online) {
-        this.isOnline = online;
+    public void setIsLiked(boolean liked) {
+        this.isLiked = liked;
     }
 
     @Override
     public String toString() {
         return "ConnectionUser{" +
-                "username='" + username + '\'' +
+                "username='" + userId + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", online=" + isOnline +
+                ", avatarUrl='" + avatarUri + '\'' +
+                ", online=" + isLiked +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(userId);
+        parcel.writeString(nickname);
+        parcel.writeString(avatarUri);
+        parcel.writeInt(isLiked ? 1: 0);
+    }
+
+    private ConnectionUser(Parcel in) {
+        this.userId = in.readString();
+        this.nickname = in.readString();
+        this.avatarUri = in.readString();
+        this.isLiked = in.readInt() == 1;
+    }
+
+    public static final Parcelable.Creator<ConnectionUser> CREATOR
+            = new Parcelable.Creator<ConnectionUser>() {
+        @Override
+        public ConnectionUser createFromParcel(Parcel parcel) {
+            return new ConnectionUser(parcel);
+        }
+
+        @Override
+        public ConnectionUser[] newArray(int i) {
+            return new ConnectionUser[i];
+        }
+    };
 }

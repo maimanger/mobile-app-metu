@@ -1,10 +1,12 @@
 package edu.neu.madcourse.metu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
@@ -14,21 +16,29 @@ import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import android.widget.Button;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import edu.neu.madcourse.metu.chat.ChatActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
-import edu.neu.madcourse.metu.utils.BitmapUtils;
+import edu.neu.madcourse.metu.utils.Constants;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
 
 
 public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
+    private String username;
+
+    private Button okButton;
+    private EditText inputName;
+    private Button recentChats;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,26 +59,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        editor = getSharedPreferences("METU_APP", MODE_PRIVATE).edit();
-        editor.putString("USERNAME", FakeDatabase.sender.getUsername());
-        editor.apply();
-
-        Button chat = findViewById(R.id.openChatActivity);
-        chat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bitmap bitmap;
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.harry);
-                FakeDatabase.receiver.setAvatar(BitmapUtils.encodeImage(bitmap, 150));
-
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ron);
-                FakeDatabase.sender.setAvatar(BitmapUtils.encodeImage(bitmap, 150));
-
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                intent.putExtra("RECEIVER", FakeDatabase.receiver);
-                startActivity(intent);
-            }
-        });
+        initCurrentUser();
+        initRecentConversations();
 
         Button explore = findViewById(R.id.openExploringActivity);
         explore.setOnClickListener(new View.OnClickListener() {
@@ -79,14 +71,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button recentChat = findViewById(R.id.openRecentConversation);
-        recentChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RecentConversationActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
 
@@ -94,5 +78,73 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ContactsActivity.class);
         startActivity(intent);
 
+    }
+
+    public void initCurrentUser() {
+        okButton = findViewById(R.id.okButton);
+        inputName = findViewById(R.id.inputUsername);
+
+        okButton.setOnClickListener(view -> {
+            String userInputName = inputName.getText().toString();
+            // if the username input is valid and not the current one
+            if (userInputName != null && userInputName.trim().length() > 0 && !userInputName.equals(username)) {
+                // auth the user somehow
+                Log.d("LOGIN", userInputName + " trying to log in ");
+                App.userLogin(userInputName);
+//                FirebaseDatabase.getInstance().getReference("Users")
+//                        .addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                if (snapshot.exists() && snapshot.hasChild(userInputName)) {
+//                                    // todo: save the username and generate the token
+////                                    editor = getSharedPreferences("METU_APP", MODE_PRIVATE).edit();
+////                                    editor.putString("USERNAME", userInputName);
+////                                    editor.apply();
+//                                    App.userLogin(userInputName);
+//                                    // todo: delete
+//                                    System.out.println(App.getUsername());
+//                                    username = userInputName;
+//
+//                                    // todo: generate and update the token
+//                                    FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
+//                                        // update and save the token if success
+//                                        FirebaseDatabase.getInstance()
+//                                                .getReference(Constants.FCM_TOKENS_STORE)
+//                                                .child(userInputName)
+//                                                .setValue(s)
+//                                                .addOnSuccessListener(unused -> {
+//                                                    Toast.makeText(getApplicationContext(), "Token updated!", Toast.LENGTH_SHORT).show();
+//                                                })
+//                                                .addOnFailureListener(e -> {
+//                                                     Toast.makeText(getApplicationContext(), "Failed to update token", Toast.LENGTH_SHORT).show();
+//                                        });
+//                                        // save the token locally
+//                                        App.setFcmToken(s);
+//                                    }).addOnFailureListener(e -> {
+//                                        Toast.makeText(getApplicationContext(), "Fail to get token", Toast.LENGTH_SHORT).show();
+//                                    });
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+
+
+            }
+
+        });
+    }
+
+    public void initRecentConversations() {
+        recentChats = findViewById(R.id.openRecentConversation);
+        recentChats.setOnClickListener(view -> {
+            if (App.isLoggedIn()) {
+                Intent intent = new Intent(MainActivity.this, RecentConversationActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
