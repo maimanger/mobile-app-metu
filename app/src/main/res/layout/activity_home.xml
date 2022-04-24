@@ -2,8 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_monterey">
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/layout_homeBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,34 +35,44 @@
                     android:layout_width="248dp"
                     android:layout_height="287dp"
                     android:layout_marginTop="60dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
                     app:srcCompat="@drawable/ic_metu" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginTop="60dp"
-                    android:paddingBottom="10dp"
                     android:layout_marginBottom="30dp"
-                    android:orientation="horizontal">
-                <Button
-                    android:id="@+id/loginbtn"
-                    android:layout_width="150dp"
-                    android:layout_height="60dp"
-                    android:layout_below="@id/metu_word"
-                    android:backgroundTint="#8c09e0"
-                    android:text="LOGIN"
-                    android:textSize="20dp" />
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
 
-                <Button
-                    android:id="@+id/registerbtn"
-                    android:layout_width="150dp"
-                    android:layout_height="60dp"
-                    android:backgroundTint="#cb33aa"
-                    android:layout_marginLeft="40dp"
-                    android:text="Register"
-                    android:textSize="20dp" />
+                    <Button
+                        android:id="@+id/loginbtn"
+                        android:layout_width="150dp"
+                        android:layout_height="60dp"
+                        android:layout_below="@id/metu_word"
+                        android:backgroundTint="#199ebd"
+                        android:elevation="10dp"
+                        android:shadowColor="#000000"
+                        android:shadowRadius="5"
+                        android:text="LOGIN"
+                        android:textSize="20dp"
+                        app:cornerRadius="50dp" />
+
+                    <Button
+                        android:id="@+id/registerbtn"
+                        android:layout_width="150dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="40dp"
+                        android:backgroundTint="#CA3CC5"
+                        android:elevation="10dp"
+                        android:shadowColor="#000000"
+                        android:shadowRadius="5"
+                        android:text="Register"
+                        android:textSize="20dp"
+                        app:cornerRadius="50dp" />
                 </LinearLayout>
 
             </LinearLayout>
