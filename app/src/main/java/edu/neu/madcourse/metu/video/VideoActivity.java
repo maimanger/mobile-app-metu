@@ -8,6 +8,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import java.util.Random;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.service.FirebaseService;
+import edu.neu.madcourse.metu.service.UpdateVideoHistoryService;
 import edu.neu.madcourse.metu.utils.Utils;
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -67,16 +70,15 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
     private String friendNickname;
     private String friendAvatarUrl;
 
-
     private RtcEngine mRtcEngine;
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         @Override
         // Listen for the remote user joining the channel to get the uid of the user.
         public void onUserJoined(int uid, int elapsed) {
-            // TODO: caller must update video chat history and connection point in Firebase
             isPeerJoined = true;
-            // Set up filters
             Log.d(TAG, "onUserJoined: currentFilterIdx = " + currentFilterIdx);
+
+            // Set up filters
             int filterId = Utils.getCurrentFilter(connectionLevel, currentFilterIdx);
             runOnUiThread(() -> {
                 setupRemoteVideo(uid);
@@ -90,6 +92,11 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
                 }
                 filterFrame.setVisibility(View.VISIBLE);
             });
+
+            // Caller must update video chat history and connection point in Firebase
+            if (isCaller) {
+                updateChatHistoryAndConnectionPoint();
+            }
         }
 
         // remote user has left channel, finish the VideoActivity
@@ -99,8 +106,15 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         }
     };
 
+    private void updateChatHistoryAndConnectionPoint() {
+        Intent startServiceIntent = new Intent(this, UpdateVideoHistoryService.class);
+        startServiceIntent.putExtra("CONNECTION_ID", connectionId);
+        startServiceIntent.putExtra("INCREMENT_POINT", 2);
+        startService(startServiceIntent);
+    }
 
-    private void initRtcEngineAndJoin() {
+
+    private void initRtcEngine() {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.agora_app_id), mRtcEventHandler);
         } catch (Exception e) {
@@ -108,6 +122,9 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         }
         setupRtcProfile();
         setupLocalVideo();
+    }
+
+    private void joinRtcChannel() {
         mRtcEngine.joinChannel(null, connectionId, "", 0);
     }
 
@@ -172,16 +189,24 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             if (grantResults.length < 2 || grantResults[0] != PackageManager.PERMISSION_GRANTED ||
                     grantResults[1] != PackageManager.PERMISSION_GRANTED) {
                 showLongToast("Sorry, MetU needs your permissions to continue video chat.");
-                // TODO: cancel localInvitation, if exits any
+                // if user is a callee, cancel the notification and refuse the call invitation
+                calleeRoleInit(false);
                 finish();
-                return;
             }
 
             // Here we continue only if all permissions are granted.
             // The permissions can also be granted in the system settings manually.
-            initRtcEngineAndJoin();
+            new Thread(() -> {
+                initRtcEngine();
+                calleeRoleInit(true);
+                callerRoleInit();
+                initFriendUI();
+                createRandomFilterIdx();
+                joinRtcChannel();
+            }).start();
         }
     }
+    /*******************************End Dealing with Permissions**********************************/
 
     // Run on UI thread to make a toast
     private void showLongToast(final String msg) {
@@ -189,7 +214,6 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
         });
     }
-    /*******************************End Dealing with Permissions**********************************/
 
 
     public void onClickLeaveChannel(View view) {
@@ -231,7 +255,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
-        ((App)getApplication()).registerCallEventListener(this);
+        ((App) getApplication()).registerCallEventListener(this);
 
         muteBtn = findViewById(R.id.fab_mute);
         unmuteBtn = findViewById(R.id.fab_unmute);
@@ -242,27 +266,31 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         loadingVideoProgress = findViewById(R.id.progressBar_loadingVideo);
         loadingMsg = findViewById(R.id.text_loadingMsg);
 
-        calleeRoleInit();
-        callerRoleInit();
-        initVideoUI();
+        // Check permissions and init RtcEngine
+        if (checkPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+                checkPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+            new Thread(() -> {
+                initRtcEngine();
+                calleeRoleInit(true);
+                callerRoleInit();
+                initFriendUI();
+                createRandomFilterIdx();
+                joinRtcChannel();
+            }).start();
+        }
+    }
 
-        // Create random filter based on friendLevel
+
+    private void createRandomFilterIdx() {
         if (connectionLevel > 2) {
             currentFilterIdx = Utils.getFiltersSize(connectionPoint) - 1;
         } else {
             currentFilterIdx = new Random().nextInt(Utils.getFiltersSize(connectionPoint));
         }
-
-        // Check permissions and init RtcEngine
-        if (checkPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-                checkPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
-            initRtcEngineAndJoin();
-        }
     }
 
 
-
-    private void calleeRoleInit() {
+    private void calleeRoleInit(boolean isPermitted) {
         // If VideoActivity is started from notification, dismiss the notification
         if (getIntent().hasExtra("NOTIFICATION_ID")) {
             new Thread(() -> {
@@ -278,8 +306,12 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             friendAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
             connectionPoint = Integer.parseInt(Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_POINT));
             connectionId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_ID);
-            connectionPoint = Utils.calculateFriendLevel(connectionPoint);
-            ((App) getApplication()).acceptCallInvitation();
+            connectionLevel = Utils.calculateFriendLevel(connectionPoint);
+            if (isPermitted) {
+                ((App) getApplication()).acceptCallInvitation();
+            } else {
+                ((App) getApplication()).refuseCallInvitation();
+            }
             Log.d(TAG, "calleeRoleInit: connectionPoint = " + connectionPoint);
         }
     }
@@ -292,13 +324,13 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             friendAvatarUrl = getIntent().getStringExtra("CALLEE_AVATAR");
             connectionPoint = getIntent().getIntExtra("CONNECTION_POINT", 1);
             connectionId = getIntent().getStringExtra("CONNECTION_ID");
-            connectionPoint = Utils.calculateFriendLevel(connectionPoint);
-            ((App)getApplication()).sendCallInvitation(calleeId, connectionPoint, connectionId);
+            connectionLevel = Utils.calculateFriendLevel(connectionPoint);
+            ((App) getApplication()).sendCallInvitation(calleeId, connectionPoint, connectionId);
             Log.d(TAG, "callerRoleInit: connectionPoint = " + connectionPoint);
         }
     }
 
-    private void initVideoUI() {
+    private void initFriendUI() {
         runOnUiThread(() -> {
             videoNickName.setText(friendNickname);
             videoFriendLevel.setText(Integer.toString(Utils.calculateFriendLevel(connectionPoint)));
@@ -310,7 +342,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     @Override
     protected void onDestroy() {
-        ((App)getApplication()).removeCallEventListener(this);
+        ((App) getApplication()).removeCallEventListener(this);
         if (mRtcEngine != null) {
             mRtcEngine.leaveChannel();
             RtcEngine.destroy();
@@ -321,25 +353,23 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
     @Override
     protected void onResume() {
         super.onResume();
-        // Auto cancel call invitation after 40s, if no one answered
+        // Auto cancel call invitation after 45s, if no one answered
         new Thread(() -> {
             long start = System.currentTimeMillis();
             long wait = start;
-            while (wait - start <= 40000 && !isPeerJoined) {
+            while (wait - start <= 45000 && !isPeerJoined) {
                 wait = System.currentTimeMillis();
             }
 
-            runOnUiThread(() -> {
-                loadingMsg.setText("No answer...");
-            });
-
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             if (!isPeerJoined) {
+                runOnUiThread(() -> {
+                    loadingMsg.setText("No answer...");
+                });
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Log.d(TAG, "No answer to video call");
                 ((App) getApplication()).cancelCallInvitation();
                 finish();
@@ -353,7 +383,6 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     @Override
     public void onLocalInvitationAccepted(LocalInvitation localInvitation, String s) {
-
         ((App) getApplication()).setLocalInvitation(null);
     }
 
@@ -389,7 +418,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         // Currently in a video chat, refuse the remote invitation automatically
         ((App) getApplication()).getRtmCallManager().refuseRemoteInvitation(remoteInvitation, null);
         // Send notification to remind of missed call
-        ((App)getApplication()).sendCanceledCallNotification(remoteInvitation);
+        ((App) getApplication()).sendCanceledCallNotification(remoteInvitation);
     }
 
     @Override
@@ -404,7 +433,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     @Override
     public void onRemoteInvitationCanceled(RemoteInvitation remoteInvitation) {
-        ((App)getApplication()).setRemoteInvitation(null);
+        ((App) getApplication()).setRemoteInvitation(null);
         finish();
     }
 

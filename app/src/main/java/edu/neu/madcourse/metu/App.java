@@ -63,12 +63,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private RtmCallManager rtmCallManager;
     private AgoraEventListener agoraEventListener;
 
-    // TODO: Add other global members, like User, Connection list...
     private User loginUser;
 
-    private String userId;
-    private String userNickname;
-    private String userAvatarUrl = "https://" + userNickname + ".png";
     /*private Map<String, Integer> peersOnlineStatus;*/
 
 
@@ -297,7 +293,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
 
-
+    // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void sendCanceledCallNotification(RemoteInvitation remoteInvitation) {
         String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
@@ -347,7 +343,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
+    // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public boolean sendCallNotification() {
         if (foregroundActivityCount == 0) {
@@ -506,7 +502,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
     public RemoteInvitation getRemoteInvitation() {
         return remoteInvitation;
     }
@@ -536,21 +531,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         return peersOnlineStatus != null ? peersOnlineStatus.get(peerId) == 0 : false;
     }*/
 
-    public String getUserId() {
-        return userId;
-    }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
-    public String getUserNickname() {
-        return userNickname;
-    }
-
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
-    }
 
     public int getCallNotificationId() {
         return callNotificationId;
@@ -560,14 +542,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
         this.callNotificationId = callNotificationId;
     }
 
-
     public void removeCanceledCallNotificationId(int canceledCallNotificationId) {
         canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
     }
 
-    public void addCanceledCallNotificationId(int canceledCallNotificationId) {
-        canceledCallNotificationIds.add(canceledCallNotificationId);
-    }
 
     public User getLoginUser() {
         return loginUser;

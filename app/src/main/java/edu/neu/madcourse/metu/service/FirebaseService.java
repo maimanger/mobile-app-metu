@@ -12,10 +12,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.SimpleFormatter;
 
 import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.ConnectionUser;
@@ -161,8 +164,39 @@ public class FirebaseService {
         });
     }
 
+    public void updateVideoHistory(String connectionId, DataFetchCallback<Long> callback) {
+        String date  = new SimpleDateFormat("yyyy-M-dd").format(new Date());
+        databaseRef.child("videos").child(connectionId).child(date).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        long newCount = 1;
+                        if (snapshot.exists()) {
+                            newCount = (long)snapshot.getValue() + 1;
+                        }
+                        snapshot.getRef().setValue(newCount);
+                        callback.onCallback(newCount);
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                }
+        );
+    }
 
+    public void addConnectionPoint(int pointIncrement, String connectionId) {
+        databaseRef.child("connections").child(connectionId).child("connectionPoint")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        long newPoint = (long)snapshot.getValue() + pointIncrement;
+                        snapshot.getRef().setValue(newPoint);
+                    }
 
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+    }
 }
