@@ -67,12 +67,12 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
 
         public void setData(RecentConversation conversation) {
             // todo: add default avatar
-            if (conversation.getContactAvatar() != null
-                    && conversation.getContactAvatar().length() > 0)  {
-                new Utils.DownloadImageTask(contactAvatar).execute(conversation.getContactAvatar());
-            } else {
-                // set to be the default avatar
-                contactAvatar.setImageResource(R.drawable.ic_default_avatar);
+            // todo: delete
+            System.out.println("connection id: " + conversation.getRecentContactNickname());
+            System.out.println("avatar: " + conversation.getContactAvatar());
+            String src = conversation.getContactAvatar();
+            if (src != null && src.length() > 0)  {
+                new Utils.DownloadImageTask(contactAvatar).execute(src);
             }
 
             //contactAvatar.setImageBitmap(BitmapUtils.getBitmapFromString(conversation.getContactAvatar()));

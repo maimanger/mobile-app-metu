@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                                     FCMTokenUtils.updateFCMToken(userId);
                                     ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
                                     // set the status
-                                    FCMTokenUtils.updateFCMToken(userId);
+                                    FCMTokenUtils.setStatusActive(userId);
                                     return;
                                 }
                             }
