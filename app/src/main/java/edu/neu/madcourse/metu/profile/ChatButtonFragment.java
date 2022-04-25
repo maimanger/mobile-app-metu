@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.models.ConnectionUser;
@@ -85,9 +86,6 @@ public class ChatButtonFragment extends Fragment {
                 connectionUser.setAvatarUri(toChatUser.getAvatarUri());
                 intent.putExtra("RECEIVER", connectionUser);
                 intent.putExtra("CONNECTION_ID", loginUserId + toChatUser.getUserId());
-                Log.e("caotama", connectionUser.toString());
-                Log.e("dayede", toChatUser.toString());
-                Log.e("bool", isLikedByLoginUser.toString());
                 startActivity(intent);
             }
         });

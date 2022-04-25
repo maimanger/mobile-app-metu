@@ -45,7 +45,7 @@ public class FirebaseService {
     public void updateUserProfile(String username, String email, String location, Integer age,
                                   String gender) {
         // Firebase does not allow '.' character in key.
-        String key = email.replace(".", "DOT");
+        String key = email.replace(".", "");
         HashMap<String, Object> userValues = new HashMap<>();
         userValues.put("username", username);
         userValues.put("email", email);

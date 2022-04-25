@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
@@ -40,8 +41,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         AddStoryButtonFragment.OnStoryDataPass {
     public static Bitmap avatarBitmap;
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String profileUserId = "tom@tomDOTcom";
-    private String loginUserId = "alice@aliceDOTcom";
+    private String profileUserId;
+    private String loginUserId;
     private final Boolean isSelf = false;
     private final Boolean isFriend = true;
 
@@ -63,13 +64,18 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        // TODO(xin): comment out next line due to returning null
+        // this.loginUserId = ((App) getApplication()).getUserId();
+        this.loginUserId = "alice@alicecom";  // TODO(xin): to remove
+
+        // TODO(xin): last activity haven't passed profileUserId yet. Comment out next line
+        // this.profileUserId = getIntent().getStringExtra("profileUserId");
+        this.profileUserId = "tom@tomDOTcom";  // TODO(xin): to remove
+
         initUserProfileData(savedInstanceState);
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
-
-        // TODO(xin): get value of userId and isFriend
-
         initFragments();
 
 

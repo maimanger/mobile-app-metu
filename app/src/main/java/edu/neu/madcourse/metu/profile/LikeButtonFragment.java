@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import edu.neu.madcourse.metu.R;
@@ -72,8 +73,8 @@ public class LikeButtonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView favorite = view.findViewById(R.id.favorite_button);
-        favorite.setOnClickListener(new View.OnClickListener() {
+        Button profile_like_button = view.findViewById(R.id.profile_like_button);
+        profile_like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO(Xin): add friend status to the database
