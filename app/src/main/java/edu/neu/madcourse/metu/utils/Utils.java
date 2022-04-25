@@ -149,6 +149,7 @@ public class Utils {
         }
     }
 
+
     public static void loadImgUri(String uri, ImageView imageView, Callback callback) {
         if (uri == null
                 || (!uri.startsWith("http://") && !uri.startsWith("https://"))

@@ -66,23 +66,21 @@
 
                     <FrameLayout
                         android:id="@+id/chat_button"
-                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="80dp"
                         android:layout_marginTop="32dp"
-                        />
+                        android:layout_marginEnd="80dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout" />
 
                     <FrameLayout
                         android:id="@+id/video_button"
-                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
                         android:layout_marginTop="32dp"
-                        />
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/user_info_constraint_layout" />
 
                     <TextView
                         android:id="@+id/text_username"
@@ -121,10 +119,9 @@
                         android:id="@+id/edit_profile_button_fragment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/text_location"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_location" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

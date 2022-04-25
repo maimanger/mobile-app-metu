@@ -3,7 +3,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#d982af"
+        android:background="#8c09e0"
         android:gravity="center">
 
         <TextView
