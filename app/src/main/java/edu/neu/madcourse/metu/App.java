@@ -9,6 +9,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.Set;
 
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 import edu.neu.madcourse.metu.video.DismissCanceledCallNotifReceiver;
 import edu.neu.madcourse.metu.video.RefuseVideoCallReceiver;
 import edu.neu.madcourse.metu.video.VideoActivity;
@@ -63,15 +67,16 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private RtmCallManager rtmCallManager;
     private AgoraEventListener agoraEventListener;
 
-    // TODO: Add other global members, like User, Connection list...
     private User loginUser;
+
 
     private String userId;
     private String userNickname;
     private String userAvatarUrl = "https://" + userNickname + ".png";
+
+    private String fcmToken = "";
+
     /*private Map<String, Integer> peersOnlineStatus;*/
-
-
 
     class AgoraEventListener implements RtmClientListener, RtmCallEventListener {
         private Map<String, RtmClientListener> activityClientListeners;
@@ -199,12 +204,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
-
-
-
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -252,6 +251,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void onActivityStarted(@NonNull Activity activity) {
         if (++foregroundActivityCount == 1 && !isActivityChangingConfigurations) {
             // App enters foreground -> stop the service
+            // set the current user to be available
+            // todo: check if logged in
+            if (userId != null && userId.length() > 0) {
+                FCMTokenUtils.setStatusActive(userId);
+                // reset the token
+                fcmToken = "";
+            }
         }
     }
 
@@ -269,6 +275,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
         // Orientation change will also trigger activity onStop
         isActivityChangingConfigurations = activity.isChangingConfigurations();
         if (--foregroundActivityCount == 0 && !isActivityChangingConfigurations) {
+            // set the current user to be inactive
+            if (userId != null && userId.length() > 0) {
+                FCMTokenUtils.setStatusInactive(userId);
+            }
         }
     }
 
@@ -288,6 +298,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 @Override
                 public void onFailure(ErrorInfo errorInfo) { }
             });
+
+            // remove the FCM token
+            if (userId != null && userId.length() > 0) {
+                FCMTokenUtils.removeFCMToken(userId);
+                fcmToken = "";
+            }
         }
     }
 
@@ -297,12 +313,17 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
 
-
+    // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void sendCanceledCallNotification(RemoteInvitation remoteInvitation) {
         String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
         String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
+
         Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
+        if (bitmap == null) {
+            Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.user_avatar, null);
+            bitmap = ((BitmapDrawable)drawable).getBitmap();
+        }
 
         // Register the new channel with the system
         NotificationChannel channel = new NotificationChannel(
@@ -347,13 +368,17 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
+    // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public boolean sendCallNotification() {
         if (foregroundActivityCount == 0) {
             String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
             String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
             Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
+            if (bitmap == null) {
+                Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.user_avatar, null);
+                bitmap = ((BitmapDrawable)drawable).getBitmap();
+            }
 
             // Register the new channel with the system
             NotificationChannel channel = new NotificationChannel(
@@ -506,7 +531,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
     public RemoteInvitation getRemoteInvitation() {
         return remoteInvitation;
     }
@@ -536,21 +560,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         return peersOnlineStatus != null ? peersOnlineStatus.get(peerId) == 0 : false;
     }*/
 
-    public String getUserId() {
-        return userId;
-    }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
-    public String getUserNickname() {
-        return userNickname;
-    }
-
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
-    }
 
     public int getCallNotificationId() {
         return callNotificationId;
@@ -560,13 +571,16 @@ public class App extends Application implements Application.ActivityLifecycleCal
         this.callNotificationId = callNotificationId;
     }
 
-
     public void removeCanceledCallNotificationId(int canceledCallNotificationId) {
         canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
     }
 
-    public void addCanceledCallNotificationId(int canceledCallNotificationId) {
-        canceledCallNotificationIds.add(canceledCallNotificationId);
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public User getLoginUser() {
@@ -576,5 +590,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void setLoginUser(User loginUser) {
         this.loginUser = loginUser;
     }
-}
 
+    public String getFcmToken() {
+        return this.fcmToken;
+    }
+
+    public void setFcmToken(String s) {
+        this.fcmToken = s;
+    }
+}

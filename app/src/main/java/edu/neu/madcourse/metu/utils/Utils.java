@@ -4,9 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -146,17 +149,31 @@ public class Utils {
         }
     }
 
-    public static void loadImgUri(String uri, ImageView imageView) {
-        Picasso.get().load(uri).into(imageView);
+    public static void loadImgUri(String uri, ImageView imageView, Callback callback) {
+        if (uri == null
+                || (!uri.startsWith("http://") && !uri.startsWith("https://"))
+                || (!Patterns.WEB_URL.matcher(uri).matches())) {
+            callback.onError(new Exception());
+            return;
+        }
+        Picasso.get().load(uri).into(imageView, callback);
+
     }
 
     public static Bitmap getBitmapFromUri(String uri) {
         Bitmap mBitmap = null;
+        if (uri == null
+                || (!uri.startsWith("http://") && !uri.startsWith("https://"))
+                || (!Patterns.WEB_URL.matcher(uri).matches())) {
+            return mBitmap;
+        }
+
         try {
             mBitmap = Picasso.get().load(uri).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return mBitmap;
     }
 }

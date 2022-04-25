@@ -34,10 +34,11 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.UUID;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.AddStoryButtonFragment;
 
-public class UploadActivity extends AppCompatActivity {
+public class UploadActivity extends BaseCalleeActivity {
 
     // view for image view
     private ImageView imageView;

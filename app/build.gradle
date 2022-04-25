@@ -71,11 +71,6 @@ dependencies {
     // rounded imageview
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
-    // like button
-    implementation 'com.jackandphantom.android:androidlikebutton:1.2.0'
-
-    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
-
     // blur image
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
 
@@ -87,8 +82,14 @@ dependencies {
     implementation 'com.github.agorabuilder:rtm-sdk:1.4.1'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
+
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
-

@@ -25,6 +25,8 @@
         <receiver android:name=".video.RefuseVideoCallReceiver" />
         <receiver android:name=".video.DismissCanceledCallNotifReceiver" />
 
+        <service android:name=".service.UpdateVideoHistoryService" />
+
         <activity
             android:name=".BaseCalleeActivity"
             android:exported="false" />
@@ -85,6 +87,15 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <service
+            android:name=".utils.MessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

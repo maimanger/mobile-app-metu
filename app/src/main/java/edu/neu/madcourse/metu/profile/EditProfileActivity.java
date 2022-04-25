@@ -23,12 +23,13 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends BaseCalleeActivity {
 
     EditText etUsername, etEmail, etLocation, etAge, etGender;
     private Uri imageFilePath;

@@ -12,7 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import edu.neu.madcourse.metu.home.HomeActivity;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends BaseCalleeActivity {
 
     @Override
 protected void onCreate(Bundle savedInstanceState) {
