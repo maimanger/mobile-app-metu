@@ -14,6 +14,7 @@ import edu.neu.madcourse.metu.R;
 
 public class HomeActivity extends AppCompatActivity {
     FrameLayout bgLayout;
+    GifView gifView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         bgLayout = findViewById(R.id.frame_homeBackground);
-        bgLayout.addView(new GifView(this));
+        gifView = new GifView(this);
 
         Button loginButton = (Button) findViewById(R.id.loginbtn);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +45,18 @@ public class HomeActivity extends AppCompatActivity {
                 return;
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bgLayout.removeAllViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bgLayout.addView(gifView);
     }
 
 }
