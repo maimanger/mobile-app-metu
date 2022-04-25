@@ -1,5 +1,6 @@
 package edu.neu.madcourse.metu.contacts;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Callback;
+
 import java.util.List;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.Contact;
@@ -61,9 +64,17 @@ public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.Conta
         Contact currContact = contactsList.get(position);
         holder.contactName.setText(currContact.getContactName());
         holder.onlineStatus.setVisibility(currContact.isOnline() ? View.VISIBLE : View.INVISIBLE);
-        //holder.contactAvatar.setImageResource(R.drawable.ic_user_avatar);
         //new Utils.DownloadImageTask(holder.contactAvatar).execute(currContact.getContactAvatarUri());
-        Utils.loadImgUri(currContact.getContactAvatarUri(), holder.contactAvatar);
+        Utils.loadImgUri(currContact.getContactAvatarUri(), holder.contactAvatar, new Callback() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onError(Exception e) {
+                holder.contactAvatar.setImageResource(R.drawable.ic_user_avatar);
+            }
+        });
 
         int friendLevel = Utils.calculateFriendLevel(currContact.getConnectionPoint());
         initFriendLevelView(holder, friendLevel);

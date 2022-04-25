@@ -9,6 +9,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -298,7 +301,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void sendCanceledCallNotification(RemoteInvitation remoteInvitation) {
         String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
         String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
+
         Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
+        if (bitmap == null) {
+            Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.user_avatar, null);
+            bitmap = ((BitmapDrawable)drawable).getBitmap();
+        }
 
         // Register the new channel with the system
         NotificationChannel channel = new NotificationChannel(
@@ -350,6 +358,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
             String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
             String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
             Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
+            if (bitmap == null) {
+                Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.user_avatar, null);
+                bitmap = ((BitmapDrawable)drawable).getBitmap();
+            }
 
             // Register the new channel with the system
             NotificationChannel channel = new NotificationChannel(

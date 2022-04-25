@@ -19,6 +19,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Callback;
 
 import java.util.Map;
 
@@ -90,9 +91,17 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
             setupAcceptDialogBtn();
             setupRefuseDialogBtn();
 
-            // TODO: update callerAvatar based on image url
             ShapeableImageView callerAvatarImg = callInvitationDialog.findViewById(R.id.image_callDialog_callerAvatar);
-            Utils.loadImgUri(callerAvatarUri, callerAvatarImg);
+            Utils.loadImgUri(callerAvatarUri, callerAvatarImg, new Callback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    callerAvatarImg.setImageResource(R.drawable.user_avatar);
+                }
+            });
             //callerAvatarImg.setImageResource(R.drawable.user_avatar);
             TextView callerNameText = callInvitationDialog.findViewById(R.id.text_callDialog_callerName);
             callerNameText.setText(callerName);

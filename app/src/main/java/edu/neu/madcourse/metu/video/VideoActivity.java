@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Callback;
 
 import java.util.Random;
 
@@ -336,7 +337,16 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             videoNickName.setText(friendNickname);
             videoFriendLevel.setText(Integer.toString(Utils.calculateFriendLevel(connectionPoint)));
             // TODO: VideoAvatar should be fetched from Firebase
-            Utils.loadImgUri(friendAvatarUrl, videoAvatar);
+            Utils.loadImgUri(friendAvatarUrl, videoAvatar, new Callback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    videoAvatar.setImageResource(R.drawable.user_avatar);
+                }
+            });
             //videoAvatar.setImageResource(R.drawable.user_avatar);
         });
     }
