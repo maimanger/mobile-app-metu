@@ -39,6 +39,7 @@
         android:text="I am sending some messagesssssssssssssssssssssssssssssssssssssssssssssssss"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sentTimestamp"
+        android:layout_marginTop="5dp"
         android:maxWidth="270dp"
         android:minWidth="40dp"/>
 

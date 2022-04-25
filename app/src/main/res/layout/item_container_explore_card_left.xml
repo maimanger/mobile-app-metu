@@ -15,41 +15,56 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/recommend_card_button_background"
-        android:elevation="20dp">
-        <com.like.LikeButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon_type="heart"
-            app:icon_size="7dp"
-            android:id="@+id/likeToggleLeft"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            />
+        android:elevation="15dp">
+<!--        <com.like.LikeButton-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:icon_type="heart"-->
+<!--            app:icon_size="7dp"-->
+<!--            android:id="@+id/likeToggleLeft"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            />-->
 <!--        <ToggleButton-->
 <!--            android:layout_centerHorizontal="true"-->
 <!--            android:id="@+id/likeToggleLeft"-->
-<!--            android:layout_width="60dp"-->
-<!--            android:layout_height="60dp"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
 <!--            android:textOff=""-->
 <!--            android:textOn=""-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            android:elevation="40dp"-->
 <!--            android:background="@drawable/toggle_selector" />-->
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_unlike"
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:elevation="40dp"
+            android:id="@+id/likeToggleLeft"
+            />
 
     </FrameLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/recProfileCardLeft"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_width="320dp"
+        android:layout_height="420dp"
         app:cardElevation="10dp"
-        app:cardBackgroundColor="@color/chat_background_color"
+        app:cardBackgroundColor="@color/bg_black1"
         app:cardCornerRadius="50dp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -64,47 +79,53 @@
                 app:layout_constraintStart_toStartOf="@+id/blurredProfilePhotoLeft"
                 app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoLeft"
                 />
-            
-<!--            <ImageView-->
-<!--                android:id="@+id/blurredProfilePhotoLeft"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="320dp"-->
-<!--                android:scaleType="centerCrop"-->
-<!--                android:src="@drawable/harry"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <com.jgabrielfreitas.core.BlurImageView
                 android:id="@+id/blurredProfilePhotoLeft"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/harry"
+                android:src="@drawable/ic_default_avatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/recUsernameLeft"
+            <FrameLayout
+                android:id="@+id/recUsernameLeftWrapper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Harry Potter"
-                android:textColor="@color/chat_contact_image_color"
-                android:textSize="25sp"
-                android:fontFamily="sans-serif-black"
+                android:background="@drawable/background_explore_recommend_username"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="18dp"
                 android:layout_marginStart="15dp"
-                android:maxWidth="250dp" />
+                android:maxWidth="250dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:elevation="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/recUsernameLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Harry Potter"
+                    android:textColor="@color/chat_contact_image_color"
+                    android:textSize="25sp"
+                    android:fontFamily="sans-serif-black" />
+
+
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/recUserGenderLeft"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_gender_male"
-                app:layout_constraintStart_toEndOf="@+id/recUsernameLeft"
-                app:layout_constraintTop_toTopOf="@+id/recUsernameLeft"
-                app:layout_constraintBottom_toBottomOf="@+id/recUsernameLeft"
+                app:layout_constraintStart_toEndOf="@+id/recUsernameLeftWrapper"
+                app:layout_constraintTop_toTopOf="@+id/recUsernameLeftWrapper"
+                app:layout_constraintBottom_toBottomOf="@+id/recUsernameLeftWrapper"
                 android:layout_marginStart="2dp"
                 app:tint="@color/blue" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

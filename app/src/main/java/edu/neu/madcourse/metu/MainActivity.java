@@ -1,5 +1,6 @@
 package edu.neu.madcourse.metu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,22 +18,30 @@ import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import android.widget.Button;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.TextView;
+import android.widget.EditText;
 
-import edu.neu.madcourse.metu.chat.ChatActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
-import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
-import edu.neu.madcourse.metu.utils.BitmapUtils;
-import edu.neu.madcourse.metu.utils.FakeDatabase;
+import edu.neu.madcourse.metu.utils.Constants;
+import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 import edu.neu.madcourse.metu.video.VideoActivity;
 
 
 public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
+    private String username;
+
+    private Button okButton;
+    private EditText inputName;
+    private Button recentChats;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,26 +80,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        editor = getSharedPreferences("METU_APP", MODE_PRIVATE).edit();
-        editor.putString("USERNAME", FakeDatabase.sender.getUsername());
-        editor.apply();
-
-        Button chat = findViewById(R.id.openChatActivity);
-        chat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bitmap bitmap;
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.harry);
-                FakeDatabase.receiver.setAvatar(BitmapUtils.encodeImage(bitmap, 150));
-
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ron);
-                FakeDatabase.sender.setAvatar(BitmapUtils.encodeImage(bitmap, 150));
-
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                intent.putExtra("RECEIVER", FakeDatabase.receiver);
-                startActivity(intent);
-            }
-        });
+        initCurrentUser();
+        initRecentConversations();
 
         Button explore = findViewById(R.id.openExploringActivity);
         explore.setOnClickListener(new View.OnClickListener() {
@@ -101,14 +92,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button recentChat = findViewById(R.id.openRecentConversation);
-        recentChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RecentConversationActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
 
@@ -132,5 +115,69 @@ public class MainActivity extends AppCompatActivity {
                 ((App)getApplication()).setLoginUser(user);
                     });
         }).start();
+    }
+
+    public void initCurrentUser() {
+        okButton = findViewById(R.id.okButton);
+        inputName = findViewById(R.id.inputUsername);
+
+        okButton.setOnClickListener(view -> {
+            String userInputName = inputName.getText().toString();
+            // if the username input is valid and not the current one
+            if (userInputName != null && userInputName.trim().length() > 0 && !userInputName.equals(username)) {
+                // auth the user somehow
+                Log.d("LOGIN", userInputName + " trying to log in ");
+                // todo: real login
+                // fetch the user info from the database
+                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
+                        .orderByChild(Constants.USER_USER_ID)
+                        .equalTo(userInputName)
+                        .limitToFirst(1)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                for (DataSnapshot d: snapshot.getChildren()) {
+                                    String userId = d.child(Constants.USER_USER_ID).getValue(String.class);
+                                    String nickname = d.child(Constants.USER_NICKNAME).getValue(String.class);
+                                    String avatarUri = d.child(Constants.USER_AVATAR_URI).getValue(String.class);
+
+                                    User loginUser = new User();
+                                    loginUser.setUserId(userId);
+                                    loginUser.setAvatarUri(avatarUri);
+                                    loginUser.setNickname(nickname);
+
+                                    // set the current user
+                                    ((App) getApplication()).setLoginUser(loginUser);
+                                    ((App) getApplication()).setUserId(userId);
+
+                                    // update the token
+                                    FCMTokenUtils.updateFCMToken(userId);
+                                    ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
+                                    // set the status
+                                    FCMTokenUtils.setStatusActive(userId);
+                                    return;
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+            }
+
+        });
+    }
+
+    public void initRecentConversations() {
+        recentChats = findViewById(R.id.openRecentConversation);
+        recentChats.setOnClickListener(view -> {
+            if (((App) getApplication()).getLoginUser() != null) {
+                Intent intent = new Intent(MainActivity.this, RecentConversationActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

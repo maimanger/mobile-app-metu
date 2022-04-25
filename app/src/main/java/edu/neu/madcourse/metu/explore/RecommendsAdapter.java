@@ -1,11 +1,11 @@
 package edu.neu.madcourse.metu.explore;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,29 +16,26 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.like.LikeButton;
-import com.like.OnLikeListener;
-
 import java.util.List;
 
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.chat.ChatActivity;
-import edu.neu.madcourse.metu.contacts.daos.RecommendedProfile;
+import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
-import edu.neu.madcourse.metu.utils.GenderUtils;
+import edu.neu.madcourse.metu.utils.Constants;
 
 public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private List<RecommendedProfile> recommends;
-    private String username;
+    private List<RecommendedUser> recommends;
+    private User loginUser;
 
     private static final int VIEW_TYPE_LEFT = 1;
     private static final int VIEW_TYPE_RIGHT = 2;
 
-    public RecommendsAdapter(Context context, List<RecommendedProfile> recommends, String username) {
+    public RecommendsAdapter(Context context, List<RecommendedUser> recommends, User loginUser) {
         this.context = context;
         this.recommends = recommends;
-        this.username = username;
+        this.loginUser = loginUser;
     }
 
     @Override
@@ -80,7 +77,8 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView recommendUsername;
         ImageView recommendUserGender;
         AppCompatImageView sendMessage;
-        LikeButton toggleButton;
+        //LikeButton toggleButton;
+        Button toggleButton;
 
         public RecommendProfileLeftViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,48 +90,38 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             toggleButton = itemView.findViewById(R.id.likeToggleLeft);
         }
 
-        public void setData(RecommendedProfile profile) {
-            this.toggleButton.setLiked(profile.isLiked());
-            // add the blur effect
-            blurredProfileImg.setImageBitmap(BitmapUtils.blurBitmap(context, BitmapUtils.getBitmapFromString(profile.getRecommendUser().getProfilePhoto()), 5));
+        public void setData(RecommendedUser recommendedUser) {
+            // this.toggleButton.setLiked(profile.isLiked());
+            if (recommendedUser.getIsLiked()) {
+                toggleButton.setBackgroundResource(R.drawable.ic_like);
+            } else {
+                toggleButton.setBackgroundResource(R.drawable.ic_unlike);
+                // set listener
+                // toggle button listener
+                toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
+            }
 
-            recommendUsername.setText(profile.getRecommendUser().getUsername());
+            // add the blur effect
+            // todo: read from uri
+            new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 5).execute(
+                    recommendedUser.getAvatarUri()
+            );
+
+            recommendUsername.setText(recommendedUser.getNickname());
             // add text view effect
-            recommendUsername.setShadowLayer(30, 0, 0, ContextCompat.getColor(context, R.color.white));
+            recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
             // todo: more gender identity
-            if (profile.getRecommendUser().getGender() == GenderUtils.FEMALE) {
+            if (recommendedUser.getGender() == Constants.GENDER_FEMALE_INT) {
                 recommendUserGender.setImageResource(R.drawable.ic_gender_female);
                 ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pink)));
-            } if (profile.getRecommendUser().getGender() == GenderUtils.MALE) {
+            } if (recommendedUser.getGender() == Constants.GENDER_MALE_INT) {
                 recommendUserGender.setImageResource(R.drawable.ic_gender_male);
                 ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
             }
 
-            // todo: sendMessage
             // add listener
-            sendMessage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("RECEIVER", profile.getRecommendUser());
-                    view.getContext().startActivity(intent);
-                }
-            });
-
-            // toggle
-            toggleButton.setOnLikeListener(new OnLikeListener() {
-                @Override
-                public void liked(LikeButton likeButton) {
-                    profile.setLiked(true);
-                }
-
-                @Override
-                public void unLiked(LikeButton likeButton) {
-                    profile.setLiked(false);
-                }
-            });
+            sendMessage.setOnClickListener(new SendMessageOnClickListener(recommendedUser, loginUser));
         }
     }
 
@@ -146,7 +134,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView recommendUsername;
         ImageView recommendUserGender;
         AppCompatImageView sendMessage;
-        LikeButton toggleButton;
+        Button toggleButton;
 
         public RecommendProfileRightViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -158,47 +146,40 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             toggleButton = itemView.findViewById(R.id.likeToggleRight);
         }
 
-        public void setData(RecommendedProfile profile) {
-            this.toggleButton.setLiked(profile.isLiked());
-            // create the blur effect
-            blurredProfileImg.setImageBitmap(BitmapUtils.blurBitmap(context, BitmapUtils.getBitmapFromString(profile.getRecommendUser().getProfilePhoto()), 5));
+        public void setData(RecommendedUser recommendedUser) {
 
-            recommendUsername.setText(profile.getRecommendUser().getUsername());
-            // add text effect
-            recommendUsername.setShadowLayer(30, 0, 0, ContextCompat.getColor(context, R.color.white));
-
-            // todo: more gender identity
-            if (profile.getRecommendUser().getGender() == GenderUtils.FEMALE) {
-                recommendUserGender.setImageResource(R.drawable.ic_gender_female);
-                ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pink)));
-            } if (profile.getRecommendUser().getGender() == GenderUtils.MALE) {
-                recommendUserGender.setImageResource(R.drawable.ic_gender_male);
-                ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
+            if (recommendedUser.getIsLiked()) {
+                toggleButton.setBackgroundResource(R.drawable.ic_like);
+            } else {
+                toggleButton.setBackgroundResource(R.drawable.ic_unlike);
+                toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
             }
 
-            // todo: sendMessage
+
+            // add the blur effect
+            new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 5).execute(
+                    recommendedUser.getAvatarUri()
+            );
+
+            recommendUsername.setText(recommendedUser.getNickname());
+            // add text view effect
+            recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
+
+            // todo: more gender identity
+            if (recommendedUser.getGender() == Constants.GENDER_FEMALE_INT) {
+                recommendUserGender.setImageResource(R.drawable.ic_gender_female);
+                ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pink)));
+            } if (recommendedUser.getGender() == Constants.GENDER_MALE_INT) {
+                recommendUserGender.setImageResource(R.drawable.ic_gender_male);
+                ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
+            } else {
+                recommendUserGender.setImageResource(R.drawable.ic_gender_undefine);
+                ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.purple_200)));
+            }
+
             // add listener
-            sendMessage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("RECEIVER", profile.getRecommendUser());
-                    view.getContext().startActivity(intent);
-                }
-            });
+            sendMessage.setOnClickListener(new SendMessageOnClickListener(recommendedUser, loginUser));
 
-            toggleButton.setOnLikeListener(new OnLikeListener() {
-                @Override
-                public void liked(LikeButton likeButton) {
-                    profile.setLiked(true);
-                }
-
-                @Override
-                public void unLiked(LikeButton likeButton) {
-                    profile.setLiked(false);
-                }
-            });
         }
     }
 }

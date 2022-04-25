@@ -31,6 +31,7 @@ import java.util.Set;
 
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 import edu.neu.madcourse.metu.video.DismissCanceledCallNotifReceiver;
 import edu.neu.madcourse.metu.video.RefuseVideoCallReceiver;
 import edu.neu.madcourse.metu.video.VideoActivity;
@@ -68,9 +69,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     private User loginUser;
 
+
+    private String userId;
+    private String userNickname;
+    private String userAvatarUrl = "https://" + userNickname + ".png";
+
+    private String fcmToken = "";
+
     /*private Map<String, Integer> peersOnlineStatus;*/
-
-
 
     class AgoraEventListener implements RtmClientListener, RtmCallEventListener {
         private Map<String, RtmClientListener> activityClientListeners;
@@ -198,12 +204,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
-
-
-
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -251,6 +251,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void onActivityStarted(@NonNull Activity activity) {
         if (++foregroundActivityCount == 1 && !isActivityChangingConfigurations) {
             // App enters foreground -> stop the service
+            // set the current user to be available
+            // todo: check if logged in
+            if (userId != null && userId.length() > 0) {
+                FCMTokenUtils.setStatusActive(userId);
+                // reset the token
+                fcmToken = "";
+            }
         }
     }
 
@@ -268,6 +275,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
         // Orientation change will also trigger activity onStop
         isActivityChangingConfigurations = activity.isChangingConfigurations();
         if (--foregroundActivityCount == 0 && !isActivityChangingConfigurations) {
+            // set the current user to be inactive
+            if (userId != null && userId.length() > 0) {
+                FCMTokenUtils.setStatusInactive(userId);
+            }
         }
     }
 
@@ -287,6 +298,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 @Override
                 public void onFailure(ErrorInfo errorInfo) { }
             });
+
+            // remove the FCM token
+            if (userId != null && userId.length() > 0) {
+                FCMTokenUtils.removeFCMToken(userId);
+                fcmToken = "";
+            }
         }
     }
 
@@ -558,6 +575,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
         canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public User getLoginUser() {
         return loginUser;
@@ -566,5 +590,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void setLoginUser(User loginUser) {
         this.loginUser = loginUser;
     }
-}
 
+    public String getFcmToken() {
+        return this.fcmToken;
+    }
+
+    public void setFcmToken(String s) {
+        this.fcmToken = s;
+    }
+}

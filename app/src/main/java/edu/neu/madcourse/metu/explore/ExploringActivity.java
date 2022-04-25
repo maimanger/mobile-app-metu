@@ -1,45 +1,55 @@
 package edu.neu.madcourse.metu.explore;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+import edu.neu.madcourse.metu.App;
+
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.chat.ChatActivity;
+
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
-import edu.neu.madcourse.metu.contacts.daos.RecommendedProfile;
-import edu.neu.madcourse.metu.contacts.daos.User;
+
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
-import edu.neu.madcourse.metu.utils.BitmapUtils;
-import edu.neu.madcourse.metu.utils.FakeDatabase;
-import edu.neu.madcourse.metu.utils.GenderUtils;
+import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
+import edu.neu.madcourse.metu.utils.Constants;
+import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
 public class ExploringActivity extends BaseCalleeActivity {
-    private String username;
-    private List<RecommendedProfile> recommends;
+    private String userId;
+
+    private List<RecommendedUser> recommends;
 
     // ui components
-    AppCompatImageView setting;
+    AppCompatImageView preferenceSetting;
 
     // recycler view
     private RecyclerView exploringPage;
@@ -47,7 +57,6 @@ public class ExploringActivity extends BaseCalleeActivity {
 
     // for multi threading
     private ExecutorService executorService;
-    private Handler uiThread;
 
     BottomNavigationView bottomNavigationView;
 
@@ -56,13 +65,15 @@ public class ExploringActivity extends BaseCalleeActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exploring);
 
+        // initialize the recycler view
+        exploringPage = findViewById(R.id.exploringPage);
+
         // initialize the executor service
         executorService = Executors.newFixedThreadPool(1);
-        uiThread = new Handler(Looper.getMainLooper());
         recommends = new ArrayList<>();
 
-        // init the username
-        loadUsername();
+        // init the user
+        loadUser();
 
         // init data view
         init(savedInstanceState);
@@ -100,58 +111,100 @@ public class ExploringActivity extends BaseCalleeActivity {
 
     }
 
-    private void loadUsername() {
-        this.username = getSharedPreferences("METU_APP", MODE_PRIVATE)
-                .getString("USERNAME", "");
+    private void loadUser() {
+        // todo: load from App
+        this.userId = ((App) getApplicationContext()).getUserId();
+        Log.d("ACTIVITY", "EXPLORING ACTIVITY: " + userId);
     }
 
     private void init(Bundle savedInstanceState) {
         // todo: deal with the direction change
-        fetchData();
-        initRecyclerView();
-        recommendsAdapter.notifyDataSetChanged();
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                initRecyclerView();
+                fetchData();
+
+            }
+        });
+
+        // initRecyclerView();
+        // recommendsAdapter.notifyDataSetChanged();
         
     }
 
     private void initRecyclerView() {
-        // init the recycler view and set the layout manager
-        exploringPage = findViewById(R.id.exploringPage);
+        // init and set the adapter
+        User loginUser = ((App) getApplication()).getLoginUser();
+        recommendsAdapter = new RecommendsAdapter(getApplicationContext(), recommends, loginUser);
+        exploringPage.setAdapter(recommendsAdapter);
+        // init the layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         exploringPage.setLayoutManager(linearLayoutManager);
 
-        // init and set the adapter
-        recommendsAdapter = new RecommendsAdapter(getApplicationContext(), recommends, username);
-        exploringPage.setAdapter(recommendsAdapter);
     }
 
     private void fetchData() {
-        RecommendedProfile profile;
-        Bitmap bitmap;
-        User user;
 
-        profile = new RecommendedProfile(FakeDatabase.receiver, false);
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.harry);
-        FakeDatabase.receiver.setGender(GenderUtils.MALE);
-        FakeDatabase.receiver.setProfilePhoto(BitmapUtils.encodeImage(bitmap, 300));
-        this.recommends.add(profile);
+        // todo: matching algorithm
 
-        user = new User();
-        user.setUsername("Hermione Granger");
-        user.setGender(GenderUtils.FEMALE);
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.hermione);
-        user.setAvatar(BitmapUtils.encodeImage(bitmap, 160));
-        user.setProfilePhoto(BitmapUtils.encodeImage(bitmap, 300));
-        profile = new RecommendedProfile(user, false);
-        this.recommends.add(profile);
+        FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        if (snapshot.exists()) {
+                            String userId = snapshot.child(Constants.USER_USER_ID).getValue(String.class);
+                            String nickname = snapshot.child(Constants.USER_NICKNAME).getValue(String.class);
+                            // todo: gender string or int?
+                            String gender = snapshot.child(Constants.USER_GENDER).getValue(String.class);
+                            String avatarUri = snapshot.child(Constants.USER_AVATAR_URI).getValue(String.class);
 
-        user = new User();
-        user.setUsername("Luna Lovegood");
-        user.setGender(GenderUtils.FEMALE);
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.luna);
-        user.setAvatar(BitmapUtils.encodeImage(bitmap, 160));
-        user.setProfilePhoto(BitmapUtils.encodeImage(bitmap, 300));
-        profile = new RecommendedProfile(user, false);
-        this.recommends.add(profile);
+                            RecommendedUser recommendedUser = new RecommendedUser();
+                            recommendedUser.setIsLiked(false);
+
+                            // todo: gender categories
+                            if (gender != null && gender.toLowerCase().equals(Constants.GENDER_FEMALE_STRING)) {
+                                recommendedUser.setGender(Constants.GENDER_FEMALE_INT);
+                            } else if (gender != null && gender.toLowerCase().equals(Constants.GENDER_MALE_STRING)) {
+                                recommendedUser.setGender(Constants.GENDER_MALE_INT);
+                            } else {
+                                recommendedUser.setGender(Constants.GENDER_UNDEFINE_INT);
+                            }
+
+                            recommendedUser.setUserId(userId);
+                            recommendedUser.setNickname(nickname);
+                            recommendedUser.setAvatarUri(avatarUri);
+
+                            recommends.add(recommendedUser);
+
+                            recommendsAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
 
     }
+
+
+
 }
