@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
@@ -34,7 +35,7 @@ import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseCalleeActivity {
     private User receiverUser;
     private String username;
 

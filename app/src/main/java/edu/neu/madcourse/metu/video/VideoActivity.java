@@ -235,7 +235,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
     }
 
     public void onClickChangeFilter(View view) {
-        currentFilterIdx = (currentFilterIdx + 1) % (Utils.getFiltersSize(connectionPoint));
+        currentFilterIdx = (currentFilterIdx + 1) % (Utils.getFiltersSize(connectionLevel));
         int filterId = Utils.getCurrentFilter(connectionLevel, currentFilterIdx);
         if (filterId != -9999) {
             filterFrame.setBackgroundResource(filterId);
@@ -283,9 +283,9 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     private void createRandomFilterIdx() {
         if (connectionLevel > 2) {
-            currentFilterIdx = Utils.getFiltersSize(connectionPoint) - 1;
+            currentFilterIdx = Utils.getFiltersSize(connectionLevel) - 1;
         } else {
-            currentFilterIdx = new Random().nextInt(Utils.getFiltersSize(connectionPoint));
+            currentFilterIdx = new Random().nextInt(Utils.getFiltersSize(connectionLevel));
         }
     }
 
@@ -307,6 +307,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             connectionPoint = Integer.parseInt(Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_POINT));
             connectionId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_ID);
             connectionLevel = Utils.calculateFriendLevel(connectionPoint);
+
             if (isPermitted) {
                 ((App) getApplication()).acceptCallInvitation();
             } else {

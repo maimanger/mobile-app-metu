@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
@@ -33,7 +34,7 @@ import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
 import edu.neu.madcourse.metu.utils.GenderUtils;
 
-public class ExploringActivity extends AppCompatActivity {
+public class ExploringActivity extends BaseCalleeActivity {
     private String username;
     private List<RecommendedProfile> recommends;
 

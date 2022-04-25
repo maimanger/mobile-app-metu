@@ -174,7 +174,8 @@ public class FirebaseService {
                         if (snapshot.exists()) {
                             newCount = (long)snapshot.getValue() + 1;
                         }
-                        snapshot.getRef().setValue(newCount);
+                        databaseRef.child("videos").child(connectionId).child(date).setValue(newCount);
+                        //snapshot.getRef().setValue(newCount);
                         callback.onCallback(newCount);
                     }
 

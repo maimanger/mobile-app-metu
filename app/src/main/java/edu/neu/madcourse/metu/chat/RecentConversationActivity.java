@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
@@ -32,7 +33,7 @@ import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.FakeDatabase;
 import edu.neu.madcourse.metu.utils.GenderUtils;
 
-public class RecentConversationActivity extends AppCompatActivity {
+public class RecentConversationActivity extends BaseCalleeActivity {
     private String username;
 
     // UI components
