@@ -103,7 +103,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             // add the blur effect
             // todo: read from uri
-            new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 5).execute(
+            new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 10).execute(
                     recommendedUser.getAvatarUri()
             );
 
@@ -139,6 +139,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public RecommendProfileRightViewHolder(@NonNull View itemView) {
             super(itemView);
             progressBar = itemView.findViewById(R.id.loadPhotoRight);
+            progressBar.setVisibility(View.VISIBLE);
             blurredProfileImg = itemView.findViewById(R.id.blurredProfilePhotoRight);
             recommendUsername = itemView.findViewById(R.id.recUsernameRight);
             recommendUserGender = itemView.findViewById(R.id.recUserGenderRight);
@@ -157,9 +158,15 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
             // add the blur effect
-            new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 5).execute(
-                    recommendedUser.getAvatarUri()
-            );
+            if (recommendedUser.getAvatarUri() != null) {
+                new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 10).execute(
+                        recommendedUser.getAvatarUri()
+                );
+                progressBar.setVisibility(View.GONE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
+
 
             recommendUsername.setText(recommendedUser.getNickname());
             // add text view effect
