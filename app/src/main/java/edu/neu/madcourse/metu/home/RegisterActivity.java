@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.utils.Constants;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private Button mRegister;
@@ -73,9 +77,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this,"Sign up error!",Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                String userID = mAuth.getCurrentUser().getUid();
-                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("username");
-                                currentUserDb.setValue(username);
+                                //String userID = mAuth.getCurrentUser().getUid();
+                                String emailDOT = email.replaceAll("\\.", "DOT");
+                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(emailDOT);
+                                Map userInfo = new HashMap<>();
+                                userInfo.put("username", username);
+                                userInfo.put("email", email);
+                                userInfo.put("password", password);
+                                currentUserDb.updateChildren(userInfo);
                             }
                         }
                     });
@@ -84,11 +93,11 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(firebaseAuthStateListener);
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(firebaseAuthStateListener);
+    }
 
     @Override
     protected void onStop() {
