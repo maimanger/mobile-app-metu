@@ -80,7 +80,8 @@ dependencies {
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
 
     // Agora RTC
-    implementation 'com.github.agorabuilder:native-full-sdk:3.4.2'
+    //implementation 'com.github.agorabuilder:native-full-sdk:3.4.2'
+    implementation 'io.agora.rtc:full-sdk:3.4.2'
 
     // Agora RTM
     implementation 'com.github.agorabuilder:rtm-sdk:1.4.1'
