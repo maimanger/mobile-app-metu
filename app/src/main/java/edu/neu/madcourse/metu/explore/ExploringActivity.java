@@ -28,7 +28,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 import edu.neu.madcourse.metu.App;
+
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
@@ -40,7 +43,7 @@ import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
 import edu.neu.madcourse.metu.utils.Constants;
 import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
-public class ExploringActivity extends AppCompatActivity {
+public class ExploringActivity extends BaseCalleeActivity {
     private String userId;
 
     private List<RecommendedUser> recommends;

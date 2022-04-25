@@ -31,24 +31,27 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 import edu.neu.madcourse.metu.App;
+
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.models.ChatItem;
 
-import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.chat.daos.RecentConversation;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 
 import edu.neu.madcourse.metu.utils.Constants;
-import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
-public class RecentConversationActivity extends AppCompatActivity {
+
+public class RecentConversationActivity extends BaseCalleeActivity {
     private String userId;
     private long countContacts;
     private Map<String, RecentConversation> usernameToConversation;
+
 
     // UI components
     private ProgressBar progressBar;

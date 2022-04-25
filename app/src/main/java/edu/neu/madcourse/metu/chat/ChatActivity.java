@@ -38,7 +38,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 import edu.neu.madcourse.metu.App;
+
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 
 import edu.neu.madcourse.metu.models.ChatItem;
@@ -55,7 +58,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseCalleeActivity {
     private String userId;
     private User loginUser;
 

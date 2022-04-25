@@ -25,6 +25,8 @@
         <receiver android:name=".video.RefuseVideoCallReceiver" />
         <receiver android:name=".video.DismissCanceledCallNotifReceiver" />
 
+        <service android:name=".service.UpdateVideoHistoryService" />
+
         <activity
             android:name=".BaseCalleeActivity"
             android:exported="false" />

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.utils.Utils;
@@ -35,7 +36,7 @@ import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
 
-public class UserProfileActivity extends AppCompatActivity implements
+public class UserProfileActivity extends BaseCalleeActivity implements
         AddTagButtonFragment.OnDataPass,
         AddStoryButtonFragment.OnStoryDataPass {
     public static Bitmap avatarBitmap;
