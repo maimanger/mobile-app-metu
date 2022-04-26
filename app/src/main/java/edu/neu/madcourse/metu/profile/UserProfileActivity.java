@@ -23,17 +23,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
+import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
+import io.agora.rtm.ErrorInfo;
+import io.agora.rtm.ResultCallback;
 
 
 public class UserProfileActivity extends BaseCalleeActivity implements
@@ -54,6 +59,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     BottomNavigationView bottomNavigationView;
     private Boolean isLikedByLoginUser = true;
     private int connectionPoint;
+    private List<Contact> contactsList;
 
 
     @Override
@@ -65,6 +71,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
+        initOnlineStatus();
         initFragments();
 
         // actionbar
@@ -289,4 +296,52 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     }
                 });
     }
+
+    private void initOnlineStatus() {
+        User loginUser = ((App) getApplication()).getLoginUser();
+        if (loginUser != null) {
+            String myUserId = loginUser.getUserId();
+            Map<String, Boolean> myConnections = loginUser.getConnections();
+
+            new Thread(() -> {
+                // Fetch Contacts from Firebase
+                FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
+                        (List<Contact> fetchedContacts) -> {
+                            Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
+
+                            Set<String> contactsId = fetchedContacts.stream()
+                                    .map(Contact::getContactUserId).collect(Collectors.toSet());
+
+                            // Subscribe contacts online status from Agora Rtm (Realtime update)
+                            ((App) getApplication()).rtmSubscribePeer(contactsId);
+
+                            // Query contacts online status from Agora Rtm (one time)
+                            ((App) getApplication()).queryPeerOnlineStatus(contactsId,
+                                    new ResultCallback<Map<String, Boolean>>() {
+                                        @Override
+                                        public void onSuccess(Map<String, Boolean> peerOnlineStatus) {
+                                            Log.d(TAG, "onSuccess: query peers online status");
+                                            for (Map.Entry<String, Boolean> entry :
+                                                    peerOnlineStatus.entrySet()) {
+                                                String userId = entry.getKey();
+                                                Boolean isOnline = entry.getValue();
+                                                if (profileUserId.equals(userId)) {
+                                                    if (!isOnline) {
+                                                        ((ImageView) findViewById(R.id.image_profile_onlineStatus))
+                                                                .setImageResource(R.drawable.ic_unavailable_status);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(ErrorInfo errorInfo) {
+                                        }
+                                    });
+                        });
+            }).start();
+        }
+    }
 }
+
