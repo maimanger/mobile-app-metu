@@ -1,14 +1,22 @@
 package edu.neu.madcourse.metu.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.chat.ChatActivity;
+import edu.neu.madcourse.metu.models.ConnectionUser;
+import edu.neu.madcourse.metu.models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,31 +27,26 @@ public class ChatButtonFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_TO_CHAT_USER = "toChatUser";
+    private static final String ARG_IS_LIKED_BY_LOGIN_USER = "isLikedByLoginUser";
+    private static final String ARG_LOGIN_USER_ID = "loginUserId";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private User toChatUser;
+    private Boolean isLikedByLoginUser;
+    private String loginUserId;
 
     public ChatButtonFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ChatButtonFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ChatButtonFragment newInstance(String param1, String param2) {
+    public static ChatButtonFragment newInstance(User toChatUser, Boolean isLikedByLoginUser,
+                                                 String loginUserId) {
         ChatButtonFragment fragment = new ChatButtonFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_TO_CHAT_USER, toChatUser);
+        args.putBoolean(ARG_IS_LIKED_BY_LOGIN_USER, isLikedByLoginUser);
+        args.putString(ARG_LOGIN_USER_ID, loginUserId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +55,9 @@ public class ChatButtonFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            toChatUser = getArguments().getParcelable(ARG_TO_CHAT_USER);
+            isLikedByLoginUser = getArguments().getBoolean(ARG_IS_LIKED_BY_LOGIN_USER);
+            loginUserId = getArguments().getString(ARG_LOGIN_USER_ID);
         }
     }
 
@@ -62,5 +66,30 @@ public class ChatButtonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chat_button, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ImageView chat = view.findViewById(R.id.chatting_button);
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                ConnectionUser connectionUser = new ConnectionUser();
+                connectionUser.setUserId(toChatUser.getUserId());
+                connectionUser.setIsLiked(isLikedByLoginUser);
+                connectionUser.setNickname(toChatUser.getNickname());
+                connectionUser.setAvatarUri(toChatUser.getAvatarUri());
+                intent.putExtra("RECEIVER", connectionUser);
+                intent.putExtra("CONNECTION_ID", loginUserId + toChatUser.getUserId());
+                Log.e("caotama", connectionUser.toString());
+                Log.e("dayede", toChatUser.toString());
+                Log.e("bool", isLikedByLoginUser.toString());
+                startActivity(intent);
+            }
+        });
     }
 }

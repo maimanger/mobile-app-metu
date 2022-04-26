@@ -1,14 +1,19 @@
 package edu.neu.madcourse.metu.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.profile.imageUpload.Image;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,5 +67,17 @@ public class LikeButtonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_like_button, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ImageView favorite = view.findViewById(R.id.favorite_button);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO(Xin): add friend status to the database
+            }
+        });
     }
 }

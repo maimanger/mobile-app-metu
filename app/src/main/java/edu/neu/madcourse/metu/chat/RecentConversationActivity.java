@@ -40,6 +40,7 @@ import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.models.ChatItem;
 
+import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.chat.daos.RecentConversation;
 import edu.neu.madcourse.metu.models.ConnectionUser;
@@ -502,12 +503,38 @@ public class RecentConversationActivity extends BaseCalleeActivity {
                 public void run() {
                     // onPreExecute
                     // doInBackground
-                    fetchDataFromDatabase();
+                    //fetchDataFromDatabase();
+                    addConnectionListener();
                 }
             });
 
         }
     }
+
+    public void addConnectionListener() {
+        // for dismissing the progress bar
+        FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // dismiss the progress bar
+                if (conversationList.size() == 0) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
+                .child(userId)
+                .child(Constants.USER_CONNECTIONS)
+                .addChildEventListener(new ConnectionListener());
+    }
+
+
 
     private void loadUsername() {
         // todo: update it with auth
@@ -518,6 +545,120 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
         // todo: delete
         Toast.makeText(getApplicationContext(), this.userId + " logs in", Toast.LENGTH_SHORT).show();
+    }
+
+    // listener
+    // each child is a connectionId of a specific user
+    // 1. fetch the recent conversations
+    // 2. listen to the connection
+    // 3. update the conversation
+    public class ConnectionListener implements ChildEventListener {
+
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            countContacts++;
+
+            if (snapshot.exists()) {
+                // fetch the connectionId
+                String connectionId = snapshot.getKey();
+                // todo: delete
+                System.out.println("Connection id: " + connectionId);
+
+                // fetch it from the Connections store
+                FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
+                        .orderByKey()
+                        .equalTo(connectionId)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                // todo: delete
+                                System.out.println(snapshot.getChildrenCount());
+                                if (snapshot.exists()) {
+                                    for (DataSnapshot connectionData: snapshot.getChildren()) {
+                                        // check if the info is correct
+                                        // todo: delete
+                                        connectionData.getKey();
+
+                                        ConnectionUser user1 = connectionData.child(Constants.CONNECTION_USER1).getValue(ConnectionUser.class);
+                                        ConnectionUser user2 = connectionData.child(Constants.CONNECTION_USER2).getValue(ConnectionUser.class);
+                                        ChatItem chatItem = connectionData.child(Constants.CONNECTION_LAST_MESSAGE).getValue(ChatItem.class);
+                                        ConnectionUser contact;
+                                        RecentConversation conversation;
+
+                                        if (user1 != null && user1.getUserId().equals(userId)) {
+                                            // user2 is the contact
+                                            contact = user2;
+                                        } else if (user2 != null && user2.getUserId().equals(userId)) {
+                                            // user1 is the contact
+                                            contact = user1;
+                                        } else {
+                                            return;
+                                        }
+
+                                        // if never chat before
+                                        if (chatItem == null) {
+                                            return;
+                                        }
+
+                                        if (usernameToConversation.containsKey(contact.getUserId())) {
+                                            conversation = usernameToConversation.get(contact.getUserId());
+                                        } else {
+                                            conversation = new RecentConversation();
+                                            conversation.setConnectionId(connectionId);
+
+                                            // add into the list
+                                            conversationList.add(conversation);
+                                            usernameToConversation.put(contact.getUserId(), conversation);
+                                        }
+
+                                        conversation.setLastMessage(chatItem);
+                                        conversation.setRecentContact(contact);
+
+                                        // sort
+                                        conversationList.sort((conversation1, conversation2)
+                                                -> conversation1.getLastMessage().getTimeStamp() > conversation2.getLastMessage().getTimeStamp()? -1:1);
+
+                                        // todo: delete
+                                        System.out.println(conversation);
+
+                                        // notify
+                                        recentConversationAdapter.notifyDataSetChanged();
+
+                                        // dismiss the progress bar
+                                        progressBar.setVisibility(View.GONE);
+
+                                        return;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+            }
+        }
+
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+        }
+
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+
+        }
     }
 
 }

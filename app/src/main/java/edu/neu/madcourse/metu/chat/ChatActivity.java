@@ -278,8 +278,6 @@ public class ChatActivity extends BaseCalleeActivity {
             if (connectionId != null && connectionId.length() > 0) {
                 fetchData();
             } else {
-                // todo: delete
-                System.out.println("dismiss the progress bar");
                 progressBar.setVisibility(View.GONE);
             }
 //            executorService.submit(new Runnable() {
@@ -314,7 +312,7 @@ public class ChatActivity extends BaseCalleeActivity {
         chatHistoryAdapter = new ChatHistoryAdapter(this, this.chatItemList, this.userId, this.connectionId, null, receiver);
 
         // initialize the avatar
-        if (receiver.getAvatarUri() != null) {
+        if (receiver.getAvatarUri() != null && receiver.getAvatarUri().length() > 0) {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -334,8 +332,6 @@ public class ChatActivity extends BaseCalleeActivity {
             });
 
         } else {
-            // todo: set to be default avatar
-            Bitmap avatar = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_avatar);
             chatHistory.setAdapter(chatHistoryAdapter);
         }
 

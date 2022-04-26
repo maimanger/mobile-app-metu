@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/harry"
+                android:src="@drawable/ic_default_avatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <FrameLayout
