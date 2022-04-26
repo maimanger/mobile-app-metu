@@ -127,4 +127,15 @@
         0a7d20050160438ebe4d47e571566f6d
     </string>
 
+    <string-array name="rangeSliderValues">
+        <item>25</item>
+        <item>70</item>
+    </string-array>
+
+    <string-array name="genderSettingValues">
+        <item>Woman Only</item>
+        <item>Man Only</item>
+        <item>Everyone</item>
+    </string-array>
+
 </resources>

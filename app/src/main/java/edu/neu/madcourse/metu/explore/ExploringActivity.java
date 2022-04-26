@@ -13,6 +13,8 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -68,6 +70,9 @@ public class ExploringActivity extends BaseCalleeActivity {
         // initialize the recycler view
         exploringPage = findViewById(R.id.exploringPage);
 
+        // UI components
+        preferenceSetting = findViewById(R.id.imageSetting);
+
         // initialize the executor service
         executorService = Executors.newFixedThreadPool(1);
         recommends = new ArrayList<>();
@@ -77,6 +82,9 @@ public class ExploringActivity extends BaseCalleeActivity {
 
         // init data view
         init(savedInstanceState);
+
+        // set listener
+        setListener();
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -113,7 +121,13 @@ public class ExploringActivity extends BaseCalleeActivity {
 
     private void loadUser() {
         // todo: load from App
-        this.userId = ((App) getApplicationContext()).getUserId();
+        User loginUser = ((App) getApplicationContext()).getLoginUser();
+        if (loginUser == null || loginUser.getUserId() == null || loginUser.getUserId().length() == 0) {
+            Log.d("ACTIVITY", "USER HAS LOGGED OUT");
+            finish();
+            return;
+        }
+        this.userId = loginUser.getUserId();
         Log.d("ACTIVITY", "EXPLORING ACTIVITY: " + userId);
     }
 
@@ -123,7 +137,11 @@ public class ExploringActivity extends BaseCalleeActivity {
             @Override
             public void run() {
                 initRecyclerView();
-                fetchData();
+                try {
+                    fetchData();
+                } catch (Exception e) {
+                    Log.d("FIREBASE FETCHING", "EXPLORING ACTIVITY: " + e.getMessage());
+                }
 
             }
         });
@@ -144,7 +162,7 @@ public class ExploringActivity extends BaseCalleeActivity {
 
     }
 
-    private void fetchData() {
+    private void fetchData() throws Exception {
 
         // todo: matching algorithm
 
@@ -153,31 +171,46 @@ public class ExploringActivity extends BaseCalleeActivity {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                         if (snapshot.exists()) {
-                            String userId = snapshot.child(Constants.USER_USER_ID).getValue(String.class);
-                            String nickname = snapshot.child(Constants.USER_NICKNAME).getValue(String.class);
-                            // todo: gender string or int?
-                            String gender = snapshot.child(Constants.USER_GENDER).getValue(String.class);
-                            String avatarUri = snapshot.child(Constants.USER_AVATAR_URI).getValue(String.class);
+                            // add try catch
+                            try {
+                                String recommendUserId = snapshot.child(Constants.USER_USER_ID).getValue(String.class);
 
-                            RecommendedUser recommendedUser = new RecommendedUser();
-                            recommendedUser.setIsLiked(false);
+                                // exclude self and users not having an userId
+                                if (userId.equals(recommendUserId) || recommendUserId == null || recommendUserId.equals("")) {
+                                    return;
+                                }
 
-                            // todo: gender categories
-                            if (gender != null && gender.toLowerCase().equals(Constants.GENDER_FEMALE_STRING)) {
-                                recommendedUser.setGender(Constants.GENDER_FEMALE_INT);
-                            } else if (gender != null && gender.toLowerCase().equals(Constants.GENDER_MALE_STRING)) {
-                                recommendedUser.setGender(Constants.GENDER_MALE_INT);
-                            } else {
-                                recommendedUser.setGender(Constants.GENDER_UNDEFINE_INT);
+                                String nickname = snapshot.child(Constants.USER_NICKNAME).getValue(String.class);
+                                int gender = snapshot.child(Constants.USER_GENDER).getValue(int.class);
+                                String avatarUri = snapshot.child(Constants.USER_AVATAR_URI).getValue(String.class);
+
+                                RecommendedUser recommendedUser = new RecommendedUser();
+                                recommendedUser.setIsLiked(false);
+                                recommendedUser.setGender(gender);
+                                recommendedUser.setUserId(recommendUserId);
+                                recommendedUser.setNickname(nickname);
+                                recommendedUser.setAvatarUri(avatarUri);
+
+                                // add the recommends
+                                recommends.add(recommendedUser);
+
+                                recommendsAdapter.notifyDataSetChanged();
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.d("FIREBASE FETCH", "EXPLORING ACTIVITY: " + e.getMessage());
                             }
 
-                            recommendedUser.setUserId(userId);
-                            recommendedUser.setNickname(nickname);
-                            recommendedUser.setAvatarUri(avatarUri);
+                            // todo: gender categories
+//                            if (gender != null && gender.toLowerCase().equals(Constants.GENDER_FEMALE_STRING)) {
+//                                recommendedUser.setGender(Constants.GENDER_FEMALE_INT);
+//                            } else if (gender != null && gender.toLowerCase().equals(Constants.GENDER_MALE_STRING)) {
+//                                recommendedUser.setGender(Constants.GENDER_MALE_INT);
+//                            } else {
+//                                recommendedUser.setGender(Constants.GENDER_UNDEFINE_INT);
+//                            }
 
-                            recommends.add(recommendedUser);
-
-                            recommendsAdapter.notifyDataSetChanged();
                         }
                     }
 
@@ -205,6 +238,23 @@ public class ExploringActivity extends BaseCalleeActivity {
 
     }
 
+    private void setListener() {
+        this.preferenceSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSettingDialog();
+            }
+        });
+    }
+
+    private void openSettingDialog() {
+        ExploreSettingDialog dialog = new ExploreSettingDialog();
+        // put current
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID", userId);
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "Explore Setting Dialog");
+    }
 
 
 }

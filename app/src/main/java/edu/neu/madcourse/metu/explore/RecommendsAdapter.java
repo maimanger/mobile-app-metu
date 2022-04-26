@@ -83,6 +83,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public RecommendProfileLeftViewHolder(@NonNull View itemView) {
             super(itemView);
             progressBar = itemView.findViewById(R.id.loadPhotoLeft);
+            progressBar.setVisibility(View.VISIBLE);
             blurredProfileImg = itemView.findViewById(R.id.blurredProfilePhotoLeft);
             recommendUsername = itemView.findViewById(R.id.recUsernameLeft);
             recommendUserGender = itemView.findViewById(R.id.recUserGenderLeft);
@@ -101,15 +102,20 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
             }
 
+
             // add the blur effect
-            // todo: read from uri
-            new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 10).execute(
-                    recommendedUser.getAvatarUri()
-            );
+            if (recommendedUser.getAvatarUri() != null) {
+                new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 20).execute(
+                        recommendedUser.getAvatarUri()
+                );
+                progressBar.setVisibility(View.GONE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
 
             recommendUsername.setText(recommendedUser.getNickname());
             // add text view effect
-            recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
+            // recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
             // todo: more gender identity
             if (recommendedUser.getGender() == Constants.GENDER_FEMALE_INT) {
@@ -159,7 +165,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             // add the blur effect
             if (recommendedUser.getAvatarUri() != null) {
-                new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 10).execute(
+                new BitmapUtils.DownloadBlurredImageTask(blurredProfileImg, context, 20).execute(
                         recommendedUser.getAvatarUri()
                 );
                 progressBar.setVisibility(View.GONE);
@@ -170,7 +176,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             recommendUsername.setText(recommendedUser.getNickname());
             // add text view effect
-            recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
+            //recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
             // todo: more gender identity
             if (recommendedUser.getGender() == Constants.GENDER_FEMALE_INT) {

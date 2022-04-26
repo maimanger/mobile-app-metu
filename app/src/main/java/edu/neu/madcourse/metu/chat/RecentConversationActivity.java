@@ -2,7 +2,6 @@ package edu.neu.madcourse.metu.chat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +39,7 @@ import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.models.ChatItem;
 
-import edu.neu.madcourse.metu.models.Connection;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.chat.daos.RecentConversation;
 import edu.neu.madcourse.metu.models.ConnectionUser;
@@ -82,7 +81,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         // load username
-        loadUsername();
+        loadUser();
 
         // initialize the executor service
         executorService = Executors.newFixedThreadPool(10);
@@ -536,13 +535,16 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
 
 
-    private void loadUsername() {
-        // todo: update it with auth
-        this.userId = ((App) getApplication()).getUserId();
-
-        // todo: delete
+    private void loadUser() {
+        // todo: load from App
+        User loginUser = ((App) getApplicationContext()).getLoginUser();
+        if (loginUser == null || loginUser.getUserId() == null || loginUser.getUserId().length() == 0) {
+            Log.d("ACTIVITY", "USER HAS LOGGED OUT");
+            finish();
+            return;
+        }
+        this.userId = loginUser.getUserId();
         Log.d("ACTIVITY", "RECENT CONVERSATION ACTIVITY: " + userId);
-
         // todo: delete
         Toast.makeText(getApplicationContext(), this.userId + " logs in", Toast.LENGTH_SHORT).show();
     }

@@ -68,9 +68,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private AgoraEventListener agoraEventListener;
 
     private User loginUser;
-
-
-    private String userId;
     private String userNickname;
     private String userAvatarUrl = "https://" + userNickname + ".png";
 
@@ -253,10 +250,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
             // App enters foreground -> stop the service
             // set the current user to be available
             // todo: check if logged in
-            if (userId != null && userId.length() > 0) {
-                FCMTokenUtils.setStatusActive(userId);
-                // reset the token
-                fcmToken = "";
+            if (loginUser != null) {
+                if (loginUser.getUserId() != null && loginUser.getUserId().length() > 0) {
+                    FCMTokenUtils.setStatusActive(loginUser.getUserId());
+                    // reset the token
+                    fcmToken = "";
+                }
             }
         }
     }
@@ -276,9 +275,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
         isActivityChangingConfigurations = activity.isChangingConfigurations();
         if (--foregroundActivityCount == 0 && !isActivityChangingConfigurations) {
             // set the current user to be inactive
-            if (userId != null && userId.length() > 0) {
-                FCMTokenUtils.setStatusInactive(userId);
+            if (loginUser != null) {
+                FCMTokenUtils.setStatusInactive(loginUser.getUserId());
             }
+
         }
     }
 
@@ -300,10 +300,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
             });
 
             // remove the FCM token
-            if (userId != null && userId.length() > 0) {
-                FCMTokenUtils.removeFCMToken(userId);
-                fcmToken = "";
-            }
+//            if (loginUser != null) {
+//                FCMTokenUtils.removeFCMToken(loginUser.getUserId());
+//                fcmToken = "";
+//            }
         }
     }
 
@@ -573,14 +573,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public void removeCanceledCallNotificationId(int canceledCallNotificationId) {
         canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public User getLoginUser() {

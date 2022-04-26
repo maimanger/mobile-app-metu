@@ -29,7 +29,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,13 +42,13 @@ import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 
 import edu.neu.madcourse.metu.models.ChatItem;
-import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
 
+import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.utils.network.ApiClient;
 import edu.neu.madcourse.metu.utils.network.ApiService;
 import retrofit2.Call;
@@ -62,6 +64,8 @@ public class ChatActivity extends BaseCalleeActivity {
     // todo: check if the connectionId is null
     private String connectionId = "";
     private Boolean isReceiverAvailable = false;
+    private Boolean isReceiverOnline = false;
+    private long connectionPoint = 0;
     private String receiverFcmToken;
 
     // UI components
@@ -117,8 +121,6 @@ public class ChatActivity extends BaseCalleeActivity {
 
     }
 
-    // todo: listen the receiver info changes
-
     private void listenAvailabilityOfReceiver() {
         FirebaseDatabase.getInstance().getReference(Constants.USERS_AVAILABILITY_STORE)
                 .child(receiver.getUserId())
@@ -129,17 +131,7 @@ public class ChatActivity extends BaseCalleeActivity {
                             isReceiverAvailable = snapshot.getValue(Boolean.class);
                         }
 
-                        // todo: delete
-                        System.out.println(receiver.getUserId() + ": " + isReceiverAvailable);
-
-                        // todo: change to isOnline
-                        if (isReceiverAvailable) {
-                            startVideoChatButton.setImageResource(R.drawable.ic_start_chat);
-                            onlineStatus.setImageResource(R.drawable.ic_available_status);
-                        } else {
-                            startVideoChatButton.setImageResource(R.drawable.ic_video_chat_disabled);
-                            onlineStatus.setImageResource(R.drawable.ic_step_away_status);
-                        }
+                        switchReceiverStatus();
                     }
 
                     @Override
@@ -216,9 +208,15 @@ public class ChatActivity extends BaseCalleeActivity {
     private void loadUser() {
         // todo: update with auth
         // todo: check if the user is logged in - if not return to the sign in activcity
-        this.userId = ((App) getApplication()).getUserId();
         this.loginUser = ((App) getApplication()).getLoginUser();
+        // if the loginUser is null
+        if (this.loginUser == null || loginUser.getUserId() == null || loginUser.getUserId().length() == 0) {
+            Log.d("ACTIVITY", "USER HAS LOGGED OUT");
+            finish();
+            return;
+        }
 
+        this.userId = loginUser.getUserId();
         Log.d("ACTIVITY", "CHAT ACTIVITY: " + userId);
         Toast.makeText(getApplicationContext(), userId + " is the current user", Toast.LENGTH_SHORT).show();
     }
@@ -232,6 +230,7 @@ public class ChatActivity extends BaseCalleeActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
             // retrieve from savedInstanceState
             // retrieve the current receiver
+            // todo: save status
             this.receiver = savedInstanceState.getParcelable("RECEIVER");
 
             // retrieve the connectionId
@@ -257,7 +256,17 @@ public class ChatActivity extends BaseCalleeActivity {
             Bundle extras = getIntent().getExtras();
             // get current receiver
             this.receiver = (ConnectionUser) extras.getParcelable("RECEIVER");
-
+            // todo: subscribe the user
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // subscribe the receiver
+                    HashSet<String> set = new HashSet<>();
+                    set.add(receiver.getUserId());
+                    ((App)getApplication()).rtmSubscribePeer(set);
+                    Log.d("RMT", "user subscribe: " + receiver.getUserId());
+                }
+            }).start();
             // todo: delete
             Toast.makeText(getApplicationContext(), receiver.getUserId() + " is the receiver", Toast.LENGTH_SHORT).show();
             // get the connectionId
@@ -275,25 +284,10 @@ public class ChatActivity extends BaseCalleeActivity {
             } else {
                 progressBar.setVisibility(View.GONE);
             }
-//            executorService.submit(new Runnable() {
-//                @Override
-//                public void run() {
-//                    // onPreExecute
-//                    // doInBackground
-//                    fetchData();
-//
-//                    // onPostExecute
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // dismiss the progress bar
-//                            progressBar.setVisibility(View.GONE);
-//                        }
-//                    });
-//                }
-//            });
 
         }
+
+
 
     }
 
@@ -332,11 +326,10 @@ public class ChatActivity extends BaseCalleeActivity {
 
     }
 
-    /**
-     * fetch chat history from database.
-     */
     private void fetchData() {
 
+        // for dismissing the progress bar
+        // todo: dismiss the progress bar inside of adapter
         FirebaseDatabase.getInstance().getReference(Constants.MESSAGES_STORE).child(this.connectionId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -359,38 +352,46 @@ public class ChatActivity extends BaseCalleeActivity {
                     }
                 });
 
+        // listen to messages under this connection
         FirebaseDatabase.getInstance().getReference(Constants.MESSAGES_STORE).child(this.connectionId)
                 .orderByChild(Constants.MESSAGE_TIMESTAMP)
                 .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot.exists()) {
-                    ChatItem chatItem = snapshot.getValue(ChatItem.class);
+                    // todo: delete
+                    System.out.println(snapshot.getKey());
+                    try {
+                        ChatItem chatItem = snapshot.getValue(ChatItem.class);
 
-                    // if the message is sent by the contact
-                    // set the chatItem to be read
-                    if (!chatItem.getSender().equals(userId) && !chatItem.getIsRead()) {
-                        chatItem.setIsRead(true);
-                        // update it to the database
-                        FirebaseDatabase.getInstance().getReference(Constants.MESSAGES_STORE)
-                                .child(connectionId)
-                                .child(snapshot.getKey())
-                                .child(Constants.MESSAGE_IS_READ)
-                                .setValue(true);
+                        // if the message is sent by the contact
+                        // set the chatItem to be read
+                        if (!chatItem.getSender().equals(userId) && !chatItem.getIsRead()) {
+                            chatItem.setIsRead(true);
+                            // update it to the database
+                            FirebaseDatabase.getInstance().getReference(Constants.MESSAGES_STORE)
+                                    .child(connectionId)
+                                    .child(snapshot.getKey())
+                                    .child(Constants.MESSAGE_IS_READ)
+                                    .setValue(true);
+                        }
+                        // add new chat Item into the list
+                        chatItemList.add(chatItem);
+
+                        // notify dataset changed
+                        chatHistoryAdapter.notifyDataSetChanged();
+
+                        // dismiss the progress bar
+                        progressBar.setVisibility(View.GONE);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        progressBar.setVisibility(View.GONE);
                     }
-                    // add new chat Item into the list
-                    chatItemList.add(chatItem);
-
-                    // notify dataset changed
-                    chatHistoryAdapter.notifyDataSetChanged();
-
-                    // dismiss the progress bar
-                    progressBar.setVisibility(View.GONE);
-
-                    // todo: locate to the last position
-
 
                 }
+
+                progressBar.setVisibility(View.GONE);
 
 
             }
@@ -421,118 +422,87 @@ public class ChatActivity extends BaseCalleeActivity {
     private void setListeners() {
         // back button
         backButton.setOnClickListener(v -> {
-            // go back to recent conversation
-//            Intent intent = new Intent(this, RecentConversationActivity.class);
-//            startActivity(intent);
             onBackPressed();
         });
 
         // send button
+        // todo: which is better
         sendButton.setOnClickListener(v -> sendMessage());
 
-        // todo: start video chat butttom
+        // todo: start video chat button
+        startVideoChatButton.setOnClickListener(v -> {
+            // check
+            if (receiver == null) {
+                return;
+            }
+            if (!isReceiverOnline) {
+                Toast.makeText(v.getContext(), receiver.getNickname() + "is not online", Toast.LENGTH_SHORT).show();
+            } else if (Utils.calculateFriendLevel((int)connectionPoint) < 1) {
+                Toast.makeText(v.getContext(), "Your connection level is not getting there yet! " + Utils.calculateFriendLevel((int)connectionPoint), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void sendMessage() {
         String inputText = inputMessage.getText().toString();
         // trim the white space
-        inputText = inputText.trim();
-        if (inputText != null && inputText.length() > 0) {
-            ChatItem message = new ChatItem();
-            message.setSender(this.userId);
-            message.setTimeStamp(System.currentTimeMillis());
-            message.setMessage(inputText);
-            message.setIsRead(false);
-            // check if the connectionId is empty
-            if (connectionId == null || connectionId.length() == 0) {
-                // create a new connection
-                connectionId = userId + receiver.getUserId();
+        String message = inputText.trim();
 
-                // save the connection in connections store
-                ConnectionUser user1 = new ConnectionUser();
-                user1.setUserId(userId);
-                user1.setIsLiked(false);
-                user1.setAvatarUri(loginUser.getAvatarUri());
-                user1.setNickname(loginUser.getNickname());
-
-                Connection connection = new Connection(user1, receiver, 0, null);
-                FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
-                        .child(connectionId)
-                        .setValue(connection);
-                // save the connection in both ppl
-                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
-                        .child(userId)
-                        .child(Constants.USER_CONNECTIONS)
-                        .child(connectionId).setValue(true);
-                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
-                        .child(receiver.getUserId())
-                        .child(Constants.USER_CONNECTIONS)
-                        .child(connectionId).setValue(true);
-
-                // update the connectionId in the adapter
-                chatHistoryAdapter.updateConnectionId(connectionId);
-
-                // add the listener
-                fetchData();
-            }
-
-            // send the message through firebase
-            FirebaseDatabase.getInstance().getReference(Constants.MESSAGES_STORE)
-                    .child(connectionId)
-                    .push()
-                    .setValue(message).addOnSuccessListener(unused -> {
-                        // update the lastMessage in the current Connection
-                FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
-                        .child(connectionId)
-                        .child(Constants.CONNECTION_LAST_MESSAGE)
-                        .setValue(message);
-                // todo: cloud messaging
-                // send notification
-                if (!isReceiverAvailable) {
-                    try {
-                        JSONArray tokens = new JSONArray();
-                        tokens.put(receiverFcmToken);
-
-                        // data to put
-                        JSONObject data = new JSONObject();
-                        // put the notification type
-                        data.put(Constants.NOTIFICATION_TYPE, Constants.NOTIFY_NEW_MSG);
-                        // put the info for current user
-                        data.put(Constants.MSG_SENDER_USER_ID, userId);
-                        data.put(Constants.MSG_SENDER_NICKNAME, loginUser.getNickname());
-                        data.put(Constants.MSG_SENDER_AVATAR_URI, loginUser.getAvatarUri());
-                        data.put(Constants.MESSAGE_CONTENT, message.getMessage());
-                        // put connection id
-                        data.put(Constants.CONNECTION_ID, connectionId);
-
-                        JSONObject body = new JSONObject();
-                        body.put(Constants.REMOTE_MSG_DATA, data);
-                        body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-
-                        sendNotification(body.toString());
-                    } catch (Exception e) {
-                        // todo: delete
-                        showToast(e.getMessage());
-                    }
-                }
-
-
-            }).addOnFailureListener(e -> {
-                // fail to send message
-                Toast.makeText(getApplicationContext(), "Fail to send the message. Please check the internet connection", Toast.LENGTH_SHORT);
-            });
-
+        if (message == null || message.length() == 0) {
+            return;
         }
-        // set the text back to null
-        this.inputMessage.setText(null);
 
-        // scroll to the bottom
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                chatHistory.getLayoutManager().scrollToPosition(chatItemList.size() - 1);
+        // prepare for the sender
+        ConnectionUser sender = new ConnectionUser();
+        sender.setUserId(userId);
+        sender.setIsLiked(false);
+        sender.setAvatarUri(loginUser.getAvatarUri());
+        sender.setNickname(loginUser.getNickname());
+
+        try {
+            // create a new user
+            if (connectionId == null || connectionId.length() == 0) {
+                MessageSendingUtils.createNewConnection(sender, receiver, (newConnectionId) -> {
+                    // set the connectionId
+                    if (newConnectionId != null) {
+                        connectionId = newConnectionId;
+                        // update the connectionId in the adapter
+                        chatHistoryAdapter.updateConnectionId(connectionId);
+
+                        // add the listener
+                        fetchData();
+                        listenToConnectionPointChange();
+                    } else {
+                        Toast.makeText(this, "Something went wrong! Please check the internet", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                });
             }
-        }, 200);
+
+            // send the message and update the connectionPoint
+            MessageSendingUtils
+                    .addMessageInMessagesStore(sender, receiver, connectionId, message);
+
+            // send notification if the receiver is not active
+            if (!isReceiverAvailable) {
+                MessageSendingUtils
+                        .sendNewMessageNotification(sender, connectionId, receiverFcmToken, message);
+            }
+
+            // set the text back to null
+            this.inputMessage.setText(null);
+
+            // scroll to the bottom
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    chatHistory.getLayoutManager().scrollToPosition(chatItemList.size() - 1);
+                }
+            }, 200);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Something went wrong! Please check the internet", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -558,5 +528,72 @@ public class ChatActivity extends BaseCalleeActivity {
         super.onResume();
         listenAvailabilityOfReceiver();
         listenReceiverToken();
+        // through connection store
+        listenToConnectionPointChange();
+    }
+
+    @Override
+    public void onPeersOnlineStatusChanged(Map<String, Integer> map) {
+        super.onPeersOnlineStatusChanged(map);
+
+        boolean changed = false;
+        synchronized (this) {
+            if (receiver != null && map.containsKey(receiver.getUserId())) {
+                isReceiverOnline = map.get(receiver.getUserId()) == 0;
+                changed = true;
+            }
+        }
+        if (changed) {
+            runOnUiThread(() -> {
+                switchReceiverStatus();
+                Toast.makeText(getApplicationContext(), "status changed: " + isReceiverOnline, Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    // todo: check video button
+    private void switchReceiverStatus() {
+        // see if the user is available
+        if (!isReceiverOnline) {
+            // set the status to be not-online
+            onlineStatus.setImageResource(R.drawable.ic_not_online);
+            // ban the video button
+            startVideoChatButton.setImageResource(R.drawable.ic_video_chat_disabled);
+            return;
+        }
+        if (isReceiverAvailable) {
+            // set the status to be available
+            onlineStatus.setImageResource(R.drawable.ic_available_status);
+            // check the connectionPoint
+        } else {
+            // set the status to be step-away
+            onlineStatus.setImageResource(R.drawable.ic_step_away_status);
+            // check the connectionPoint
+        }
+    }
+
+    private void listenToConnectionPointChange() {
+        if (connectionId == null || connectionId.length() == 0) {
+            return;
+        }
+
+        try {
+            FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
+                    .child(connectionId)
+                    .child(Constants.CONNECTION_POINT)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            connectionPoint = snapshot.getValue(long.class);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -149,13 +149,15 @@ public class MainActivity extends AppCompatActivity {
 
                                     // set the current user
                                     ((App) getApplication()).setLoginUser(loginUser);
-                                    ((App) getApplication()).setUserId(userId);
 
                                     // update the token
                                     FCMTokenUtils.updateFCMToken(userId);
                                     ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
                                     // set the status
                                     FCMTokenUtils.setStatusActive(userId);
+
+                                    // rmt login
+                                    ((App)getApplication()).rtmLogin(userId);
                                     return;
                                 }
                             }
