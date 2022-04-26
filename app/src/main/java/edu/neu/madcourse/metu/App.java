@@ -66,6 +66,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private AgoraEventListener agoraEventListener;
 
     private User loginUser;
+    private String userNickname;
+    private String userAvatarUrl = "https://" + userNickname + ".png";
 
     private String fcmToken = "";
 
@@ -245,10 +247,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
         if (++foregroundActivityCount == 1 && !isActivityChangingConfigurations) {
             // App enters foreground -> stop the service
             // set the current user to be available
+            // todo: check if logged in
             if (loginUser != null) {
-                FCMTokenUtils.setStatusActive(loginUser.getUserId());
-                // reset the token
-                fcmToken = "";
+                if (loginUser.getUserId() != null && loginUser.getUserId().length() > 0) {
+                    FCMTokenUtils.setStatusActive(loginUser.getUserId());
+                    // reset the token
+                    fcmToken = "";
+                }
             }
         }
     }
@@ -271,6 +276,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             if (loginUser != null) {
                 FCMTokenUtils.setStatusInactive(loginUser.getUserId());
             }
+
         }
     }
 
@@ -292,10 +298,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
             });
 
             // remove the FCM token
-            if (loginUser != null) {
-                FCMTokenUtils.removeFCMToken(loginUser.getUserId());
-                fcmToken = "";
-            }
+//            if (loginUser != null) {
+//                FCMTokenUtils.removeFCMToken(loginUser.getUserId());
+//                fcmToken = "";
+//            }
         }
     }
 
@@ -567,7 +573,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void removeCanceledCallNotificationId(int canceledCallNotificationId) {
         canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
     }
-
 
     public User getLoginUser() {
         return loginUser;

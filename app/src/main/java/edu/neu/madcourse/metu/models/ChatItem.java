@@ -74,6 +74,13 @@ public class ChatItem implements Parcelable {
         return format.format(date);
     }
 
+    public String generateDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Timestamp ts = new Timestamp(this.timeStamp);
+        Date date = new Date(ts.getTime());
+        return dateFormat.format(date);
+    }
+
     @Override
     public String toString() {
         return "ChatItem{" +
