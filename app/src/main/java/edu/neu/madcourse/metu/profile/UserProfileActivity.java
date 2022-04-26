@@ -55,6 +55,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private String avatarStoragePath;
     private User profileUser;
     private Boolean isLikedByLoginUser = true;
+    private int connectionPoint;
 
 
     @Override
@@ -64,14 +65,17 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
         // TODO(xin): comment out next line due to returning null
         // this.loginUserId = ((App) getApplication()).getUserId();
-        this.loginUserId = "tom@tomcom";  // TODO(xin): to remove
+        this.loginUserId = "weini15@gmailcom";  // TODO(xin): to remove
 
         // TODO(xin): last activity haven't passed profileUserId yet. Comment out next line
         // this.profileUserId = getIntent().getStringExtra("profileUserId");
-        this.profileUserId = "jerry@jerrycom";  // TODO(xin): to remove
+        this.profileUserId = "weini13@gmailcom";  // TODO(xin): to remove
 
         this.isSelf = (this.loginUserId == this.profileUserId);
         this.isFriend = true;  // TODO(xin): need connections table in db
+
+        // TODO(xin): need testing
+        this.connectionPoint = getIntent().getIntExtra("CONNECTION_POINT", 100);
 
 
         initUserProfileData(savedInstanceState);
@@ -270,8 +274,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 .add(R.id.like_button,
                                         LikeButtonFragment.newInstance(profileUserId),
                                         "LikeButtonFragment")
-                                .add(R.id.star_button, StarButtonFragment.newInstance("a", "b"
-                                ), "f")
+                                .add(R.id.star_button, StarButtonFragment.newInstance(this.connectionPoint), "StarButtonFragment")
                                 .add(R.id.chat_button,
                                         ChatButtonFragment.newInstance(profileUser,
                                                 isLikedByLoginUser, loginUserId),
