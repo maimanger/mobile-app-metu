@@ -61,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (user != null) {
                     // call FCMTokenUtils
                     FCMTokenUtils.updateFCMToken(userID);
+                    ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
                     FCMTokenUtils.setStatusActive(userID);
 
                     // RTM login
@@ -116,6 +117,8 @@ public class RegisterActivity extends AppCompatActivity {
 //                                };
                                 User newUser = new User(userID,username,password,email,"",0,2, new HashMap<>(),new HashMap<>(),"",new HashMap<>(),System.currentTimeMillis(),true,true,true);
                                 FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userID).setValue(newUser);
+                                // save User locally
+                                ((App) getApplication()).setLoginUser(newUser);
 //                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(emailDOT);
 //                                Map userInfo = new HashMap<>();
 //                                userInfo.put("username", username);

@@ -57,8 +57,29 @@ public class LoginActivity extends AppCompatActivity {
 
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
+
+                    // update lastLoginTime and send to firebase
+                    Long currentTime = System.currentTimeMillis();
+                    FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userID).child("lastLoginTime").setValue(currentTime);
+
+                    // fetch data from firebase
+                    ValueEventListener userListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Get User object and use the values to update the UI
+                            User loginUser = snapshot.getValue(User.class);
+                            // save data locally
+                            ((App) getApplication()).setLoginUser(loginUser);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    };
+                    FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).addValueEventListener(userListener);
+
                     // call FCMTokenUtils
                     FCMTokenUtils.updateFCMToken(userID);
+                    ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
                     FCMTokenUtils.setStatusActive(userID);
 
                     // RTM login
@@ -70,24 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                                     ((App)getApplication()).setLoginUser(userRTM);
                                 });
                     }).start();
-
-                    // fetch data from firebase
-                    // TODO save in the application
-                    ValueEventListener userListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            // Get User object and use the values to update the UI
-                            User user = snapshot.getValue(User.class);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    };
-                    FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).addValueEventListener(userListener);
-
-                    // update lastLoginTime and send to firebase
-                    FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userID).child("lastLoginTime").setValue(System.currentTimeMillis());
 
                     Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
