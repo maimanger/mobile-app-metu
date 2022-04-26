@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
@@ -50,59 +52,14 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // userID
-                mEmail = (EditText) findViewById(R.id.email);
-                String email = mEmail.getText().toString();
-                String userID = email.replaceAll("\\.", "");
-
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-
-                    // update lastLoginTime and send to firebase
-                    Long currentTime = System.currentTimeMillis();
-                    FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userID).child("lastLoginTime").setValue(currentTime);
-
-                    // fetch data from firebase
-                    ValueEventListener userListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            // Get User object and use the values to update the UI
-                            User loginUser = snapshot.getValue(User.class);
-                            // save data locally
-                            ((App) getApplication()).setLoginUser(loginUser);
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    };
-                    FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).addValueEventListener(userListener);
-
-                    // call FCMTokenUtils
-                    FCMTokenUtils.updateFCMToken(userID);
-                    ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
-                    FCMTokenUtils.setStatusActive(userID);
-
-                    // RTM login
-                    ((App)getApplication()).rtmLogin(userID);
-                    new Thread(() -> {
-                        FirebaseService.getInstance().fetchUserProfileData(userID,
-                                (User userRTM) -> {
-                                    Log.d("LoginActivity", "login profile fetched ");
-                                    ((App)getApplication()).setLoginUser(userRTM);
-                                });
-                    }).start();
-
-                    Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                    //return;
-
                 }
             }
         };
 
         mLogin = (Button) findViewById(R.id.loginbtn);
+        mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
 
         mLogin.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +75,39 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Sign in error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                String userId = email.replaceAll("\\.", "");
+                                Log.d("App", "login success: " + userId);
+
+                                // update lastLoginTime and send to firebase
+                                Long currentTime = System.currentTimeMillis();
+                                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userId).child("lastLoginTime").setValue(currentTime);
+
+                                // fetch the user info from the database
+                                FirebaseService.getInstance().fetchUserProfileData(userId,
+                                        (User user) -> {
+                                            if (user != null) {
+                                                Log.d("LoginActivity", "login profile fetched " + user.getUserId());
+                                            } else {
+                                                Log.d("LoginActivity", "login profile fetched null");
+                                            }
+                                            ((App)getApplication()).setLoginUser(user);
+
+                                            // update the token
+                                            FCMTokenUtils.updateFCMToken(userId);
+                                            ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
+                                            // set the status
+                                            FCMTokenUtils.setStatusActive(userId);
+
+                                            // rmt login
+                                            ((App)getApplication()).rtmLogin(userId);
+                                            //return;
+
+                                            Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        });
                             }
                         }
                     });
@@ -149,6 +139,3 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 }
-
-
-

@@ -60,9 +60,20 @@ public class Constants {
     public static final String USERS_STORE = "users";
     public static final String USER_USER_ID = "userId";
     public static final String USER_NICKNAME = "nickname";
+    public static final String USER_PASSWORD = "password";
+    public static final String USER_EMAIL = "email";
+    public static final String USER_LOCATION = "location";
+    public static final String USER_AGE = "age";
+    public static final String USER_GENDER = "gender";
+    public static final String USER_TAGS = "tags";
+    public static final String USER_STORIES = "stories";
     public static final String USER_AVATAR_URI = "avatarUri";
     public static final String USER_CONNECTIONS = "connections";
-    public static final String USER_GENDER = "gender";
+    public static final String USER_LAST_LOGIN_TIME = "lastLoginTime";
+    public static final String USER_SETTING_MESSAGE = "settingMessage";
+    public static final String USER_SETTING_VIDEO = "settingVideo";
+    public static final String USER_SETTING_VIBRATION = "settingVibration";
+
 
     // user gender
     // todo: add more gender

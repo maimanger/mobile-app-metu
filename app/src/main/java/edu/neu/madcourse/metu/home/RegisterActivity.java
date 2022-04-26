@@ -52,36 +52,24 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // userID
+                // userId
                 mEmail = (EditText) findViewById(R.id.email);
                 String email = mEmail.getText().toString();
-                String userID = email.replaceAll("\\.", "");
+                String userId = email.replaceAll("\\.", "");
 
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     // call FCMTokenUtils
-                    FCMTokenUtils.updateFCMToken(userID);
+                    FCMTokenUtils.updateFCMToken(userId);
                     ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
-                    FCMTokenUtils.setStatusActive(userID);
+                    FCMTokenUtils.setStatusActive(userId);
 
-                    // RTM login
-                    ((App)getApplication()).rtmLogin(userID);
-                    new Thread(() -> {
-                        FirebaseService.getInstance().fetchUserProfileData(userID,
-                                (User userRTM) -> {
-                                    Log.d("RegisterActivity", "login profile fetched ");
-                                    ((App)getApplication()).setLoginUser(userRTM);
-                                });
-                    }).start();
-
-                    mEmail = (EditText) findViewById(R.id.email);
+                    // rmt login
+                    ((App)getApplication()).rtmLogin(userId);
 
                     Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finish();
-                    //return;
-
                 }
             }
         };
@@ -106,8 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this,"Sign up error!",Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                //String userID = mAuth.getCurrentUser().getUid();
-                                String userID = email.replaceAll("\\.", "");
+                                String userId = email.replaceAll("\\.", "");
 
 //                                Map<Integer,Boolean> settings =  new HashMap<Integer, Boolean>() {
 //                                    {
@@ -116,16 +103,10 @@ public class RegisterActivity extends AppCompatActivity {
 //                                        put(3, true);
 //                                    }
 //                                };
-                                User newUser = new User(userID,username,password,email,"",0,2, new HashMap<>(),new HashMap<>(),"",new HashMap<>(),System.currentTimeMillis(),true,true,true);
-                                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userID).setValue(newUser);
+                                User newUser = new User(userId,username,password,email,"",0,2, new HashMap<>(),new HashMap<>(),"",new HashMap<>(),System.currentTimeMillis(),true,true,true);
+                                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userId).setValue(newUser);
                                 // save User locally
                                 ((App) getApplication()).setLoginUser(newUser);
-//                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(emailDOT);
-//                                Map userInfo = new HashMap<>();
-//                                userInfo.put("username", username);
-//                                userInfo.put("email", email);
-//                                userInfo.put("password", password);
-//                                currentUserDb.updateChildren(userInfo);
                             }
                         }
                     });
