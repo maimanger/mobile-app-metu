@@ -22,14 +22,7 @@ import edu.neu.madcourse.metu.profile.imageUpload.Image;
 import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LikeButtonFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LikeButtonFragment extends Fragment {
-
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PROFILE_USER_ID = "profileUserId";
     private String profileUserId;
 
@@ -37,7 +30,6 @@ public class LikeButtonFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static LikeButtonFragment newInstance(String profileUserId) {
         LikeButtonFragment fragment = new LikeButtonFragment();
         Bundle args = new Bundle();
@@ -57,7 +49,6 @@ public class LikeButtonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_like_button, container, false);
     }
 
