@@ -538,7 +538,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
     private void loadUsername() {
         // todo: update it with auth
-        this.userId = ((App) getApplication()).getUserId();
+        this.userId = ((App) getApplication()).getLoginUser().getUserId();
 
         // todo: delete
         Log.d("ACTIVITY", "RECENT CONVERSATION ACTIVITY: " + userId);

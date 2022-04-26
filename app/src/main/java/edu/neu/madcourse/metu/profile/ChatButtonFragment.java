@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import edu.neu.madcourse.metu.App;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.models.ConnectionUser;
@@ -63,7 +65,7 @@ public class ChatButtonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView chat = view.findViewById(R.id.chatting_button);
+        FloatingActionButton chat = view.findViewById(R.id.chatting_button);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -15,7 +15,7 @@ public class User implements Parcelable {
     private String email; // email is used as id
     private String location;
     private Integer age;
-    private int gender;
+    private Integer gender;
     private Map<String, Boolean> tags;
     private Map<String, String> stories;
     private String avatarUri;
@@ -32,7 +32,7 @@ public class User implements Parcelable {
     }
 
     public User(String username, String password, String email, String location, Integer age,
-                int gender, Map<String, Boolean> tags, Map<String, String> stories,
+                Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
                 String avatarUri) {
         this.nickname = username;
         this.password = password;
@@ -46,7 +46,7 @@ public class User implements Parcelable {
     }
 
     public User(String userId, String nickname, String password, String email, String location,
-                Integer age, int gender, Map<String, Boolean> tags, Map<String, String> stories,
+                Integer age, Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
                 String avatarUri, Map<String, Boolean> connections) {
         this.userId = userId;
         this.nickname = nickname;
@@ -128,11 +128,11 @@ public class User implements Parcelable {
         this.age = age;
     }
 
-    public int getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 

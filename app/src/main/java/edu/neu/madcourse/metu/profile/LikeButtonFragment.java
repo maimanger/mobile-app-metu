@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import edu.neu.madcourse.metu.App;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.explore.LikeButtonOnClickListener;
 import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
@@ -71,7 +73,5 @@ public class LikeButtonFragment extends Fragment {
                             profile_like_button.setOnClickListener(new LikeButtonOnClickListener(
                                     profile_like_button, recommendedUser, loginUser));
                         }));
-
-
     }
 }

@@ -63,6 +63,8 @@ public class Constants {
     public static final int GENDER_UNDEFINE_INT = 2;
     public static final String GENDER_MALE_STRING = "male";
     public static final String GENDER_FEMALE_STRING = "female";
+    public static final int GENDER_MALE = 0;
+    public static final int GENDER_FEMALE = 1;
 
     // for user availability
     public static final String USERS_AVAILABILITY_STORE = "availabilities";

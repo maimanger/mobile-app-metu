@@ -123,6 +123,13 @@ public class EditProfileActivity extends BaseCalleeActivity {
             Integer age = Integer.parseInt(etAge.getText().toString());
             int gender = Integer.parseInt(etGender.getText().toString());
 
+            Integer genderInt = 2;
+            if (gender.toLowerCase().equals("male")) {
+                genderInt = 0;
+            } else if (gender.toLowerCase().equals("female")) {
+                genderInt = 1;
+            }
+
             // Write user data to firebase
             // User loginUser = ((App) getApplication()).getLoginUser();
             User loginUser = new User();

@@ -221,8 +221,8 @@ public class ChatActivity extends BaseCalleeActivity {
     private void loadUser() {
         // todo: update with auth
         // todo: check if the user is logged in - if not return to the sign in activcity
-        this.userId = ((App) getApplication()).getUserId();
         this.loginUser = ((App) getApplication()).getLoginUser();
+        this.userId = loginUser.getUserId();
 
         Log.d("ACTIVITY", "CHAT ACTIVITY: " + userId);
         Toast.makeText(getApplicationContext(), userId + " is the current user", Toast.LENGTH_SHORT).show();
