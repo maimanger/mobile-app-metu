@@ -271,9 +271,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     } else if (isFriend) {
                         // Show friend profile
                         getSupportFragmentManager().beginTransaction()
-                                .add(R.id.like_button,
-                                        LikeButtonFragment.newInstance(profileUserId),
-                                        "LikeButtonFragment")
                                 .add(R.id.star_button, StarButtonFragment.newInstance(this.connectionPoint), "StarButtonFragment")
                                 .add(R.id.chat_button,
                                         ChatButtonFragment.newInstance(profileUser,
