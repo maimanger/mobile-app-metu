@@ -3,15 +3,18 @@ package edu.neu.madcourse.metu.home;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Constants;
 import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,25 +49,31 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // userID
-        mEmail = (EditText) findViewById(R.id.email);
-        String email = mEmail.getText().toString();
-        String userID = email.replaceAll("\\.", "");
-
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                // userID
+                mEmail = (EditText) findViewById(R.id.email);
+                String email = mEmail.getText().toString();
+                String userID = email.replaceAll("\\.", "");
+
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     // call FCMTokenUtils
                     FCMTokenUtils.updateFCMToken(userID);
                     FCMTokenUtils.setStatusActive(userID);
 
-                    //
+                    // RTM login
+                    ((App)getApplication()).rtmLogin(userID);
+                    new Thread(() -> {
+                        FirebaseService.getInstance().fetchUserProfileData(userID,
+                                (User userRTM) -> {
+                                    Log.d("RegisterActivity", "login profile fetched ");
+                                    ((App)getApplication()).setLoginUser(userRTM);
+                                });
+                    }).start();
 
                     mEmail = (EditText) findViewById(R.id.email);
-                    String email = mEmail.getText().toString();
-                    String userID = email.replaceAll("\\.", "");
 
                     Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,7 +106,15 @@ public class RegisterActivity extends AppCompatActivity {
                             else {
                                 //String userID = mAuth.getCurrentUser().getUid();
                                 String userID = email.replaceAll("\\.", "");
-                                User newUser = new User(userID,username,password,email,"",0,2, new HashMap<>(),new HashMap<>(),"",new HashMap<>(),System.currentTimeMillis(),new HashMap<>());
+
+//                                Map<Integer,Boolean> settings =  new HashMap<Integer, Boolean>() {
+//                                    {
+//                                        put(1, true);
+//                                        put(2, true);
+//                                        put(3, true);
+//                                    }
+//                                };
+                                User newUser = new User(userID,username,password,email,"",0,2, new HashMap<>(),new HashMap<>(),"",new HashMap<>(),System.currentTimeMillis(),true,true,true);
                                 FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userID).setValue(newUser);
 //                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(emailDOT);
 //                                Map userInfo = new HashMap<>();
