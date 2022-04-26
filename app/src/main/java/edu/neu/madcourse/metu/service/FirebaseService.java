@@ -42,16 +42,17 @@ public class FirebaseService {
         return singleton_instance;
     }
 
-    public void updateUserProfile(String username, String email, String location, Integer age,
-                                  String gender) {
+    public void updateUserProfile(User user) {
         // Firebase does not allow '.' character in key.
-        String key = email.replace(".", "DOT");
+        String key = user.getEmail().replace(".", "");
         HashMap<String, Object> userValues = new HashMap<>();
-        userValues.put("username", username);
-        userValues.put("email", email);
-        userValues.put("location", location);
-        userValues.put("age", age);
-        userValues.put("gender", gender);
+        userValues.put("userId", user.getUserId());
+        userValues.put("nickname", user.getNickname());
+        userValues.put("password", user.getPassword());
+        userValues.put("location", user.getLocation());
+        userValues.put("age", user.getAge());
+        userValues.put("gender", user.getGender());
+        userValues.put("avatarUri", user.getAvatarUri());
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + key, userValues);
@@ -136,7 +137,7 @@ public class FirebaseService {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Contact> fetchedContacts = new ArrayList<>();
 
-                for(DataSnapshot child : snapshot.getChildren()) {
+                for (DataSnapshot child : snapshot.getChildren()) {
                     String connectionId = child.getKey();
 
                     if (connections.containsKey(connectionId)) {
@@ -165,14 +166,14 @@ public class FirebaseService {
     }
 
     public void updateVideoHistory(String connectionId, DataFetchCallback<Long> callback) {
-        String date  = new SimpleDateFormat("yyyy-M-dd").format(new Date());
+        String date = new SimpleDateFormat("yyyy-M-dd").format(new Date());
         databaseRef.child("videos").child(connectionId).child(date).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         long newCount = 1;
                         if (snapshot.exists()) {
-                            newCount = (long)snapshot.getValue() + 1;
+                            newCount = (long) snapshot.getValue() + 1;
                         }
                         databaseRef.child("videos").child(connectionId).child(date).setValue(newCount);
                         //snapshot.getRef().setValue(newCount);
@@ -191,7 +192,7 @@ public class FirebaseService {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        long newPoint = (long)snapshot.getValue() + pointIncrement;
+                        long newPoint = (long) snapshot.getValue() + pointIncrement;
                         snapshot.getRef().setValue(newPoint);
                     }
 

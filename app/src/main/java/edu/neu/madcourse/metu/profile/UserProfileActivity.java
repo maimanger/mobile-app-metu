@@ -24,13 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
-import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
@@ -38,12 +39,10 @@ import edu.neu.madcourse.metu.service.FirebaseService;
 public class UserProfileActivity extends BaseCalleeActivity implements
         AddTagButtonFragment.OnDataPass,
         AddStoryButtonFragment.OnStoryDataPass {
-    public static Bitmap avatarBitmap;
-    // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String profileUserId = "tom@tomDOTcom";
-    private String loginUserId = "alice@aliceDOTcom";
-    private final Boolean isSelf = false;
-    private final Boolean isFriend = true;
+    private String profileUserId;
+    private String loginUserId;
+    private Boolean isSelf = true;
+    private Boolean isFriend = true;
 
     private RecyclerView storyRecyclerView;
     private StoryAdapter storyAdapter;
@@ -53,9 +52,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private RecyclerView tagRecyclerView;
     private TagAdapter tagAdapter;
     BottomNavigationView bottomNavigationView;
-    private String avatarStoragePath;
-    private User profileUser;
     private Boolean isLikedByLoginUser = true;
+    private int connectionPoint;
 
 
     @Override
@@ -67,11 +65,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
-
-        // TODO(xin): get value of userId and isFriend
-
         initFragments();
-
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -126,6 +120,18 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
     private void initUserProfileData(Bundle savedInstanceState) {
+        // TODO: Only for testing ,refactor it later
+        loginUserId = ((App) getApplication()).getLoginUser().getUserId();
+        int connectionPoints = 0;
+        if (getIntent().hasExtra("PROFILE_USER_ID")) {
+            profileUserId = getIntent().getStringExtra("PROFILE_USER_ID");
+            connectionPoints = getIntent().getIntExtra("CONNECTION_POINT", 0);
+            Log.d(TAG, "initUserProfileData: " + profileUserId);
+        }
+        profileUserId = "weini15@gmailcom";  // TODO(xin): hard-coded, fix later
+        isSelf = profileUserId.equals(loginUserId);
+        isFriend = connectionPoints > 0;
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,10 +143,14 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
                                 ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
                                 String avatarUri = user.getAvatarUri();
+                                //TODO: set default profile avatar
                                 if (avatarUri != null && !avatarUri.isEmpty()) {
                                     Log.e("initUserProfileData", avatarUri);
                                     new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
                                 }
+                                /*ImageView profileAvatar = findViewById(R.id.imageProfile);
+                                profileAvatar.setImageResource(R.drawable.user_avatar);*/
+
 
                             }
                         });
@@ -150,7 +160,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
     private void initItemData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            // TODO(xin): recover state from savedInstanceState
         }
     }
 
@@ -175,7 +184,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     public void run() {
                                         storyRecyclerView = findViewById(R.id.story_recycler_view);
                                         storyRecyclerView.setHasFixedSize(true);
-                                        storyRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                                        storyRecyclerView.setLayoutManager(new LinearLayoutManager(
+                                                UserProfileActivity.this,
+                                                LinearLayoutManager.HORIZONTAL, false));
 
                                         storyAdapter = new StoryAdapter(storyList);
                                         storyRecyclerView.setAdapter(storyAdapter);
@@ -192,29 +203,28 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             @Override
             public void run() {
                 FirebaseService.getInstance().fetchTagList(profileUserId,
-                        new DataFetchCallback<Map<String, Boolean>>() {
-                            @Override
-                            public void onCallback(Map<String, Boolean> map) {
-                                if (map != null) {
-                                    tagList.clear();
-                                    for (Map.Entry<String, Boolean> entry : map.entrySet()) {
-                                        String key = entry.getKey();
-                                        tagList.add(new Tag(key));
-                                    }
+                        map -> {
+                            if (map != null) {
+                                tagList.clear();
+                                for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+                                    String key = entry.getKey();
+                                    tagList.add(new Tag(key));
                                 }
-
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tagRecyclerView = findViewById(R.id.tag_recycler_view);
-                                        tagRecyclerView.setHasFixedSize(true);
-                                        tagRecyclerView.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
-
-                                        tagAdapter = new TagAdapter(tagList);
-                                        tagRecyclerView.setAdapter(tagAdapter);
-                                    }
-                                });
                             }
+
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tagRecyclerView = findViewById(R.id.tag_recycler_view);
+                                    tagRecyclerView.setHasFixedSize(true);
+                                    tagRecyclerView.setLayoutManager(new LinearLayoutManager(
+                                            UserProfileActivity.this,
+                                            LinearLayoutManager.HORIZONTAL, false));
+
+                                    tagAdapter = new TagAdapter(tagList);
+                                    tagRecyclerView.setAdapter(tagAdapter);
+                                }
+                            });
                         });
             }
         }).start();
@@ -225,64 +235,58 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             @Override
             public void run() {
                 FirebaseService.getInstance().fetchUserProfileData(profileUserId,
-                        new DataFetchCallback<User>() {
-                            @Override
-                            public void onCallback(User user) {
-                                ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
-                                ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
-                                ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
-                                String avatarUri = user.getAvatarUri();
-                                if (avatarUri != null && !avatarUri.isEmpty()) {
-                                    Log.e("initUserProfileData", avatarUri);
-                                    new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
-                                }
-
+                        user -> {
+                            ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
+                            ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
+                            ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                            String avatarUri = user.getAvatarUri();
+                            if (avatarUri != null && !avatarUri.isEmpty()) {
+                                Log.e("initUserProfileData", avatarUri);
+                                new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
                             }
                         });
             }
         }).start();
 
-        new Thread(() -> FirebaseService.getInstance().fetchUserProfileData(profileUserId,
+        FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                 profileUser -> {
                     if (isSelf) {
                         // Show private profile
                         getSupportFragmentManager().beginTransaction()
                                 .add(R.id.edit_profile_button_fragment,
-                                        EditProfileButtonFragment.newInstance("hello world",
-                                                "haha", profileUserId), "f1")
+                                        EditProfileButtonFragment.newInstance(profileUserId),
+                                        "EditProfileButtonFragment")
                                 .add(R.id.add_tag_button_fragment,
-                                        AddTagButtonFragment.newInstance(), "f1")
+                                        AddTagButtonFragment.newInstance(), "AddTagButtonFragment")
                                 .add(R.id.add_story_button_fragment,
-                                        AddStoryButtonFragment.newInstance("AddStory",
-                                                "haha"), "AddTagButtonFragment")
+                                        AddStoryButtonFragment.newInstance(),
+                                        "AddTagButtonFragment")
                                 .commit();
                     } else if (isFriend) {
                         // Show friend profile
                         getSupportFragmentManager().beginTransaction()
-                                .add(R.id.like_button, LikeButtonFragment.newInstance("hello " +
-                                        "world", "haha"), "f1")
-                                .add(R.id.star_button, StarButtonFragment.newInstance("a", "b"
-                                ), "f")
+                                .add(R.id.star_button,
+                                        StarButtonFragment.newInstance(this.connectionPoint),
+                                        "StarButtonFragment")
                                 .add(R.id.chat_button,
                                         ChatButtonFragment.newInstance(profileUser,
                                                 isLikedByLoginUser, loginUserId),
                                         "ChatButtonFragment")
-                                .add(R.id.video_button, VideoButtonFragment.newInstance("a",
-                                        "b"), "f")
+                                .add(R.id.video_button, VideoButtonFragment.newInstance(),
+                                        "VideoButtonFragment")
                                 .commit();
                     } else {
                         // Show public profile
                         getSupportFragmentManager().beginTransaction()
-                                .add(R.id.like_button, LikeButtonFragment.newInstance("hello " +
-                                        "world", "haha"), "f1")
+                                .add(R.id.like_button,
+                                        LikeButtonFragment.newInstance(profileUserId),
+                                        "LikeButtonFragment")
                                 .add(R.id.chat_button,
                                         ChatButtonFragment.newInstance(profileUser,
                                                 isLikedByLoginUser, loginUserId),
                                         "ChatButtonFragment")
                                 .commit();
                     }
-                })).start();
-
-
+                });
     }
 }

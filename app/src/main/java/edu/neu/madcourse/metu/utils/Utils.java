@@ -25,6 +25,7 @@ public class Utils {
     public static int CALLER_AVATAR = 1;
     public static int CALL_CONNECTION_POINT = 2;
     public static int CALL_CONNECTION_ID = 3;
+    public static int CALLER_ID = 4;
 
     private static Integer[] filterIdHigh = new Integer[]{
             R.drawable.church_window,
@@ -120,6 +121,12 @@ public class Utils {
                 + connectionPoint + "-&-" + connectionId;
     }
 
+    public static String createCallInvitationContent(String callerName, String callerAvatarUrl,
+                                                     int connectionPoint, String connectionId, String callerId) {
+        return callerName + "-&-" + callerAvatarUrl + "-&-"
+                + connectionPoint + "-&-" + connectionId + "-&-" + callerId;
+    }
+
     public static String getRemoteInvitationContent(RemoteInvitation remoteInvitation, int contentIdx) {
         return remoteInvitation.getContent().split("-&-")[contentIdx];
     }
@@ -148,6 +155,7 @@ public class Utils {
             bmImage.setImageBitmap(result);
         }
     }
+
 
     public static void loadImgUri(String uri, ImageView imageView, Callback callback) {
         if (uri == null

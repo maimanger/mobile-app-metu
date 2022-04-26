@@ -92,7 +92,6 @@
                 android:id="@+id/recUsernameRightWrapper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_explore_recommend_username"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="18dp"
@@ -104,6 +103,8 @@
 
                 <TextView
                     android:id="@+id/recUsernameRight"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Luna Lovegood"

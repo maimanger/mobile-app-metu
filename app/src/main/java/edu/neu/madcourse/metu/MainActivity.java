@@ -111,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             FirebaseService.getInstance().fetchUserProfileData(userId,
                     (User user) -> {
-                        Log.d("MainActivity", "login profile fetched ");
+                if (user != null) {
+                    Log.d("MainActivity", "login profile fetched " + user.getUserId());
+                } else {
+                    Log.d("MainActivity", "login profile fetched null");
+                }
+
                 ((App)getApplication()).setLoginUser(user);
                     });
         }).start();
@@ -149,13 +154,15 @@ public class MainActivity extends AppCompatActivity {
 
                                     // set the current user
                                     ((App) getApplication()).setLoginUser(loginUser);
-                                    ((App) getApplication()).setUserId(userId);
 
                                     // update the token
                                     FCMTokenUtils.updateFCMToken(userId);
                                     ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
                                     // set the status
                                     FCMTokenUtils.setStatusActive(userId);
+
+                                    // rmt login
+                                    ((App)getApplication()).rtmLogin(userId);
                                     return;
                                 }
                             }

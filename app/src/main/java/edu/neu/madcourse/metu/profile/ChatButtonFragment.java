@@ -13,25 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import edu.neu.madcourse.metu.App;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.ChatActivity;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChatButtonFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ChatButtonFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class ChatButtonFragment extends Fragment {
     private static final String ARG_TO_CHAT_USER = "toChatUser";
     private static final String ARG_IS_LIKED_BY_LOGIN_USER = "isLikedByLoginUser";
     private static final String ARG_LOGIN_USER_ID = "loginUserId";
 
-    // TODO: Rename and change types of parameters
     private User toChatUser;
     private Boolean isLikedByLoginUser;
     private String loginUserId;
@@ -64,14 +59,13 @@ public class ChatButtonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chat_button, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView chat = view.findViewById(R.id.chatting_button);
+        FloatingActionButton chat = view.findViewById(R.id.chatting_button);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,9 +79,6 @@ public class ChatButtonFragment extends Fragment {
                 connectionUser.setAvatarUri(toChatUser.getAvatarUri());
                 intent.putExtra("RECEIVER", connectionUser);
                 intent.putExtra("CONNECTION_ID", loginUserId + toChatUser.getUserId());
-                Log.e("caotama", connectionUser.toString());
-                Log.e("dayede", toChatUser.toString());
-                Log.e("bool", isLikedByLoginUser.toString());
                 startActivity(intent);
             }
         });

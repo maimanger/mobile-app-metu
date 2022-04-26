@@ -148,7 +148,6 @@ public class User implements Parcelable {
         this.lastLoginTime = lastLoginTime;
     }
 
-
     public String getNickname() {
         return nickname;
     }

@@ -94,12 +94,12 @@ public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.Conta
                 holder.friendLevel.setText(Integer.toString(friendLevel));
                 break;
             case 2:
-                holder.friendStar.setColorFilter(Color.parseColor("#c0448f"));
+                holder.friendStar.setColorFilter(Color.parseColor("#8c09e0"));
                 holder.friendStar.setVisibility(View.VISIBLE);
                 holder.friendLevel.setText(Integer.toString(friendLevel));
                 break;
             case 3:
-                holder.friendStar.setColorFilter(Color.parseColor("#8c0161"));
+                holder.friendStar.setColorFilter(Color.parseColor("#5500ad"));
                 holder.friendStar.setVisibility(View.VISIBLE);
                 holder.friendLevel.setText(Integer.toString(friendLevel));
                 break;

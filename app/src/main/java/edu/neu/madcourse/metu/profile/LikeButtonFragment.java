@@ -10,45 +10,32 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import edu.neu.madcourse.metu.App;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.explore.LikeButtonOnClickListener;
+import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.Image;
+import edu.neu.madcourse.metu.service.DataFetchCallback;
+import edu.neu.madcourse.metu.service.FirebaseService;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LikeButtonFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LikeButtonFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_PROFILE_USER_ID = "profileUserId";
+    private String profileUserId;
 
     public LikeButtonFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LikeButtonFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LikeButtonFragment newInstance(String param1, String param2) {
+    public static LikeButtonFragment newInstance(String profileUserId) {
         LikeButtonFragment fragment = new LikeButtonFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PROFILE_USER_ID, profileUserId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,27 +44,33 @@ public class LikeButtonFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            profileUserId = getArguments().getString(ARG_PROFILE_USER_ID);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_like_button, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView favorite = view.findViewById(R.id.favorite_button);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO(Xin): add friend status to the database
-            }
-        });
+//        String loginUserId = ((App) getActivity().getApplication()).getLoginUser().getUserId();
+        String loginUserId = "tom@tomDOTcom";
+        FirebaseService.getInstance().fetchUserProfileData(loginUserId,
+                loginUser -> FirebaseService.getInstance().fetchUserProfileData(profileUserId,
+                        profileUser -> {
+                            RecommendedUser recommendedUser = new RecommendedUser();
+                            recommendedUser.setUserId(profileUser.getUserId());
+                            recommendedUser.setNickname(profileUser.getNickname());
+                            recommendedUser.setAvatarUri(profileUser.getAvatarUri());
+                            recommendedUser.setGender(profileUser.getGender());
+                            recommendedUser.setIsLiked(true);
+                            Button profile_like_button = view.findViewById(R.id.profile_like_button);
+                            profile_like_button.setOnClickListener(new LikeButtonOnClickListener(
+                                    profile_like_button, recommendedUser, loginUser));
+                        }));
     }
 }

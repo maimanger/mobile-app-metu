@@ -17,6 +17,7 @@ import java.util.List;
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.Contact;
+import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.video.VideoActivity;
 
 public class ContactsFragment extends Fragment implements CustomedItemClickListener {
@@ -55,18 +56,21 @@ public class ContactsFragment extends Fragment implements CustomedItemClickListe
     @Override
     public void onClick(int position) {
         Contact clickedItem = contactsList.get(position);
-        // TODO: Go to Profile Activity
-        /*Toast.makeText(this.getContext(),
-                "Clicked: Go to " + clickedItem.getContactName() + " Profile!",
-                Toast.LENGTH_SHORT).show();*/
+        // Go to Profile Activity
+        Intent intent = new Intent(getContext(), UserProfileActivity.class);
+        intent.putExtra("PROFILE_USER_ID", clickedItem.getContactUserId());
+        intent.putExtra("CONNECTION_ID", clickedItem.getConnectionId());
+        intent.putExtra("CONNECTION_POINT", clickedItem.getConnectionPoint());
+        startActivity(intent);
+
 
         // TODO: This is for VideoCall testing, will be deleted
-        Intent intent = new Intent(getContext(), VideoActivity.class);
+/*        Intent intent = new Intent(getContext(), VideoActivity.class);
         intent.putExtra("CALLEE_ID", clickedItem.getContactUserId());
         intent.putExtra("CALLEE_NAME", clickedItem.getContactName());
         intent.putExtra("CALLEE_AVATAR", clickedItem.getContactAvatarUri());
         intent.putExtra("CONNECTION_POINT", clickedItem.getConnectionPoint());
         intent.putExtra("CONNECTION_ID", clickedItem.getConnectionId());
-        startActivity(intent);
+        startActivity(intent);*/
     }
 }
