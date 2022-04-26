@@ -68,8 +68,7 @@ public class LikeButtonFragment extends Fragment {
                             recommendedUser.setAvatarUri(profileUser.getAvatarUri());
                             recommendedUser.setGender(profileUser.getGender());
                             recommendedUser.setIsLiked(true);
-                            Button profile_like_button =
-                                    view.findViewById(R.id.profile_like_button);
+                            Button profile_like_button = view.findViewById(R.id.profile_like_button);
                             profile_like_button.setOnClickListener(new LikeButtonOnClickListener(
                                     profile_like_button, recommendedUser, loginUser));
                         }));

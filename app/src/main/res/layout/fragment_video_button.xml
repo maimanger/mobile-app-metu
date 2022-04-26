@@ -8,7 +8,7 @@
     tools:context=".profile.VideoButtonFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/buttom_profile_video"
+        android:id="@+id/button_profile_video"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:clickable="true"

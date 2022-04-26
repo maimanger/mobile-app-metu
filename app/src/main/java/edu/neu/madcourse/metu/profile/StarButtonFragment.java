@@ -49,7 +49,7 @@ public class StarButtonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView friendLevelTextView = view.findViewById(R.id.text_friend_level_in_fragment);
+        TextView friendLevelTextView = view.findViewById(R.id.text_profile_star_friend_level);
         friendLevelTextView.setText(String.valueOf(Utils.calculateFriendLevel(connectionPoint)));
     }
 }

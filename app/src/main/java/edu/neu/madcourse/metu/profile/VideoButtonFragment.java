@@ -41,7 +41,7 @@ public class VideoButtonFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ImageView videoChat = view.findViewById(R.id.video_fragment_button);
+        ImageView videoChat = view.findViewById(R.id.button_profile_video);
         videoChat.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), VideoActivity.class);
             startActivity(intent);

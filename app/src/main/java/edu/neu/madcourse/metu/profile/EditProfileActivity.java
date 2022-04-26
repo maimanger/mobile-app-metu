@@ -121,7 +121,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             String nickname = etNickname.getText().toString();
             String location = etLocation.getText().toString();
             Integer age = Integer.parseInt(etAge.getText().toString());
-            int gender = Integer.parseInt(etGender.getText().toString());
+            String gender = etGender.getText().toString();
 
             Integer genderInt = 2;
             if (gender.toLowerCase().equals("male")) {
@@ -137,7 +137,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             loginUser.setNickname(nickname);
             loginUser.setLocation(location);
             loginUser.setAge(age);
-            loginUser.setGender(gender);
+            loginUser.setGender(genderInt);
 
             FirebaseService.getInstance().updateUserProfile(loginUser);
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();

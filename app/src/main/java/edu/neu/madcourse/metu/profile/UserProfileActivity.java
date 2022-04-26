@@ -28,6 +28,7 @@ import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
@@ -60,27 +61,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        // TODO(xin): comment out next line due to returning null
-        // this.loginUserId = ((App) getApplication()).getUserId();
-        this.loginUserId = "weini15@gmailcom";  // TODO(xin): to remove
-
-        // TODO(xin): last activity haven't passed profileUserId yet. Comment out next line
-        // this.profileUserId = getIntent().getStringExtra("profileUserId");
-        this.profileUserId = "weini13@gmailcom";  // TODO(xin): to remove
-
-        this.isSelf = (this.loginUserId == this.profileUserId);
-        this.isFriend = true;  // TODO(xin): need connections table in db
-
-        // TODO(xin): need testing
-        this.connectionPoint = getIntent().getIntExtra("CONNECTION_POINT", 100);
-
-
         initUserProfileData(savedInstanceState);
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
         initFragments();
-
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -135,28 +120,15 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
     private void initUserProfileData(Bundle savedInstanceState) {
-        // new Thread(() -> FirebaseService.getInstance().fetchUserProfileData(profileUserId,
-        //         user -> {
-        //             ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
-        //             ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() +
-        //                     " years");
-        //             ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
-        //             String avatarUri = user.getAvatarUri();
-        //             if (avatarUri != null && !avatarUri.isEmpty()) {
-        //                 Log.e("initUserProfileData", avatarUri);
-        //                 new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
-        //             }
-        //         })).start();
-
-
         // TODO: Only for testing ,refactor it later
-        loginUserId = ((App)getApplication()).getLoginUser().getUserId();
+        loginUserId = ((App) getApplication()).getLoginUser().getUserId();
         int connectionPoints = 0;
         if (getIntent().hasExtra("PROFILE_USER_ID")) {
             profileUserId = getIntent().getStringExtra("PROFILE_USER_ID");
             connectionPoints = getIntent().getIntExtra("CONNECTION_POINT", 0);
             Log.d(TAG, "initUserProfileData: " + profileUserId);
         }
+        profileUserId = "weini15@gmailcom";  // TODO(xin): hard-coded, fix later
         isSelf = profileUserId.equals(loginUserId);
         isFriend = connectionPoints > 0;
 
