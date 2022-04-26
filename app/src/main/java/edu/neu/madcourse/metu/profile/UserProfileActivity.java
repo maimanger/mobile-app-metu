@@ -39,12 +39,10 @@ import edu.neu.madcourse.metu.service.FirebaseService;
 public class UserProfileActivity extends BaseCalleeActivity implements
         AddTagButtonFragment.OnDataPass,
         AddStoryButtonFragment.OnStoryDataPass {
-    public static Bitmap avatarBitmap;
-    // TODO(xin): hard-coding, need to interpret from login user and clicked user
     private String profileUserId;
     private String loginUserId;
-    private final Boolean isSelf = false;
-    private final Boolean isFriend = true;
+    private Boolean isSelf = true;
+    private Boolean isFriend = true;
 
     private RecyclerView storyRecyclerView;
     private StoryAdapter storyAdapter;
@@ -66,11 +64,15 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
         // TODO(xin): comment out next line due to returning null
         // this.loginUserId = ((App) getApplication()).getUserId();
-        this.loginUserId = "alice@alicecom";  // TODO(xin): to remove
+        this.loginUserId = "tom@tomcom";  // TODO(xin): to remove
 
         // TODO(xin): last activity haven't passed profileUserId yet. Comment out next line
         // this.profileUserId = getIntent().getStringExtra("profileUserId");
-        this.profileUserId = "tom@tomDOTcom";  // TODO(xin): to remove
+        this.profileUserId = "jerry@jerrycom";  // TODO(xin): to remove
+
+        this.isSelf = (this.loginUserId == this.profileUserId);
+        this.isFriend = true;  // TODO(xin): need connections table in db
+
 
         initUserProfileData(savedInstanceState);
         initItemData(savedInstanceState);
@@ -248,7 +250,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
 
-        new Thread(() -> FirebaseService.getInstance().fetchUserProfileData(profileUserId,
+        FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                 profileUser -> {
                     if (isSelf) {
                         // Show private profile
@@ -265,8 +267,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     } else if (isFriend) {
                         // Show friend profile
                         getSupportFragmentManager().beginTransaction()
-                                .add(R.id.like_button, LikeButtonFragment.newInstance("hello " +
-                                        "world", "haha"), "f1")
+                                .add(R.id.like_button,
+                                        LikeButtonFragment.newInstance(profileUserId),
+                                        "LikeButtonFragment")
                                 .add(R.id.star_button, StarButtonFragment.newInstance("a", "b"
                                 ), "f")
                                 .add(R.id.chat_button,
@@ -279,16 +282,15 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     } else {
                         // Show public profile
                         getSupportFragmentManager().beginTransaction()
-                                .add(R.id.like_button, LikeButtonFragment.newInstance("hello " +
-                                        "world", "haha"), "f1")
+                                .add(R.id.like_button,
+                                        LikeButtonFragment.newInstance(profileUserId),
+                                        "LikeButtonFragment")
                                 .add(R.id.chat_button,
                                         ChatButtonFragment.newInstance(profileUser,
                                                 isLikedByLoginUser, loginUserId),
                                         "ChatButtonFragment")
                                 .commit();
                     }
-                })).start();
-
-
+                });
     }
 }

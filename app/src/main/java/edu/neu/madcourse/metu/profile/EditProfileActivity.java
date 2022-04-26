@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,14 +23,14 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import edu.neu.madcourse.metu.BaseCalleeActivity;
-import edu.neu.madcourse.metu.MainActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
 public class EditProfileActivity extends BaseCalleeActivity {
 
-    EditText etUsername, etEmail, etLocation, etAge, etGender;
+    EditText etNickname, etLocation, etAge, etGender;
     private Uri imageFilePath;
     private Uri imageFirebaseUri;
     private Bitmap avatarBitmap;
@@ -79,8 +78,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
     }
 
     void viewInitializations() {
-        etUsername = findViewById(R.id.et_username);
-        etEmail = findViewById(R.id.et_email);
+        etNickname = findViewById(R.id.et_username);
         etLocation = findViewById(R.id.et_location);
         etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
@@ -88,13 +86,8 @@ public class EditProfileActivity extends BaseCalleeActivity {
 
     // Checking if the input in form is valid
     boolean validateInput() {
-        if (etUsername.getText().toString().equals("")) {
-            etUsername.setError("Please Enter Username");
-            return false;
-        }
-
-        if (etEmail.getText().toString().equals("")) {
-            etEmail.setError("Please Enter Your Email");
+        if (etNickname.getText().toString().equals("")) {
+            etNickname.setError("Please Enter Username");
             return false;
         }
 
@@ -113,12 +106,6 @@ public class EditProfileActivity extends BaseCalleeActivity {
             return false;
         }
 
-        // checking the proper email format
-        if (!isEmailValid(etEmail.getText().toString())) {
-            etEmail.setError("Please Enter Valid Email");
-            return false;
-        }
-
         return true;
     }
 
@@ -131,14 +118,21 @@ public class EditProfileActivity extends BaseCalleeActivity {
     public void performEditProfile(View v) {
         if (validateInput()) {
             // Input is valid, here send data to your server
-            String username = etUsername.getText().toString();
-            String email = etEmail.getText().toString();
+            String nickname = etNickname.getText().toString();
             String location = etLocation.getText().toString();
             Integer age = Integer.parseInt(etAge.getText().toString());
-            String gender = etGender.getText().toString();
+            int gender = Integer.parseInt(etGender.getText().toString());
 
             // Write user data to firebase
-            FirebaseService.getInstance().updateUserProfile(username, email, location, age, gender);
+            // User loginUser = ((App) getApplication()).getLoginUser();
+            User loginUser = new User();
+            loginUser.setEmail("tom@tom.com");
+            loginUser.setNickname(nickname);
+            loginUser.setLocation(location);
+            loginUser.setAge(age);
+            loginUser.setGender(gender);
+
+            FirebaseService.getInstance().updateUserProfile(loginUser);
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
             finish();
         }

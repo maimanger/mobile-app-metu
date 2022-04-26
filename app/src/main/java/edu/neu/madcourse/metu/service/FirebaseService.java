@@ -42,16 +42,17 @@ public class FirebaseService {
         return singleton_instance;
     }
 
-    public void updateUserProfile(String username, String email, String location, Integer age,
-                                  String gender) {
+    public void updateUserProfile(User user) {
         // Firebase does not allow '.' character in key.
-        String key = email.replace(".", "");
+        String key = user.getEmail().replace(".", "");
         HashMap<String, Object> userValues = new HashMap<>();
-        userValues.put("username", username);
-        userValues.put("email", email);
-        userValues.put("location", location);
-        userValues.put("age", age);
-        userValues.put("gender", gender);
+        userValues.put("userId", user.getUserId());
+        userValues.put("nickname", user.getNickname());
+        userValues.put("password", user.getPassword());
+        userValues.put("location", user.getLocation());
+        userValues.put("age", user.getAge());
+        userValues.put("gender", user.getGender());
+        userValues.put("avatarUri", user.getAvatarUri());
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + key, userValues);

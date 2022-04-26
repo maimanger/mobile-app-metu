@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1051254796603",
-    "firebase_url": "https://mobile-app-metu-default-rtdb.firebaseio.com",
-    "project_id": "mobile-app-metu",
-    "storage_bucket": "mobile-app-metu.appspot.com"
+    "project_number": "549419853523",
+    "firebase_url": "https://metu-demo-default-rtdb.firebaseio.com",
+    "project_id": "metu-demo",
+    "storage_bucket": "metu-demo.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1051254796603:android:056fe9b0c6a32bff83071e",
+        "mobilesdk_app_id": "1:549419853523:android:e9a02906d44f099c1f9626",
         "android_client_info": {
           "package_name": "edu.neu.madcourse.metu"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1051254796603-km28vbpbprau5ib32ak61kbuf7005veo.apps.googleusercontent.com",
+          "client_id": "549419853523-7h8lc3guf33pus56n328jq3kn9ugtihf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDvoDUnNXplcHkPcWK_qGeomDQU9ngb0xI"
+          "current_key": "AIzaSyDml-K0cpml6XRu9AYnzmyTgCWKaIXZevc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1051254796603-km28vbpbprau5ib32ak61kbuf7005veo.apps.googleusercontent.com",
+              "client_id": "549419853523-7h8lc3guf33pus56n328jq3kn9ugtihf.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

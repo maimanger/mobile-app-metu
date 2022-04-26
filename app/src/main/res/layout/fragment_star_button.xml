@@ -3,11 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".profile.StarButtonFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_connection_level" />
+        android:id="@+id/image_friend_start_in_fragment"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_connection_level" />
+
+    <TextView
+        android:id="@+id/text_friend_level_in_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alfa_slab_one"
+        android:shadowColor="#020202"
+        android:shadowRadius="2"
+        android:text="1"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/image_friend_start_in_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/image_friend_start_in_fragment"
+        app:layout_constraintStart_toStartOf="@+id/image_friend_start_in_fragment"
+        app:layout_constraintTop_toTopOf="@+id/image_friend_start_in_fragment" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

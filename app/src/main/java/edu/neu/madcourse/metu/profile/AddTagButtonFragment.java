@@ -85,7 +85,7 @@ public class AddTagButtonFragment extends Fragment {
         dataPasser = (OnDataPass) context;
     }
 
-//    //    Adding more tags
+    // Adding more tags
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
