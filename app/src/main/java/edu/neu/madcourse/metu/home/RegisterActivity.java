@@ -48,9 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
-                    return;
+                    //return;
                 }
             }
         };
@@ -78,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else {
                                 //String userID = mAuth.getCurrentUser().getUid();
-                                String emailDOT = email.replaceAll("\\.", "DOT");
+                                String emailDOT = email.replaceAll("\\.", "");
                                 DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(emailDOT);
                                 Map userInfo = new HashMap<>();
                                 userInfo.put("username", username);
