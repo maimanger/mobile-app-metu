@@ -1,7 +1,6 @@
 package edu.neu.madcourse.metu.profile;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
@@ -41,9 +41,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         AddStoryButtonFragment.OnStoryDataPass {
     public static Bitmap avatarBitmap;
     // TODO(xin): hard-coding, need to interpret from login user and clicked user
-    private final String userId = "tom@tomDOTcom";
-    private final Boolean isSelf = true;
-    private final Boolean isFriend = false;
+    private String profileUserId;
+    private String loginUserId;
+    private final Boolean isSelf = false;
+    private final Boolean isFriend = true;
 
     private RecyclerView storyRecyclerView;
     private StoryAdapter storyAdapter;
@@ -54,6 +55,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private TagAdapter tagAdapter;
     BottomNavigationView bottomNavigationView;
     private String avatarStoragePath;
+    private User profileUser;
+    private Boolean isLikedByLoginUser = true;
 
 
     @Override
@@ -61,35 +64,20 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        // TODO(xin): comment out next line due to returning null
+        // this.loginUserId = ((App) getApplication()).getUserId();
+        this.loginUserId = "alice@alicecom";  // TODO(xin): to remove
+
+        // TODO(xin): last activity haven't passed profileUserId yet. Comment out next line
+        // this.profileUserId = getIntent().getStringExtra("profileUserId");
+        this.profileUserId = "tom@tomDOTcom";  // TODO(xin): to remove
+
         initUserProfileData(savedInstanceState);
         initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
+        initFragments();
 
-        // TODO(xin): get value of userId and isFriend
-
-        if (isSelf) {
-            // Show private profile
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.edit_profile_button_fragment, EditProfileButtonFragment.newInstance("hello world", "haha", userId), "f1")
-                    .add(R.id.add_tag_button_fragment, AddTagButtonFragment.newInstance(), "f1")
-                    .add(R.id.add_story_button_fragment, AddStoryButtonFragment.newInstance("AddStory", "haha"), "AddTagButtonFragment")
-                    .commit();
-        } else if (isFriend) {
-            // Show friend profile
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.like_button, LikeButtonFragment.newInstance("hello world", "haha"), "f1")
-                    .add(R.id.star_button, StarButtonFragment.newInstance("a", "b"), "f")
-                    .add(R.id.chat_button, ChatButtonFragment.newInstance("a", "b"), "f")
-                    .add(R.id.video_button, VideoButtonFragment.newInstance("a", "b"), "f")
-                    .commit();
-        } else {
-            // Show public profile
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.like_button, LikeButtonFragment.newInstance("hello world", "haha"), "f1")
-                    .add(R.id.chat_button, ChatButtonFragment.newInstance("a", "b"), "f")
-                    .commit();
-        }
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -101,19 +89,19 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId())
-                {
+                switch (item.getItemId()) {
                     case R.id.menu_explore:
                         startActivity(new Intent(getApplicationContext(), ExploringActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.menu_contacts:
                         startActivity(new Intent(getApplicationContext(), ContactsActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.menu_chats:
-                        startActivity(new Intent(getApplicationContext(), RecentConversationActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(),
+                                RecentConversationActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.menu_me:
                         return true;
@@ -129,7 +117,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         int position = tagList.size();
         tagList.add(position, new Tag(data));
         tagAdapter.notifyItemInserted(position);
-        FirebaseService.getInstance().addTag(userId, data);
+        FirebaseService.getInstance().addTag(profileUserId, data);
     }
 
     @Override
@@ -139,15 +127,15 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), localPath);
         storyList.add(position, new Story(storyImageUri));
         storyAdapter.notifyItemInserted(position);
-        FirebaseService.getInstance().addStory(userId, storyImageUri.toString());
+        FirebaseService.getInstance().addStory(profileUserId, storyImageUri.toString());
         Log.e("story", String.valueOf(storyList.size()));
     }
 
-    public void initUserProfileData(Bundle savedInstanceState) {
+    private void initUserProfileData(Bundle savedInstanceState) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FirebaseService.getInstance().fetchUserProfileData(userId,
+                FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                         new DataFetchCallback<User>() {
                             @Override
                             public void onCallback(User user) {
@@ -166,17 +154,17 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }).start();
     }
 
-    public void initItemData(Bundle savedInstanceState) {
+    private void initItemData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             // TODO(xin): recover state from savedInstanceState
         }
     }
 
-    public void initStoryPager() {
+    private void initStoryPager() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FirebaseService.getInstance().fetchStoryList(userId,
+                FirebaseService.getInstance().fetchStoryList(profileUserId,
                         new DataFetchCallback<Map<String, String>>() {
                             @Override
                             public void onCallback(Map<String, String> map) {
@@ -205,11 +193,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }).start();
     }
 
-    public void initTagPager() {
+    private void initTagPager() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FirebaseService.getInstance().fetchTagList(userId,
+                FirebaseService.getInstance().fetchTagList(profileUserId,
                         new DataFetchCallback<Map<String, Boolean>>() {
                             @Override
                             public void onCallback(Map<String, Boolean> map) {
@@ -236,5 +224,71 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         });
             }
         }).start();
+    }
+
+    private void initFragments() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FirebaseService.getInstance().fetchUserProfileData(profileUserId,
+                        new DataFetchCallback<User>() {
+                            @Override
+                            public void onCallback(User user) {
+                                ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
+                                ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
+                                ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                                String avatarUri = user.getAvatarUri();
+                                if (avatarUri != null && !avatarUri.isEmpty()) {
+                                    Log.e("initUserProfileData", avatarUri);
+                                    new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
+                                }
+
+                            }
+                        });
+            }
+        }).start();
+
+        new Thread(() -> FirebaseService.getInstance().fetchUserProfileData(profileUserId,
+                profileUser -> {
+                    if (isSelf) {
+                        // Show private profile
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.edit_profile_button_fragment,
+                                        EditProfileButtonFragment.newInstance("hello world",
+                                                "haha", profileUserId), "f1")
+                                .add(R.id.add_tag_button_fragment,
+                                        AddTagButtonFragment.newInstance(), "f1")
+                                .add(R.id.add_story_button_fragment,
+                                        AddStoryButtonFragment.newInstance("AddStory",
+                                                "haha"), "AddTagButtonFragment")
+                                .commit();
+                    } else if (isFriend) {
+                        // Show friend profile
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.like_button, LikeButtonFragment.newInstance("hello " +
+                                        "world", "haha"), "f1")
+                                .add(R.id.star_button, StarButtonFragment.newInstance("a", "b"
+                                ), "f")
+                                .add(R.id.chat_button,
+                                        ChatButtonFragment.newInstance(profileUser,
+                                                isLikedByLoginUser, loginUserId),
+                                        "ChatButtonFragment")
+                                .add(R.id.video_button, VideoButtonFragment.newInstance("a",
+                                        "b"), "f")
+                                .commit();
+                    } else {
+                        // Show public profile
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.like_button, LikeButtonFragment.newInstance("hello " +
+                                        "world", "haha"), "f1")
+                                .add(R.id.chat_button,
+                                        ChatButtonFragment.newInstance(profileUser,
+                                                isLikedByLoginUser, loginUserId),
+                                        "ChatButtonFragment")
+                                .commit();
+                    }
+                })).start();
+
+
     }
 }

@@ -5,9 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".profile.LikeButtonFragment">
 
-    <ImageView
+
+    <Button
+        android:id="@+id/profile_like_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/like" />
+        android:background="@drawable/ic_unlike"
+        android:layout_gravity="center"
+        />
 
 </FrameLayout>

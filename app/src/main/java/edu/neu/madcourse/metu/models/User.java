@@ -1,8 +1,14 @@
 package edu.neu.madcourse.metu.models;
 
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.Map;
 
-public class User {
+public class User implements Parcelable {
     private String userId;
     private String nickname; // username is used as nickname
     private String password;
@@ -12,7 +18,6 @@ public class User {
     private String gender;
     private Map<String, Boolean> tags;
     private Map<String, String> stories;
-    private Boolean isOnline;
     private String avatarUri;
     private Map<String, Boolean> connections;
 
@@ -28,7 +33,7 @@ public class User {
 
     public User(String username, String password, String email, String location, Integer age,
                 String gender, Map<String, Boolean> tags, Map<String, String> stories,
-                Boolean isOnline, String avatarUri) {
+                String avatarUri) {
         this.nickname = username;
         this.password = password;
         this.email = email;
@@ -37,13 +42,12 @@ public class User {
         this.gender = gender;
         this.tags = tags;
         this.stories = stories;
-        this.isOnline = isOnline;
         this.avatarUri = avatarUri;
     }
 
     public User(String userId, String nickname, String password, String email, String location,
                 Integer age, String gender, Map<String, Boolean> tags, Map<String, String> stories,
-                Boolean isOnline, String avatarUri, Map<String, Boolean> connections) {
+                String avatarUri, Map<String, Boolean> connections) {
         this.userId = userId;
         this.nickname = nickname;
         this.password = password;
@@ -53,7 +57,6 @@ public class User {
         this.gender = gender;
         this.tags = tags;
         this.stories = stories;
-        this.isOnline = isOnline;
         this.avatarUri = avatarUri;
         this.connections = connections;
     }
@@ -122,14 +125,6 @@ public class User {
         this.stories = stories;
     }
 
-    public Boolean getOnline() {
-        return isOnline;
-    }
-
-    public void setOnline(Boolean online) {
-        isOnline = online;
-    }
-
     public String getAvatarUri() {
         return avatarUri;
     }
@@ -149,7 +144,6 @@ public class User {
                 ", gender='" + gender + '\'' +
                 ", tags=" + tags +
                 ", stories=" + stories +
-                ", isOnline=" + isOnline +
                 ", avatarUri='" + avatarUri + '\'' +
                 '}';
     }
@@ -168,5 +162,26 @@ public class User {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.userId);
+        parcel.writeString(this.nickname);
+        parcel.writeString(this.password);
+        parcel.writeString(this.email);
+        parcel.writeString(this.location);
+        parcel.writeInt(this.age);
+        parcel.writeString(this.gender);
+        parcel.writeMap(this.tags);
+        parcel.writeMap(this.stories);
+        parcel.writeString(this.avatarUri);
+        parcel.writeMap(this.connections);
     }
 }
