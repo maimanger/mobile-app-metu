@@ -113,7 +113,7 @@ public class ExploringActivity extends BaseCalleeActivity {
 
     private void loadUser() {
         // todo: load from App
-        this.userId = ((App) getApplicationContext()).getUserId();
+        this.userId = ((App) getApplicationContext()).getLoginUser().getUserId();
         Log.d("ACTIVITY", "EXPLORING ACTIVITY: " + userId);
     }
 
@@ -156,16 +156,16 @@ public class ExploringActivity extends BaseCalleeActivity {
                             String userId = snapshot.child(Constants.USER_USER_ID).getValue(String.class);
                             String nickname = snapshot.child(Constants.USER_NICKNAME).getValue(String.class);
                             // todo: gender string or int?
-                            String gender = snapshot.child(Constants.USER_GENDER).getValue(String.class);
+                            Integer gender = snapshot.child(Constants.USER_GENDER).getValue(Integer.class);
                             String avatarUri = snapshot.child(Constants.USER_AVATAR_URI).getValue(String.class);
 
                             RecommendedUser recommendedUser = new RecommendedUser();
                             recommendedUser.setIsLiked(false);
 
                             // todo: gender categories
-                            if (gender != null && gender.toLowerCase().equals(Constants.GENDER_FEMALE_STRING)) {
+                            if (gender != null && gender.equals(Constants.GENDER_FEMALE)) {
                                 recommendedUser.setGender(Constants.GENDER_FEMALE_INT);
-                            } else if (gender != null && gender.toLowerCase().equals(Constants.GENDER_MALE_STRING)) {
+                            } else if (gender != null && gender.equals(Constants.GENDER_MALE)) {
                                 recommendedUser.setGender(Constants.GENDER_MALE_INT);
                             } else {
                                 recommendedUser.setGender(Constants.GENDER_UNDEFINE_INT);

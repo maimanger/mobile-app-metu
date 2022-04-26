@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.profile.imageUpload.Image;
 
@@ -72,7 +74,7 @@ public class LikeButtonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ImageView favorite = view.findViewById(R.id.favorite_button);
+        FloatingActionButton favorite = view.findViewById(R.id.favorite_button);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

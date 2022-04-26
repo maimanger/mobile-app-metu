@@ -15,7 +15,7 @@ public class User implements Parcelable {
     private String email; // email is used as id
     private String location;
     private Integer age;
-    private String gender;
+    private Integer gender;
     private Map<String, Boolean> tags;
     private Map<String, String> stories;
     private String avatarUri;
@@ -32,7 +32,7 @@ public class User implements Parcelable {
     }
 
     public User(String username, String password, String email, String location, Integer age,
-                String gender, Map<String, Boolean> tags, Map<String, String> stories,
+                Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
                 String avatarUri) {
         this.nickname = username;
         this.password = password;
@@ -46,7 +46,7 @@ public class User implements Parcelable {
     }
 
     public User(String userId, String nickname, String password, String email, String location,
-                Integer age, String gender, Map<String, Boolean> tags, Map<String, String> stories,
+                Integer age, Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
                 String avatarUri, Map<String, Boolean> connections) {
         this.userId = userId;
         this.nickname = nickname;
@@ -60,6 +60,33 @@ public class User implements Parcelable {
         this.avatarUri = avatarUri;
         this.connections = connections;
     }
+
+    protected User(Parcel in) {
+        userId = in.readString();
+        nickname = in.readString();
+        password = in.readString();
+        email = in.readString();
+        location = in.readString();
+        if (in.readByte() == 0) {
+            age = null;
+        } else {
+            age = in.readInt();
+        }
+        gender = in.readInt();
+        avatarUri = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getNickname() {
         return nickname;
@@ -101,11 +128,11 @@ public class User implements Parcelable {
         this.age = age;
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
@@ -178,7 +205,7 @@ public class User implements Parcelable {
         parcel.writeString(this.email);
         parcel.writeString(this.location);
         parcel.writeInt(this.age);
-        parcel.writeString(this.gender);
+        parcel.writeInt(this.gender);
         parcel.writeMap(this.tags);
         parcel.writeMap(this.stories);
         parcel.writeString(this.avatarUri);

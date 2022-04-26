@@ -137,8 +137,15 @@ public class EditProfileActivity extends BaseCalleeActivity {
             Integer age = Integer.parseInt(etAge.getText().toString());
             String gender = etGender.getText().toString();
 
+            Integer genderInt = 2;
+            if (gender.toLowerCase().equals("male")) {
+                genderInt = 0;
+            } else if (gender.toLowerCase().equals("female")) {
+                genderInt = 1;
+            }
+
             // Write user data to firebase
-            FirebaseService.getInstance().updateUserProfile(username, email, location, age, gender);
+            FirebaseService.getInstance().updateUserProfile(username, email, location, age, genderInt);
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
             finish();
         }

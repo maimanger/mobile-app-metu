@@ -56,8 +56,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private boolean isActivityChangingConfigurations = false;
     private String currActivityName;
 
-
-
     // Call invitation function members
     private int callNotificationId = -1;
     private List<Integer> canceledCallNotificationIds = new ArrayList<>();
@@ -68,11 +66,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private AgoraEventListener agoraEventListener;
 
     private User loginUser;
-
-
-    private String userId;
-    private String userNickname;
-    private String userAvatarUrl = "https://" + userNickname + ".png";
 
     private String fcmToken = "";
 
@@ -252,9 +245,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         if (++foregroundActivityCount == 1 && !isActivityChangingConfigurations) {
             // App enters foreground -> stop the service
             // set the current user to be available
-            // todo: check if logged in
-            if (userId != null && userId.length() > 0) {
-                FCMTokenUtils.setStatusActive(userId);
+            if (loginUser != null) {
+                FCMTokenUtils.setStatusActive(loginUser.getUserId());
                 // reset the token
                 fcmToken = "";
             }
@@ -276,8 +268,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         isActivityChangingConfigurations = activity.isChangingConfigurations();
         if (--foregroundActivityCount == 0 && !isActivityChangingConfigurations) {
             // set the current user to be inactive
-            if (userId != null && userId.length() > 0) {
-                FCMTokenUtils.setStatusInactive(userId);
+            if (loginUser != null) {
+                FCMTokenUtils.setStatusInactive(loginUser.getUserId());
             }
         }
     }
@@ -300,8 +292,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
             });
 
             // remove the FCM token
-            if (userId != null && userId.length() > 0) {
-                FCMTokenUtils.removeFCMToken(userId);
+            if (loginUser != null) {
+                FCMTokenUtils.removeFCMToken(loginUser.getUserId());
                 fcmToken = "";
             }
         }
@@ -310,15 +302,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
 
-
-
-
     // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void sendCanceledCallNotification(RemoteInvitation remoteInvitation) {
-        String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
         String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
-
         Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
         if (bitmap == null) {
             Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.user_avatar, null);
@@ -344,8 +331,15 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 this, notifId, dismissIntent, 0);
 
         // TODO: Go to caller Profile (REMEMBER: App.removeCanceledCallNotificationId(notifId))
+        String callerId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_ID);
+        String connectionId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_ID);
+        String connectionPoint = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_POINT);
+
         Intent contentIntent = new Intent(this, UserProfileActivity.class);
-        //contentIntent.putExtra("NOTIFICATION_ID", notifId);
+        contentIntent.putExtra("PROFILE_USER_ID", callerId);
+        contentIntent.putExtra("CONNECTION_ID", connectionId);
+        contentIntent.putExtra("CONNECTION_POINT", connectionPoint);
+
         PendingIntent pendingContentIntent =PendingIntent.getActivity(
                 this, notifId * 2, contentIntent, 0);
 
@@ -372,7 +366,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @RequiresApi(api = Build.VERSION_CODES.S)
     public boolean sendCallNotification() {
         if (foregroundActivityCount == 0) {
-            String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
             String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
             Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
             if (bitmap == null) {
@@ -404,6 +397,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             PendingIntent pendingAcceptIntent =PendingIntent.getActivity(
                     this, notifId * 2, acceptIntent, 0);
 
+            String callerName = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_NAME);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(
                     this,
                     "VideoCallNotification")
@@ -432,10 +426,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void sendCallInvitation(String calleeId, int connectionPoint, String connectionId) {
         if (loginUser != null) {
             localInvitation = rtmCallManager.createLocalInvitation(calleeId);
-
             localInvitation.setContent(Utils.createCallInvitationContent(
                     loginUser.getNickname(), loginUser.getAvatarUri(),
-                    connectionPoint, connectionId));
+                    connectionPoint, connectionId, loginUser.getUserId()));
 
             rtmCallManager.sendLocalInvitation(localInvitation, new ResultCallback<Void>() {
                 @Override
@@ -575,13 +568,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
         canceledCallNotificationIds.remove((Integer)canceledCallNotificationId);
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public User getLoginUser() {
         return loginUser;

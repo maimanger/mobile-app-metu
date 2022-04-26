@@ -62,5 +62,6 @@ public class StarButtonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_star_button, container, false);
+        //TODO: set friend level text and setColorFilter to the imageView! See ContactsAdapter
     }
 }

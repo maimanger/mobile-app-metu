@@ -13,7 +13,10 @@
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.26979166666666665" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/background_image.xml" value="0.26979166666666665" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/header_background.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_connection_level_shadow.xml" value="0.26979166666666665" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18958333333333333" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_like.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_start_chat.xml" value="0.26979166666666665" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/selector_menu.xml" value="0.26979166666666665" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_chat.xml" value="0.12132725430597771" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_contact.xml" value="0.264" />
@@ -26,19 +29,23 @@
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_recent_conversation.xml" value="0.25226449275362317" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_register.xml" value="0.264" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_splash.xml" value="0.264" />
-        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_user_profile.xml" value="0.25226449275362317" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_user_profile.xml" value="0.34074074074074073" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_video.xml" value="0.264" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/call_dialog.xml" value="0.264" />
-        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_contact.xml" value="0.2" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_contact.xml" value="0.6" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_tag.xml" value="0.15579710144927536" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_chat_button.xml" value="0.1" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_contacts.xml" value="0.2" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_edit_profile_button.xml" value="0.13903985507246377" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_friend.xml" value="0.264" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_friends.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_like_button.xml" value="0.2" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_met.xml" value="0.1431159420289855" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_mets.xml" value="0.264" />
-        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_star_button.xml" value="0.15579710144927536" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_star_button.xml" value="0.6" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_video_button.xml" value="0.1" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/item_container_sent_message.xml" value="0.15579710144927536" />
-        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/layout_top.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/layout_top.xml" value="0.24909420289855072" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/menu/menu.xml" value="0.25364583333333335" />
       </map>
     </option>
