@@ -34,7 +34,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/exploringPageBackground"
-        android:tint="@color/chat_background_input_color"/>
+        android:tint="@color/chat_background_input_color"
+        app:tint="@color/white"/>
 
     <View
         android:id="@+id/exploringPageBackground"
