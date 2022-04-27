@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +40,9 @@ import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 public class LoginActivity extends AppCompatActivity {
     private Button mLogin;
     private EditText mEmail, mPassword;
+    private TextView linkSignUp;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
+    //private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,74 +50,19 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-
-        firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
+        /*firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                }
             }
-        };
+        };*/
 
         mLogin = (Button) findViewById(R.id.loginbtn);
         mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
 
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String email = mEmail.getText().toString();
-                final String password = mPassword.getText().toString();
-                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                    Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_LONG).show();
-                } else {
-                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Sign in error!", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                String userId = email.replaceAll("\\.", "");
-                                Log.d("App", "login success: " + userId);
-
-                                // update lastLoginTime and send to firebase
-                                Long currentTime = System.currentTimeMillis();
-                                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userId).child("lastLoginTime").setValue(currentTime);
-
-                                // fetch the user info from the database
-                                FirebaseService.getInstance().fetchUserProfileData(userId,
-                                        (User user) -> {
-                                            if (user != null) {
-                                                Log.d("LoginActivity", "login profile fetched " + user.getUserId());
-                                            } else {
-                                                Log.d("LoginActivity", "login profile fetched null");
-                                            }
-                                            ((App)getApplication()).setLoginUser(user);
-
-                                            // update the token
-                                            FCMTokenUtils.updateFCMToken(userId);
-                                            ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
-                                            // set the status
-                                            FCMTokenUtils.setStatusActive(userId);
-
-                                            // rmt login
-                                            ((App)getApplication()).rtmLogin(userId);
-                                            //return;
-
-                                            Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
-                                        });
-                            }
-                        }
-                    });
-                }
-            }
-        });
-
-        TextView linkSignUp = findViewById(R.id.register);
+        // Link that Go to Register Screen
+        linkSignUp = findViewById(R.id.register);
         linkSignUp.setPaintFlags(linkSignUp.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         linkSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,18 +71,106 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        mLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String email = mEmail.getText().toString();
+                final String password = mPassword.getText().toString();
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                    runOnUiThread(() -> {
+                        if (TextUtils.isEmpty(email))
+                            mEmail.setError("Please enter your email.");
+                        if (TextUtils.isEmpty(password))
+                            mPassword.setError("Please enter your password.");
+                    });
+                    //Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_LONG).show();
+                } else {
+                    // Start showing loading progress bar
+                    runOnUiThread(() -> {
+                        findViewById(R.id.progressBar_login_loading).setVisibility(View.VISIBLE);
+                    });
+                    authLogin(email, password);
+                }
+            }
+        });
     }
+
+
+    private void authLogin(String email, String password) {
+        new Thread(() -> {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
+                    LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                runOnUiThread(() -> {
+                                    mEmail.setError("Please enter your email again.");
+                                    mPassword.setError("Please enter your password again.");
+                                    Toast.makeText(
+                                            LoginActivity.this,
+                                            "Your email or password is invalid!",
+                                            Toast.LENGTH_SHORT).show();
+                                });
+                            } else {
+                                String userId = email.replaceAll("\\.", "");
+                                Log.d("App", "login success: " + userId);
+                                initLoginUser(userId);
+                            }
+                        }
+                    });
+        }).start();
+    }
+
+    private void initLoginUser(String userId) {
+        new Thread(() -> {
+            // update lastLoginTime and send to firebase
+            Long currentTime = System.currentTimeMillis();
+            FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
+                    .child(userId).child("lastLoginTime").setValue(currentTime);
+            // fetch the user info from the database
+            FirebaseService.getInstance().fetchUserProfileData(userId,
+                    (User user) -> {
+                        if (user != null) {
+                            Log.d("LoginActivity", "login profile fetched " + user.getUserId());
+                        } else {
+                            Log.d("LoginActivity", "login profile fetched null");
+                        }
+                        boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
+
+                        // Update Current loginUser
+                        ((App)getApplication()).setLoginUser(user);
+
+                        if (isFirstLogin) {
+                            // update FCM token and FCM status
+                            FCMTokenUtils.updateFCMToken(userId);
+                            ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
+                            FCMTokenUtils.setStatusActive(userId);
+
+                            // rmt login
+                            ((App)getApplication()).rtmLogin(userId);
+
+                            // Go to ProfileActivity
+                            Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+        }).start();
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthStateListener);
+        //mAuth.addAuthStateListener(firebaseAuthStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthStateListener);
+        //mAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
 
 }
