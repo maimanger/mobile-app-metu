@@ -60,6 +60,14 @@
                 app:layout_constraintTop_toTopOf="@+id/edit_profile_image"
                 app:tint="@color/white" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="64dp"
+                android:src="@drawable/twotone_edit_24"
+                app:layout_constraintBottom_toBottomOf="@id/layout_image"
+                app:layout_constraintEnd_toEndOf="@id/layout_image" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_name"
                 android:layout_width="0dp"

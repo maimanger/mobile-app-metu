@@ -70,6 +70,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private Boolean isLikedByLoginUser = true;
     private int connectionPoint;
     private String connectionId;
+
     private List<Contact> contactsList;
 
     private ValueEventListener firebaseEventListener;
@@ -91,8 +92,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         /*initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
+        initFragments();
         initOnlineStatus();*/
-
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -545,6 +546,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
 
         /*User loginUser = ((App) getApplication()).getLoginUser();
+
+    private void initOnlineStatus() {
+        User loginUser = ((App) getApplication()).getLoginUser();
         if (loginUser != null) {
             String myUserId = loginUser.getUserId();
             Map<String, Boolean> myConnections = loginUser.getConnections();
@@ -604,9 +608,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                             });
                 }
             }).start();
+
         }*/
     }
 
 
 }
+
 
