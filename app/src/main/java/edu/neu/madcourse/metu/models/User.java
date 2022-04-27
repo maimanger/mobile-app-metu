@@ -22,9 +22,9 @@ public class User implements Parcelable {
     private String avatarUri;
     private Map<String, Boolean> connections;
     private Long lastLoginTime;
-    private Boolean settingMessage;
-    private Boolean settingVideo;
-    private Boolean settingVibration;
+    private Boolean allowMessageNotif;
+    private Boolean allowVideoNotif;
+    private Boolean allowVibration;
     //private Map<Integer, Boolean> settings; // 1 represent new messages; 2 represent video calls; 3 represent vibration
 
 
@@ -47,9 +47,9 @@ public class User implements Parcelable {
         this.avatarUri = avatarUri;
         this.connections = connections;
         this.lastLoginTime = lastLoginTime;
-        this.settingMessage = settingMessage;
-        this.settingVideo = settingVideo;
-        this.settingVibration = settingVibration;
+        this.allowMessageNotif = settingMessage;
+        this.allowVideoNotif = settingVideo;
+        this.allowVibration = settingVibration;
     }
 
 
@@ -66,9 +66,9 @@ public class User implements Parcelable {
         this.avatarUri = "";
         this.connections = new HashMap<>();
         this.lastLoginTime = lastLoginTime;
-        this.settingMessage = true;
-        this.settingVideo = true;
-        this.settingVibration = true;
+        this.allowMessageNotif = true;
+        this.allowVideoNotif = true;
+        this.allowVibration = true;
     }
 
 
@@ -76,28 +76,28 @@ public class User implements Parcelable {
         return CREATOR;
     }
 
-    public Boolean getSettingMessage() {
-        return settingMessage;
+    public Boolean getAllowMessageNotif() {
+        return allowMessageNotif;
     }
 
-    public void setSettingMessage(Boolean settingMessage) {
-        this.settingMessage = settingMessage;
+    public void setAllowMessageNotif(Boolean allowMessageNotif) {
+        this.allowMessageNotif = allowMessageNotif;
     }
 
-    public Boolean getSettingVideo() {
-        return settingVideo;
+    public Boolean getAllowVideoNotif() {
+        return allowVideoNotif;
     }
 
-    public void setSettingVideo(Boolean settingVideo) {
-        this.settingVideo = settingVideo;
+    public void setAllowVideoNotif(Boolean allowVideoNotif) {
+        this.allowVideoNotif = allowVideoNotif;
     }
 
-    public Boolean getSettingVibration() {
-        return settingVibration;
+    public Boolean getAllowVibration() {
+        return allowVibration;
     }
 
-    public void setSettingVibration(Boolean settingVibration) {
-        this.settingVibration = settingVibration;
+    public void setAllowVibration(Boolean allowVibration) {
+        this.allowVibration = allowVibration;
     }
 
     protected User(Parcel in) {
@@ -263,8 +263,8 @@ public class User implements Parcelable {
         parcel.writeString(this.avatarUri);
         parcel.writeMap(this.connections);
         parcel.writeLong(this.lastLoginTime);
-        parcel.writeBoolean(this.settingMessage);
-        parcel.writeBoolean(this.settingVideo);
-        parcel.writeBoolean(this.settingVibration);
+        parcel.writeBoolean(this.allowMessageNotif);
+        parcel.writeBoolean(this.allowVideoNotif);
+        parcel.writeBoolean(this.allowVibration);
     }
 }

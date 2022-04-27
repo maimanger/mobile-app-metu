@@ -127,6 +127,12 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
     private void initUserProfileData(Bundle savedInstanceState) {
+        // If Entering profile from CanceledCallNotification, remove this notification Id from App
+        if (getIntent().hasExtra("NOTIFICATION_ID")) {
+            int notifId = getIntent().getIntExtra("NOTIFICATION_ID", 0);
+            ((App)getApplicationContext()).removeCanceledCallNotificationId(notifId);
+        }
+
         // Enter profile from Contacts/Exploring/Chat, must have PROFILE_USER_ID intent
         loginUserId = ((App) getApplication()).getLoginUser().getUserId();
         int connectionPoints = 0;
@@ -137,7 +143,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         } else {
             profileUserId = loginUserId;
         }
-
         isSelf = profileUserId.equals(loginUserId);
         isFriend = connectionPoints > 0;
 
@@ -261,6 +266,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
 
+
         FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                 profileUser -> {
                     if (isSelf) {
@@ -274,7 +280,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 .add(R.id.add_story_button_fragment,
                                         AddStoryButtonFragment.newInstance(),
                                         "AddTagButtonFragment")
-                                .commit();
+                                .commitAllowingStateLoss();
                     } else if (isFriend) {
                         // Show friend profile
                         getSupportFragmentManager().beginTransaction()
@@ -287,7 +293,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         "ChatButtonFragment")
                                 .add(R.id.video_button, VideoButtonFragment.newInstance(),
                                         "VideoButtonFragment")
-                                .commit();
+                                .commitAllowingStateLoss();
                     } else {
                         // Show public profile
                         getSupportFragmentManager().beginTransaction()
@@ -298,7 +304,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         ChatButtonFragment.newInstance(profileUser,
                                                 isLikedByLoginUser, loginUserId),
                                         "ChatButtonFragment")
-                                .commit();
+                                .commitAllowingStateLoss();
                     }
                 });
     }
