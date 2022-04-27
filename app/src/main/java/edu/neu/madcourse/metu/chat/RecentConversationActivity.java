@@ -150,19 +150,6 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
     private void initRecyclerView() {
         // initialize and set the adapter
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (recentConversationAdapter == null) {
-//                    recentConversationAdapter = new RecentConversationAdapter(getApplicationContext(), conversationList, userId);
-//                }
-//                recentConversation.setAdapter(recentConversationAdapter);
-//                recentConversation.setVisibility(View.VISIBLE);
-//
-//                renderView();
-//            }
-//        });
-
         if (recentConversationAdapter == null) {
             recentConversationAdapter = new RecentConversationAdapter(this, this.conversationList, userId);
         }
@@ -172,17 +159,13 @@ public class RecentConversationActivity extends BaseCalleeActivity {
     }
 
     private void renderView() {
-        Log.d("RECENT CONVERSATION", "render view method called");
         MessageSendingUtils.countConnections(userId, new DataFetchCallback<Long>() {
             @Override
             public void onCallback(Long value) {
-                Log.d("RECENT CONVERSATION", "render view callback");
                 if (value == 0 || value == null) {
                     noRecentChatsTextview.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
-                    Log.d("RECENT CONVERSATION: ", "No messages, dismiss the progressive bar");
                 } else {
-                    Log.d("RECENT CONVERSATION: ", "Have " + value + " connections");
                     noRecentChatsTextview.setVisibility(View.GONE);
                 }
             }
