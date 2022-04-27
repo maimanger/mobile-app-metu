@@ -5,8 +5,6 @@ import android.util.Log;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import edu.neu.madcourse.metu.models.User;
-
 /**
  * class to handle FCM token and user availabilities
  */
@@ -18,8 +16,7 @@ public class FCMTokenUtils {
             return;
         }
         FirebaseDatabase.getInstance().getReference(Constants.FCM_TOKENS_STORE)
-                .child(userId)
-                .setValue(null);
+                .child(userId).removeValue();
         fcmToken = "";
     }
 

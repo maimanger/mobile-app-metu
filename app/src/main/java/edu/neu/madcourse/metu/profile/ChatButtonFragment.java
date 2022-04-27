@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.ChatActivity;
+import edu.neu.madcourse.metu.explore.SendMessageOnClickListener;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
 
@@ -66,21 +67,28 @@ public class ChatButtonFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FloatingActionButton chat = view.findViewById(R.id.chatting_button);
-        chat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                ConnectionUser connectionUser = new ConnectionUser();
-                connectionUser.setUserId(toChatUser.getUserId());
-                connectionUser.setIsLiked(isLikedByLoginUser);
-                connectionUser.setNickname(toChatUser.getNickname());
-                connectionUser.setAvatarUri(toChatUser.getAvatarUri());
-                intent.putExtra("RECEIVER", connectionUser);
-                intent.putExtra("CONNECTION_ID", loginUserId + toChatUser.getUserId());
-                startActivity(intent);
-            }
-        });
+        ConnectionUser sender = ((App) getActivity().getApplication()).getLoginUser().convertToConnectionUser();
+        ConnectionUser receiver = toChatUser.convertToConnectionUser();
+        receiver.setIsLiked(isLikedByLoginUser);
+
+        chat.setOnClickListener(new SendMessageOnClickListener(receiver, sender));
+
+//        chat.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//                ConnectionUser connectionUser = new ConnectionUser();
+//                connectionUser.setUserId(toChatUser.getUserId());
+//                connectionUser.setIsLiked(isLikedByLoginUser);
+//                connectionUser.setNickname(toChatUser.getNickname());
+//                connectionUser.setAvatarUri(toChatUser.getAvatarUri());
+//                intent.putExtra("RECEIVER", connectionUser);
+//                intent.putExtra("CONNECTION_ID", toChatUser.getUserId() + loginUserId);
+//                startActivity(intent);
+//            }
+//        });
     }
 }

@@ -96,6 +96,12 @@ public class ChatActivity extends BaseCalleeActivity {
         // set the progress bar to be visible
         progressBar.setVisibility(View.VISIBLE);
 
+        // initialize recycler view and set layout manager
+        chatHistory = findViewById(R.id.chatHistory);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        chatHistory.setLayoutManager(linearLayoutManager);
+
+
         sendButton = findViewById(R.id.layoutSend);
         inputMessage = findViewById(R.id.inputMessage);
         backButton = findViewById(R.id.imageBack);
@@ -259,13 +265,10 @@ public class ChatActivity extends BaseCalleeActivity {
     }
 
     private void initRecyclerView() {
-        // initialize recycler view and set layout manager
-        chatHistory = findViewById(R.id.chatHistory);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        chatHistory.setLayoutManager(linearLayoutManager);
-
         // initialize and set the adapter
-        chatHistoryAdapter = new ChatHistoryAdapter(this, this.chatItemList, this.userId, this.connectionId, null, receiver);
+        if (chatHistoryAdapter == null) {
+            chatHistoryAdapter = new ChatHistoryAdapter(this, this.chatItemList, this.userId, this.connectionId, null, receiver);
+        }
 
         // initialize the avatar
         if (receiver.getAvatarUri() != null && receiver.getAvatarUri().length() > 0) {
@@ -344,8 +347,9 @@ public class ChatActivity extends BaseCalleeActivity {
                         chatItemList.add(chatItem);
 
                         // notify dataset changed
-                        chatHistoryAdapter.notifyDataSetChanged();
-
+                        chatHistoryAdapter.notifyItemChanged(databaseList().length - 1);
+                        //chatHistory.setAdapter(null);
+                        //chatHistory.setAdapter(chatHistoryAdapter);
                         // dismiss the progress bar
                         progressBar.setVisibility(View.GONE);
 
@@ -556,6 +560,7 @@ public class ChatActivity extends BaseCalleeActivity {
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                             if (snapshot.exists() && snapshot.hasChild(connectionId)) {
                                 // add listener
                                 snapshot.child(connectionId).getRef().addValueEventListener(new ValueEventListener() {

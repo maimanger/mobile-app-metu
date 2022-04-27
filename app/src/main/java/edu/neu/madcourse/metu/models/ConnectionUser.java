@@ -55,10 +55,10 @@ public class ConnectionUser implements Parcelable {
     @Override
     public String toString() {
         return "ConnectionUser{" +
-                "username='" + userId + '\'' +
+                "userId='" + userId + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", avatarUrl='" + avatarUri + '\'' +
-                ", online=" + isLiked +
+                ", isLiked=" + isLiked +
                 '}';
     }
 

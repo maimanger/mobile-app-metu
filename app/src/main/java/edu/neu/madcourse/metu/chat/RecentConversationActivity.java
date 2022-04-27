@@ -167,26 +167,28 @@ public class RecentConversationActivity extends BaseCalleeActivity {
              progressBar.setVisibility(View.GONE);
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                addConnectionListener();
-            }
-        }).start();
+        addConnectionListener();
+        initRecyclerView();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                progressBar.setVisibility(View.GONE);
+//            }
+//        }, 200);
 
         // init recycler view
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                initRecyclerView();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }, 200);
-            }
-        });
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                initRecyclerView();
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        progressBar.setVisibility(View.GONE);
+//                    }
+//                }, 200);
+//            }
+//        });
     }
 
     public void addConnectionListener() {
@@ -280,14 +282,11 @@ public class RecentConversationActivity extends BaseCalleeActivity {
                                         conversationList.sort((conversation1, conversation2)
                                                 -> conversation1.getLastMessage().getTimeStamp() > conversation2.getLastMessage().getTimeStamp()? -1:1);
 
-                                        // todo: delete
-                                        System.out.println(conversation);
-
-                                        // notify
-                                        recentConversationAdapter.notifyDataSetChanged();
+                                        recentConversation.setAdapter(null);
+                                        recentConversation.setAdapter(recentConversationAdapter);
 
                                         // todo: dismiss the progress bar
-                                        // progressBar.setVisibility(View.GONE);
+                                         progressBar.setVisibility(View.GONE);
 
                                         return;
                                     }
@@ -323,5 +322,19 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Recent Conversation", "onResume");
+        if (recentConversationAdapter != null && recentConversation != null) {
+            recentConversation.setAdapter(recentConversationAdapter);
+        }
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Recent Conversation", "onStop");
+        recentConversation.setAdapter(null);
+    }
 }

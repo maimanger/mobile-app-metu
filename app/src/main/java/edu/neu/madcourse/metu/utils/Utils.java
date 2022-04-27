@@ -7,9 +7,11 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.ImageView;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
 import java.io.InputStream;

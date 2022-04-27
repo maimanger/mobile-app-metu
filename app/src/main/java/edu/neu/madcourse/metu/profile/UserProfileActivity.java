@@ -120,42 +120,53 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
     private void initUserProfileData(Bundle savedInstanceState) {
-        // TODO: Only for testing ,refactor it later
+        // If Entering profile from CanceledCallNotification, remove this notification Id from App
+        if (getIntent().hasExtra("NOTIFICATION_ID")) {
+            int notifId = getIntent().getIntExtra("NOTIFICATION_ID", 0);
+            ((App)getApplicationContext()).removeCanceledCallNotificationId(notifId);
+        }
+
+        // Enter profile from Contacts/Exploring/Chat, must have PROFILE_USER_ID intent
         loginUserId = ((App) getApplication()).getLoginUser().getUserId();
         int connectionPoints = 0;
         if (getIntent().hasExtra("PROFILE_USER_ID")) {
             profileUserId = getIntent().getStringExtra("PROFILE_USER_ID");
             connectionPoints = getIntent().getIntExtra("CONNECTION_POINT", 0);
             Log.d(TAG, "initUserProfileData: " + profileUserId);
+        } else {
+            profileUserId = loginUserId;
         }
-        profileUserId = "weini15@gmailcom";  // TODO(xin): hard-coded, fix later
         isSelf = profileUserId.equals(loginUserId);
         isFriend = connectionPoints > 0;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseService.getInstance().fetchUserProfileData(profileUserId,
-                        new DataFetchCallback<User>() {
-                            @Override
-                            public void onCallback(User user) {
-                                ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
-                                ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
-                                ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
-                                String avatarUri = user.getAvatarUri();
-                                //TODO: set default profile avatar
-                                if (avatarUri != null && !avatarUri.isEmpty()) {
-                                    Log.e("initUserProfileData", avatarUri);
-                                    new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
-                                }
+        if (!isSelf) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FirebaseService.getInstance().fetchUserProfileData(profileUserId,
+                            new DataFetchCallback<User>() {
+                                @Override
+                                public void onCallback(User user) {
+                                    ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
+                                    ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
+                                    ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                                    String avatarUri = user.getAvatarUri();
+                                    //TODO: set default profile avatar
+                                    if (avatarUri != null && !avatarUri.isEmpty()) {
+                                        Log.e("initUserProfileData", avatarUri);
+                                        new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
+                                    }
                                 /*ImageView profileAvatar = findViewById(R.id.imageProfile);
                                 profileAvatar.setImageResource(R.drawable.user_avatar);*/
 
 
-                            }
-                        });
-            }
-        }).start();
+                                }
+                            });
+                }
+            }).start();
+        }
+
+
     }
 
     private void initItemData(Bundle savedInstanceState) {
@@ -248,6 +259,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
 
+
         FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                 profileUser -> {
                     if (isSelf) {
@@ -261,7 +273,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 .add(R.id.add_story_button_fragment,
                                         AddStoryButtonFragment.newInstance(),
                                         "AddTagButtonFragment")
-                                .commit();
+                                .commitAllowingStateLoss();
                     } else if (isFriend) {
                         // Show friend profile
                         getSupportFragmentManager().beginTransaction()
@@ -274,7 +286,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         "ChatButtonFragment")
                                 .add(R.id.video_button, VideoButtonFragment.newInstance(),
                                         "VideoButtonFragment")
-                                .commit();
+                                .commitAllowingStateLoss();
                     } else {
                         // Show public profile
                         getSupportFragmentManager().beginTransaction()
@@ -285,7 +297,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         ChatButtonFragment.newInstance(profileUser,
                                                 isLikedByLoginUser, loginUserId),
                                         "ChatButtonFragment")
-                                .commit();
+                                .commitAllowingStateLoss();
                     }
                 });
     }

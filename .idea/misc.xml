@@ -37,6 +37,7 @@
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_recent_conversation.xml" value="0.1796875" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_user_profile.xml" value="0.335" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/call_dialog.xml" value="0.1796875" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/card_contact.xml" value="0.335" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/explore_setting_dialog.xml" value="0.25" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card.xml" value="0.165" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card_left.xml" value="0.25" />
@@ -44,6 +45,7 @@
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_received_message.xml" value="0.25" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_recent_conversation.xml" value="0.2596401028277635" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_sent_message.xml" value="0.21201413427561838" />
+        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/layout_top.xml" value="0.1796875" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19583333333333333" />
       </map>
     </option>

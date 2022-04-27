@@ -69,22 +69,21 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
         public void setData(RecentConversation conversation) {
 
             String src = conversation.getContactAvatar();
-            if (src != null && src.length() > 0)  {
-                //new Utils.DownloadImageTask(contactAvatar).execute(src);
-                Utils.loadImgUri(src, contactAvatar, new Callback() {
-                    @Override
-                    public void onSuccess() {
 
-                    }
+            //new Utils.DownloadImageTask(contactAvatar).execute(src);
+            Utils.loadImgUri(src, contactAvatar, new Callback() {
+                @Override
+                public void onSuccess() {
 
-                    @Override
-                    public void onError(Exception e) {
-                        contactAvatar.setImageResource(R.drawable.ic_default_avatar);
-                    }
-                });
-            }
+                }
 
-            //contactAvatar.setImageBitmap(BitmapUtils.getBitmapFromString(conversation.getContactAvatar()));
+                @Override
+                public void onError(Exception e) {
+                    contactAvatar.setImageResource(R.drawable.ic_default_avatar);
+                }
+            });
+
+
             recentContact.setText(conversation.getRecentContactNickname());
             recentMessage.setText(conversation.getRecentMessage());
             messageTimestamp.setText(conversation.getConversationFormattedTimestamp());

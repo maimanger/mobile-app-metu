@@ -13,6 +13,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.neu.madcourse.metu.chat.daos.RecentConversation;
 import edu.neu.madcourse.metu.models.ChatItem;
 import edu.neu.madcourse.metu.models.Connection;
@@ -472,4 +475,23 @@ public class MessageSendingUtils {
                     }
                 });
     }
+
+    public void fetchConnections(String userId, DataFetchCallback<List<String>> callback) {
+        List<String> connectionIds = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
+                .child(userId)
+                .child(Constants.CONNECTIONS_STORE)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
 }
