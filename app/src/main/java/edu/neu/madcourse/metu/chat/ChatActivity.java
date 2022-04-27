@@ -25,9 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +39,7 @@ import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 
 import edu.neu.madcourse.metu.models.ChatItem;
+import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 
 import edu.neu.madcourse.metu.models.User;
@@ -49,11 +47,6 @@ import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
 
 import edu.neu.madcourse.metu.utils.Utils;
-import edu.neu.madcourse.metu.utils.network.ApiClient;
-import edu.neu.madcourse.metu.utils.network.ApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChatActivity extends BaseCalleeActivity {
     private String userId;
@@ -63,10 +56,13 @@ public class ChatActivity extends BaseCalleeActivity {
 
     // todo: check if the connectionId is null
     private String connectionId = "";
+    private String receiverFcmToken;
+    // status of receiver
     private Boolean isReceiverAvailable = false;
     private Boolean isReceiverOnline = false;
+    // relationship with receiver
     private long connectionPoint = 0;
-    private String receiverFcmToken;
+    private boolean isFriend = false ;
 
     // UI components
     private ProgressBar progressBar;
@@ -132,6 +128,7 @@ public class ChatActivity extends BaseCalleeActivity {
                         }
 
                         switchReceiverStatus();
+                        switchVideoButtonStatus();
                     }
 
                     @Override
@@ -164,43 +161,6 @@ public class ChatActivity extends BaseCalleeActivity {
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
-
-    private void sendNotification(String messageBody) {
-        ApiClient.getClient().create(ApiService.class).sendMessage(
-                Constants.getRemoteMsgHeaders(),
-                messageBody
-        ).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(@NonNull  Call<String> call, @NonNull  Response<String> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        if (response.body() != null) {
-                            JSONObject responseJson = new JSONObject(response.body());
-                            JSONArray results = responseJson.getJSONArray("results");
-                            if (responseJson.getInt("failure") == 1) {
-                                JSONObject error = (JSONObject) results.get(0);
-                                showToast(error.getString("error"));
-                                return;
-                            }
-                        }
-                    } catch (Exception e) {
-                        // todo: log it maybe
-                        e.printStackTrace();
-                    }
-                    showToast("Notification sent successfully");
-                } else {
-                    // todo: remove it maybe?
-                    showToast("error: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<String> call,@NonNull Throwable t) {
-                showToast(t.getMessage());
-            }
-        });
-    }
-
 
     /**
      * load the username of current user.
@@ -248,6 +208,17 @@ public class ChatActivity extends BaseCalleeActivity {
             }
 
             initRecyclerView();
+            // subscribe the user
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    HashSet<String> set = new HashSet<>();
+                    set.add(receiver.getUserId());
+                    ((App)getApplication()).rtmSubscribePeer(set);
+                    Log.d("RMT", "user subscribe: " + receiver.getUserId());
+                }
+            }).start();
+
             // dismiss the progress bar
             progressBar.setVisibility(View.GONE);
 
@@ -256,11 +227,10 @@ public class ChatActivity extends BaseCalleeActivity {
             Bundle extras = getIntent().getExtras();
             // get current receiver
             this.receiver = (ConnectionUser) extras.getParcelable("RECEIVER");
-            // todo: subscribe the user
+            // subscribe the user
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // subscribe the receiver
                     HashSet<String> set = new HashSet<>();
                     set.add(receiver.getUserId());
                     ((App)getApplication()).rtmSubscribePeer(set);
@@ -275,9 +245,6 @@ public class ChatActivity extends BaseCalleeActivity {
             receiverName.setText(receiver.getNickname());
             // initialize the recycler view
             initRecyclerView();
-
-            // todo: delete
-            System.out.println("connectionid is: " + connectionId);
 
             if (connectionId != null && connectionId.length() > 0) {
                 fetchData();
@@ -310,8 +277,6 @@ public class ChatActivity extends BaseCalleeActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // todo: delete
-                            System.out.println(avatar);
                             chatHistoryAdapter.updateReceiverAvatar(avatar);
                             chatHistory.setAdapter(chatHistoryAdapter);
                         }
@@ -471,7 +436,7 @@ public class ChatActivity extends BaseCalleeActivity {
 
                         // add the listener
                         fetchData();
-                        listenToConnectionPointChange();
+                        listenToConnection();
                     } else {
                         Toast.makeText(this, "Something went wrong! Please check the internet", Toast.LENGTH_SHORT).show();
                         return;
@@ -481,7 +446,7 @@ public class ChatActivity extends BaseCalleeActivity {
 
             // send the message and update the connectionPoint
             MessageSendingUtils
-                    .addMessageInMessagesStore(sender, receiver, connectionId, message);
+                    .addMessageInMessagesStore(sender, receiver, connectionId, message, isFriend);
 
             // send notification if the receiver is not active
             if (!isReceiverAvailable) {
@@ -529,7 +494,7 @@ public class ChatActivity extends BaseCalleeActivity {
         listenAvailabilityOfReceiver();
         listenReceiverToken();
         // through connection store
-        listenToConnectionPointChange();
+        listenToConnection();
     }
 
     @Override
@@ -546,7 +511,8 @@ public class ChatActivity extends BaseCalleeActivity {
         if (changed) {
             runOnUiThread(() -> {
                 switchReceiverStatus();
-                Toast.makeText(getApplicationContext(), "status changed: " + isReceiverOnline, Toast.LENGTH_SHORT).show();
+                switchVideoButtonStatus();
+                Toast.makeText(getApplicationContext(), "status changed, the status is " + isReceiverOnline, Toast.LENGTH_SHORT).show();
             });
         }
     }
@@ -556,35 +522,67 @@ public class ChatActivity extends BaseCalleeActivity {
         // see if the user is available
         if (!isReceiverOnline) {
             // set the status to be not-online
-            onlineStatus.setImageResource(R.drawable.ic_not_online);
-            // ban the video button
-            startVideoChatButton.setImageResource(R.drawable.ic_video_chat_disabled);
+            onlineStatus.setVisibility(View.INVISIBLE);
+            // onlineStatus.setImageResource(R.drawable.ic_not_online);
             return;
         }
+
         if (isReceiverAvailable) {
             // set the status to be available
             onlineStatus.setImageResource(R.drawable.ic_available_status);
-            // check the connectionPoint
         } else {
             // set the status to be step-away
             onlineStatus.setImageResource(R.drawable.ic_step_away_status);
-            // check the connectionPoint
+        }
+        onlineStatus.setVisibility(View.VISIBLE);
+    }
+
+    private void switchVideoButtonStatus() {
+        if (isReceiverOnline && isFriend) {
+            startVideoChatButton.setImageResource(R.drawable.ic_start_chat);
+        } else {
+            startVideoChatButton.setImageResource(R.drawable.ic_video_chat_disabled);
         }
     }
 
-    private void listenToConnectionPointChange() {
+    // listen to the connection point
+    private void listenToConnection() {
         if (connectionId == null || connectionId.length() == 0) {
             return;
         }
 
         try {
             FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
-                    .child(connectionId)
-                    .child(Constants.CONNECTION_POINT)
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            connectionPoint = snapshot.getValue(long.class);
+                            if (snapshot.exists() && snapshot.hasChild(connectionId)) {
+                                // add listener
+                                snapshot.child(connectionId).getRef().addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Connection connection = snapshot.getValue(Connection.class);
+
+                                        if (connection != null) {
+                                            connectionPoint = connection.getConnectionPoint();
+                                        }
+
+                                        if (connection.getUser1() != null && connection.getUser2() != null) {
+                                            isFriend = connection.getUser1().getIsLiked() && connection.getUser2().getIsLiked();
+                                        }
+
+                                        // update the video button status
+                                        switchVideoButtonStatus();
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
                         }
 
                         @Override

@@ -220,6 +220,16 @@ public class User implements Parcelable {
         this.avatarUri = avatarUri;
     }
 
+    public ConnectionUser convertToConnectionUser() {
+        ConnectionUser connectionUser = new ConnectionUser();
+        connectionUser.setUserId(userId);
+        connectionUser.setNickname(nickname);
+        connectionUser.setAvatarUri(avatarUri);
+        connectionUser.setIsLiked(false);
+
+        return connectionUser;
+    }
+
     @Override
     public String toString() {
         return "NewUser{" +
