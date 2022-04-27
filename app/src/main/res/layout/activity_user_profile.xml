@@ -138,9 +138,9 @@
             <!--            app:shapeAppearanceOverlay="@style/Circular"-->
             <!--            tools:srcCompat="@tools:sample/avatars" />-->
 
-            <com.makeramen.roundedimageview.RoundedImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imageProfile"
-                android:layout_width="252dp"
+                android:layout_width="138dp"
                 android:layout_height="138dp"
                 android:layout_marginTop="24dp"
                 android:src="@drawable/user_avatar"
@@ -150,13 +150,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_border_color="#FFFFFF"
                 app:riv_border_width="4dp"
-                app:riv_oval="true" />
+                app:riv_oval="true"
+                android:scaleType="fitXY"
+                app:shapeAppearanceOverlay="@style/Circular"/>
 
             <ImageView
                 android:id="@+id/image_profile_onlineStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="70dp"
+                android:layout_marginEnd="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
                 app:layout_constraintEnd_toEndOf="@+id/imageProfile"
                 app:srcCompat="@drawable/ic_available_status" />

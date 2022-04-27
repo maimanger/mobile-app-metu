@@ -64,6 +64,22 @@ public class FirebaseService {
         databaseRef.child("users").child(userId).child("avatarUri").setValue(imageFirebaseUri);
     }
 
+
+    public void fetchUserProfileDataOneTime(String userId, DataFetchCallback<User> callback) {
+        databaseRef.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onCallback(snapshot.getValue(User.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                throw error.toException();
+            }
+        });
+    }
+
+
     public void fetchUserProfileData(String userId, DataFetchCallback<User> callback) {
         databaseRef.child("users").child(userId).addValueEventListener(new ValueEventListener() {
             @Override

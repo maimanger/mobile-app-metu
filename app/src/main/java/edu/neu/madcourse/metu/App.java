@@ -335,7 +335,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
         PendingIntent pendingDismissIntent =PendingIntent.getBroadcast(
                 this, notifId, dismissIntent, 0);
 
-        // TODO: Go to caller Profile (REMEMBER: App.removeCanceledCallNotificationId(notifId))
         String callerId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_ID);
         String connectionId = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_ID);
         String connectionPoint = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_POINT);
