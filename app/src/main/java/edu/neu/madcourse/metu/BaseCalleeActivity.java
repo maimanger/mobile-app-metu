@@ -23,6 +23,7 @@ import com.squareup.picasso.Callback;
 
 import java.util.Map;
 
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.video.VideoActivity;
 import io.agora.rtm.LocalInvitation;
@@ -108,8 +109,12 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
 
             // Show dialog and start vibrating
             callInvitationDialog.show();
-            callInvitationVibrator.vibrate(VibrationEffect.createWaveform(
-                    new long[]{500, 300, 200, 200, 300, 1000}, 0));
+
+            User loginUser = ((App)getApplication()).getLoginUser();
+            if (loginUser != null && loginUser.getAllowVibration()) {
+                callInvitationVibrator.vibrate(VibrationEffect.createWaveform(
+                        new long[]{500, 300, 200, 200, 300, 1000}, 0));
+            }
         });
     }
 
