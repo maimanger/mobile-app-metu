@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class User implements Parcelable {
@@ -30,43 +31,10 @@ public class User implements Parcelable {
     public User() {
     }
 
-    public User(String username, String password, String email) {
-        this.nickname = username;
-        this.password = password;
-        this.email = email;
-    }
-
-    public User(String username, String password, String email, String location, Integer age,
-                Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
-                String avatarUri) {
-        this.nickname = username;
-        this.password = password;
-        this.email = email;
-        this.location = location;
-        this.age = age;
-        this.gender = gender;
-        this.tags = tags;
-        this.stories = stories;
-        this.avatarUri = avatarUri;
-    }
-
     public User(String userId, String nickname, String password, String email, String location,
                 Integer age, Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
-                String avatarUri, Map<String, Boolean> connections) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.password = password;
-        this.email = email;
-        this.location = location;
-        this.age = age;
-        this.gender = gender;
-        this.tags = tags;
-        this.stories = stories;
-        this.avatarUri = avatarUri;
-        this.connections = connections;
-    }
-
-    public User(String userId, String nickname, String password, String email, String location, Integer age, Integer gender, Map<String, Boolean> tags, Map<String, String> stories, String avatarUri, Map<String, Boolean> connections, Long lastLoginTime, Boolean settingMessage, Boolean settingVideo, Boolean settingVibration) {
+                String avatarUri, Map<String, Boolean> connections, Long lastLoginTime,
+                Boolean settingMessage, Boolean settingVideo, Boolean settingVibration) {
         this.userId = userId;
         this.nickname = nickname;
         this.password = password;
@@ -82,6 +50,30 @@ public class User implements Parcelable {
         this.settingMessage = settingMessage;
         this.settingVideo = settingVideo;
         this.settingVibration = settingVibration;
+    }
+
+
+    public User(String userId, String nickname, String password, String email, long lastLoginTime) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+        this.location = "";
+        this.age = 18;
+        this.gender = 2;
+        this.tags = new HashMap<>();
+        this.stories = new HashMap<>();
+        this.avatarUri = "";
+        this.connections = new HashMap<>();
+        this.lastLoginTime = lastLoginTime;
+        this.settingMessage = true;
+        this.settingVideo = true;
+        this.settingVibration = true;
+    }
+
+
+    public static Creator<User> getCREATOR() {
+        return CREATOR;
     }
 
     public Boolean getSettingMessage() {

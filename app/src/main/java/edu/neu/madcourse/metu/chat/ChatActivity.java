@@ -584,7 +584,12 @@ public class ChatActivity extends BaseCalleeActivity {
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            connectionPoint = snapshot.getValue(long.class);
+                            if (snapshot.exists()) {
+                                connectionPoint = snapshot.getValue(long.class);
+                            } else {
+                                connectionPoint = 0;
+                            }
+
                         }
 
                         @Override
