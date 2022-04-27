@@ -64,6 +64,8 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
             recentMessage = itemView.findViewById(R.id.recentMessage);
             messageTimestamp = itemView.findViewById(R.id.messageTimestamp);
             unreadMark = itemView.findViewById(R.id.unreadMark);
+
+
         }
 
         public void setData(RecentConversation conversation) {

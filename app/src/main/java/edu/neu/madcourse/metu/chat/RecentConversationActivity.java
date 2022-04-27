@@ -45,6 +45,7 @@ import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.chat.daos.RecentConversation;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 
+import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.utils.Constants;
 
 
@@ -55,6 +56,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
     // UI components
     private ProgressBar progressBar;
+    private TextView noRecentChatsTextview;
 
     // recycler view
     private RecyclerView recentConversation;
@@ -79,6 +81,8 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         recentConversation = findViewById(R.id.recentConversationRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recentConversation.setLayoutManager(linearLayoutManager);
+        // textview
+        noRecentChatsTextview = findViewById(R.id.noRecentConversation);
 
         // load username
         loadUser();
@@ -146,10 +150,43 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
     private void initRecyclerView() {
         // initialize and set the adapter
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (recentConversationAdapter == null) {
+//                    recentConversationAdapter = new RecentConversationAdapter(getApplicationContext(), conversationList, userId);
+//                }
+//                recentConversation.setAdapter(recentConversationAdapter);
+//                recentConversation.setVisibility(View.VISIBLE);
+//
+//                renderView();
+//            }
+//        });
+
         if (recentConversationAdapter == null) {
             recentConversationAdapter = new RecentConversationAdapter(this, this.conversationList, userId);
         }
         recentConversation.setAdapter(recentConversationAdapter);
+        recentConversation.setVisibility(View.VISIBLE);
+        renderView();
+    }
+
+    private void renderView() {
+        Log.d("RECENT CONVERSATION", "render view method called");
+        MessageSendingUtils.countConnections(userId, new DataFetchCallback<Long>() {
+            @Override
+            public void onCallback(Long value) {
+                Log.d("RECENT CONVERSATION", "render view callback");
+                if (value == 0 || value == null) {
+                    noRecentChatsTextview.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    Log.d("RECENT CONVERSATION: ", "No messages, dismiss the progressive bar");
+                } else {
+                    Log.d("RECENT CONVERSATION: ", "Have " + value + " connections");
+                    noRecentChatsTextview.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void init(Bundle savedInstanceState) {
@@ -169,26 +206,6 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
         addConnectionListener();
         initRecyclerView();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                progressBar.setVisibility(View.GONE);
-//            }
-//        }, 200);
-
-        // init recycler view
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                initRecyclerView();
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        progressBar.setVisibility(View.GONE);
-//                    }
-//                }, 200);
-//            }
-//        });
     }
 
     public void addConnectionListener() {
@@ -287,6 +304,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
                                         // todo: dismiss the progress bar
                                          progressBar.setVisibility(View.GONE);
+                                         noRecentChatsTextview.setVisibility(View.GONE);
 
                                         return;
                                     }

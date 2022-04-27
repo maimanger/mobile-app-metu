@@ -2,6 +2,8 @@ package edu.neu.madcourse.metu.profile;
 
 //package com.example.handyopinion;
 
+import static edu.neu.madcourse.metu.utils.Constants.GENDER_MAP;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +28,9 @@ import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
+import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
+import edu.neu.madcourse.metu.utils.Utils;
 
 public class EditProfileActivity extends BaseCalleeActivity {
 
@@ -35,40 +39,37 @@ public class EditProfileActivity extends BaseCalleeActivity {
     private Uri imageFirebaseUri;
     private Bitmap avatarBitmap;
     private ActivityResultLauncher<Intent> uploadActivityResultLauncher;
+    private String profileUserId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        String userId = getIntent().getExtras().getString("userId");
+        profileUserId = getIntent().getExtras().getString("userId");
         viewInitializations();
 
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
-//        ImageView avatarImageView = findViewById(R.id.imageProfile);
         uploadActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
-                            imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
+                        imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
 
-                            Log.e("onCreate", userId);
-                            FirebaseService.getInstance().updateUserAvatar(userId, imageFirebaseUri.toString());
-                            try {
-                                avatarBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageFilePath);
-                                uploadImageView.setImageBitmap(avatarBitmap);
-                                Log.e("imageFilePath_: ", "avatar updated");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        // TODO: Should be implemented in Button(R.id.bt_register) onclickListener
+                        FirebaseService.getInstance().updateUserAvatar(profileUserId, imageFirebaseUri.toString());
+                        try {
+                            avatarBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageFilePath);
+                            uploadImageView.setImageBitmap(avatarBitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+
                         }
                     }
                 });
-
 
         uploadImageView.setOnClickListener(view -> {
             Intent intent = new Intent(EditProfileActivity.this, UploadActivity.class);
@@ -82,6 +83,15 @@ public class EditProfileActivity extends BaseCalleeActivity {
         etLocation = findViewById(R.id.et_location);
         etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
+        ImageView uploadImageView = findViewById(R.id.edit_profile_image);
+
+        FirebaseService.getInstance().fetchUserProfileData(profileUserId, user -> {
+            etNickname.setText(user.getNickname());
+            etLocation.setText(user.getLocation());
+            etAge.setText(String.valueOf(user.getAge()));
+            etGender.setText(GENDER_MAP.get(user.getGender()));
+            new Utils.DownloadImageTask(uploadImageView).execute(user.getAvatarUri());
+        });
     }
 
     // Checking if the input in form is valid
@@ -133,7 +143,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             // Write user data to firebase
             // User loginUser = ((App) getApplication()).getLoginUser();
             User loginUser = new User();
-            loginUser.setEmail("tom@tom.com");
+            loginUser.setEmail("tom@tom.com");  // TODO(xin): to remove
             loginUser.setNickname(nickname);
             loginUser.setLocation(location);
             loginUser.setAge(age);
