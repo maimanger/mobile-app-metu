@@ -69,6 +69,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     BottomNavigationView bottomNavigationView;
     private Boolean isLikedByLoginUser = true;
     private int connectionPoint;
+    private String connectionId;
     private List<Contact> contactsList;
 
     private ValueEventListener firebaseEventListener;
@@ -77,6 +78,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable("PROFILE_USER", profileUser);
+        outState.putString("CONNECTION_ID", connectionId);
         super.onSaveInstanceState(outState);
     }
 
@@ -161,6 +163,29 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         Log.e("story", String.valueOf(storyList.size()));
     }
 
+
+    private void initUserProfileDataFromBundle(Bundle savedInstanceState) {
+        new Thread(() -> {
+            profileUser = savedInstanceState.getParcelable("PROFILE_USER");
+            loginUser = ((App) getApplication()).getLoginUser();
+            loginUserId = loginUser.getUserId();
+            profileUserId = profileUser.getUserId();
+            isSelf = profileUserId.equals(loginUserId);
+            isFriend = connectionPoint > 0;
+            connectionId = savedInstanceState.getParcelable("CONNECTION_ID");
+            if (!isSelf) {
+                initTags(profileUser.getTags());
+                initStories(profileUser.getStories());
+                initUserProfile(isFriend);
+            } else {
+                initTags(loginUser.getTags());
+                initStories(loginUser.getStories());
+                initPrivateProfile();
+            }
+        }).start();
+    }
+
+
     private void initUserProfileData(Bundle savedInstanceState) {
         /*if (savedInstanceState != null && savedInstanceState.containsKey("PROFILE_USER")) {
             initUserProfileDataFromBundle(savedInstanceState);
@@ -180,6 +205,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         if (getIntent().hasExtra("PROFILE_USER_ID")) {
             profileUserId = getIntent().getStringExtra("PROFILE_USER_ID");
             connectionPoint = getIntent().getIntExtra("CONNECTION_POINT", 0);
+            connectionId = getIntent().getStringExtra("CONNECTION_ID");
             Log.d(TAG, "initUserProfileData: " + profileUserId);
         } else {
             profileUserId = loginUserId;
