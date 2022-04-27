@@ -26,16 +26,15 @@
         android:id="@+id/imageSetting"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:padding="1dp"
         android:src="@drawable/ic_setting"
+        android:tint="@color/chat_background_input_color"
+        app:layout_constraintBottom_toTopOf="@id/exploringPageBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/exploringPageBackground"
-        android:tint="@color/chat_background_input_color"
-        app:tint="@color/white"/>
+        app:tint="@color/white" />
 
     <View
         android:id="@+id/exploringPageBackground"
