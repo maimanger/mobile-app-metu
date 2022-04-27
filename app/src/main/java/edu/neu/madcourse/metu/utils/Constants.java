@@ -47,14 +47,33 @@ public class Constants {
     public static final String MESSAGE_CONTENT = "message";
     public static final String MESSAGE_SENDER = "sender";
     public static final String MESSAGE_TIMESTAMP = "timeStamp";
+    // for messages count
+    // messagesCount {
+    //      connectionId:
+    //          yyyy-mm-dd: count
+    // }
+    public static final String MESSAGES_COUNT_STORE = "messagesCount";
+    public static final long POINTS_ADDED_BY_CHAT_EACH_DAY = 10;
+    public static final long POINTS_ADDED_ONE_MESSAGE = 1;
 
     // for Users
     public static final String USERS_STORE = "users";
     public static final String USER_USER_ID = "userId";
     public static final String USER_NICKNAME = "nickname";
+    public static final String USER_PASSWORD = "password";
+    public static final String USER_EMAIL = "email";
+    public static final String USER_LOCATION = "location";
+    public static final String USER_AGE = "age";
+    public static final String USER_GENDER = "gender";
+    public static final String USER_TAGS = "tags";
+    public static final String USER_STORIES = "stories";
     public static final String USER_AVATAR_URI = "avatarUri";
     public static final String USER_CONNECTIONS = "connections";
-    public static final String USER_GENDER = "gender";
+    public static final String USER_LAST_LOGIN_TIME = "lastLoginTime";
+    public static final String USER_SETTING_MESSAGE = "settingMessage";
+    public static final String USER_SETTING_VIDEO = "settingVideo";
+    public static final String USER_SETTING_VIBRATION = "settingVibration";
+
 
     // user gender
     // todo: add more gender
@@ -65,6 +84,28 @@ public class Constants {
     public static final String GENDER_FEMALE_STRING = "female";
     public static final int GENDER_MALE = 0;
     public static final int GENDER_FEMALE = 1;
+
+    // user explore settings
+    public static final String EXPLORE_SETTINGS_STORE = "exploreSettings";
+    public static final String EXPLORE_SETTING_LOCATION = "locationPreference";
+    public static final String EXPLORE_SETTING_GENDER = "genderPreference";
+    public static final String EXPLORE_SETTING_AGE_MIN = "ageMin";
+    public static final String EXPLORE_SETTING_AGE_MAX = "ageMax";
+    // 0: only male checked
+    // 1: only female checked
+    // 2: only other checked
+    // 3: male and female
+    // 4: male and other
+    // 5: female and other
+    // 6: all
+    public static final int EXPLORE_MAN_ONLY = 0;
+    public static final int EXPLORE_WOMAN_ONLY = 1;
+    public static final int EXPLORE_OTHER_ONLY = 2;
+    public static final int EXPLORE_MAN_WOMAN = 3;
+    public static final int EXPLORE_MAN_OTHER = 4;
+    public static final int EXPLORE_WOMAN_OTHER = 5;
+    public static final int EXPLORE_ALL = 6;
+
 
     // for user availability
     public static final String USERS_AVAILABILITY_STORE = "availabilities";

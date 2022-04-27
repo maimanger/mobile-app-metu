@@ -30,8 +30,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish();
-                return;
             }
         });
 
@@ -41,8 +39,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, RegisterActivity.class);
                 startActivity(intent);
-                finish();
-                return;
             }
         });
     }

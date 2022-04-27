@@ -14,6 +14,9 @@ public class FCMTokenUtils {
     public static String fcmToken = "";
 
     public static void removeFCMToken(String userId) {
+        if (userId == null || userId.length() == 0) {
+            return;
+        }
         FirebaseDatabase.getInstance().getReference(Constants.FCM_TOKENS_STORE)
                 .child(userId)
                 .setValue(null);
@@ -22,6 +25,9 @@ public class FCMTokenUtils {
 
 
     public static void updateFCMToken(String userId) {
+        if (userId == null || userId.length() == 0) {
+            return;
+        }
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
             // update and save the token if success
             FirebaseDatabase.getInstance()
@@ -42,12 +48,18 @@ public class FCMTokenUtils {
     }
 
     public static void setStatusActive(String userId) {
+        if (userId == null || userId.length() == 0) {
+            return;
+        }
         FirebaseDatabase.getInstance().getReference(Constants.USERS_AVAILABILITY_STORE)
                 .child(userId)
                 .setValue(true);
     }
 
     public static void setStatusInactive(String userId) {
+        if (userId == null || userId.length() == 0) {
+            return;
+        }
         FirebaseDatabase.getInstance().getReference(Constants.USERS_AVAILABILITY_STORE)
                 .child(userId)
                 .setValue(false);

@@ -15,11 +15,16 @@ public class User implements Parcelable {
     private String email; // email is used as id
     private String location;
     private Integer age;
-    private Integer gender;
+    private Integer gender; // 0 male; 1 female; 2 undeclared
     private Map<String, Boolean> tags;
     private Map<String, String> stories;
     private String avatarUri;
     private Map<String, Boolean> connections;
+    private Long lastLoginTime;
+    private Boolean settingMessage;
+    private Boolean settingVideo;
+    private Boolean settingVibration;
+    //private Map<Integer, Boolean> settings; // 1 represent new messages; 2 represent video calls; 3 represent vibration
 
 
     public User() {
@@ -61,6 +66,48 @@ public class User implements Parcelable {
         this.connections = connections;
     }
 
+    public User(String userId, String nickname, String password, String email, String location, Integer age, Integer gender, Map<String, Boolean> tags, Map<String, String> stories, String avatarUri, Map<String, Boolean> connections, Long lastLoginTime, Boolean settingMessage, Boolean settingVideo, Boolean settingVibration) {
+        this.userId = userId;
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+        this.location = location;
+        this.age = age;
+        this.gender = gender;
+        this.tags = tags;
+        this.stories = stories;
+        this.avatarUri = avatarUri;
+        this.connections = connections;
+        this.lastLoginTime = lastLoginTime;
+        this.settingMessage = settingMessage;
+        this.settingVideo = settingVideo;
+        this.settingVibration = settingVibration;
+    }
+
+    public Boolean getSettingMessage() {
+        return settingMessage;
+    }
+
+    public void setSettingMessage(Boolean settingMessage) {
+        this.settingMessage = settingMessage;
+    }
+
+    public Boolean getSettingVideo() {
+        return settingVideo;
+    }
+
+    public void setSettingVideo(Boolean settingVideo) {
+        this.settingVideo = settingVideo;
+    }
+
+    public Boolean getSettingVibration() {
+        return settingVibration;
+    }
+
+    public void setSettingVibration(Boolean settingVibration) {
+        this.settingVibration = settingVibration;
+    }
+
     protected User(Parcel in) {
         userId = in.readString();
         nickname = in.readString();
@@ -74,6 +121,11 @@ public class User implements Parcelable {
         }
         gender = in.readInt();
         avatarUri = in.readString();
+        if (in.readByte() == 0) {
+            lastLoginTime = null;
+        } else {
+            lastLoginTime = in.readLong();
+        }
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -87,6 +139,14 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
+    public Long getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Long lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
 
     public String getNickname() {
         return nickname;
@@ -210,5 +270,9 @@ public class User implements Parcelable {
         parcel.writeMap(this.stories);
         parcel.writeString(this.avatarUri);
         parcel.writeMap(this.connections);
+        parcel.writeLong(this.lastLoginTime);
+        parcel.writeBoolean(this.settingMessage);
+        parcel.writeBoolean(this.settingVideo);
+        parcel.writeBoolean(this.settingVibration);
     }
 }

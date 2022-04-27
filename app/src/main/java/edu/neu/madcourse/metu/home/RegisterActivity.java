@@ -3,12 +3,18 @@ package edu.neu.madcourse.metu.home;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
+import edu.neu.madcourse.metu.utils.Constants;
+import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +32,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegisterActivity extends AppCompatActivity {
     private Button mRegister;
     private EditText mUsername, mEmail, mPassword;
@@ -38,22 +48,34 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
+
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                // userId
+                mEmail = (EditText) findViewById(R.id.email);
+                String email = mEmail.getText().toString();
+                String userId = email.replaceAll("\\.", "");
+
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
+                    // call FCMTokenUtils
+                    FCMTokenUtils.updateFCMToken(userId);
+                    ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
+                    FCMTokenUtils.setStatusActive(userId);
+
+                    // rmt login
+                    ((App)getApplication()).rtmLogin(userId);
+
                     Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finish();
                 }
             }
         };
 
         mRegister = (Button) findViewById(R.id.signupbtn);
         mUsername = (EditText) findViewById(R.id.username);
-        mEmail = (EditText) findViewById(R.id.email);
         mPassword = (EditText) findViewById(R.id.password);
 
         mRegister.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
                 final String username = mUsername.getText().toString();
                 final String email = mEmail.getText().toString();
                 final String password = mPassword.getText().toString();
-
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) ) {
                     Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
@@ -73,9 +94,19 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this,"Sign up error!",Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                String userID = mAuth.getCurrentUser().getUid();
-                                DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("username");
-                                currentUserDb.setValue(username);
+                                String userId = email.replaceAll("\\.", "");
+
+//                                Map<Integer,Boolean> settings =  new HashMap<Integer, Boolean>() {
+//                                    {
+//                                        put(1, true);
+//                                        put(2, true);
+//                                        put(3, true);
+//                                    }
+//                                };
+                                User newUser = new User(userId,username,password,email,"",0,2, new HashMap<>(),new HashMap<>(),"",new HashMap<>(),System.currentTimeMillis(),true,true,true);
+                                FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userId).setValue(newUser);
+                                // save User locally
+                                ((App) getApplication()).setLoginUser(newUser);
                             }
                         }
                     });
@@ -84,15 +115,16 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(firebaseAuthStateListener);
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(firebaseAuthStateListener);
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
+
 }

@@ -3,6 +3,7 @@ package edu.neu.madcourse.metu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,4 +24,8 @@ protected void onCreate(Bundle savedInstanceState) {
     toolbar.setText("Settings");
 
 };
+    public void Logout(View view) {
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        finish();
+    }
 }
