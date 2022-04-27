@@ -59,6 +59,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
                         imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
                         imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
 
+                        // TODO: Should be implemented in Button(R.id.bt_register) onclickListener
                         FirebaseService.getInstance().updateUserAvatar(profileUserId, imageFirebaseUri.toString());
                         try {
                             avatarBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageFilePath);
@@ -68,7 +69,6 @@ public class EditProfileActivity extends BaseCalleeActivity {
                         }
                     }
                 });
-
 
         uploadImageView.setOnClickListener(view -> {
             Intent intent = new Intent(EditProfileActivity.this, UploadActivity.class);

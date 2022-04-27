@@ -106,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
                             } else {
                                 // Start showing loading progress bar
                                 runOnUiThread(() -> {
-                                    findViewById(R.id.progressBar_login_loading).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.progressBar_register_loading).setVisibility(View.VISIBLE);
                                 });
 
                                 String userId = email.replaceAll("\\.", "");
