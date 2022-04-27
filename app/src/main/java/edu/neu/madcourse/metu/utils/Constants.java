@@ -1,6 +1,7 @@
 package edu.neu.madcourse.metu.utils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Constants {
     // for FCM tokens
@@ -82,8 +83,15 @@ public class Constants {
     public static final int GENDER_UNDEFINE_INT = 2;
     public static final String GENDER_MALE_STRING = "male";
     public static final String GENDER_FEMALE_STRING = "female";
-    public static final int GENDER_MALE = 0;
-    public static final int GENDER_FEMALE = 1;
+    public static final String GENDER_UNDEFINED_STRING = "undefined";
+
+    public static final Map<Integer, String> GENDER_MAP = new HashMap<Integer, String>() {
+        {
+            put(GENDER_MALE_INT, GENDER_MALE_STRING);
+            put(GENDER_FEMALE_INT, GENDER_FEMALE_STRING);
+            put(GENDER_UNDEFINE_INT, GENDER_UNDEFINED_STRING);
+        }
+    };
 
     // user explore settings
     public static final String EXPLORE_SETTINGS_STORE = "exploreSettings";
