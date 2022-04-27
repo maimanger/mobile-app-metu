@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.view.MenuItem;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -130,7 +131,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         // If Entering profile from CanceledCallNotification, remove this notification Id from App
         if (getIntent().hasExtra("NOTIFICATION_ID")) {
             int notifId = getIntent().getIntExtra("NOTIFICATION_ID", 0);
-            ((App)getApplicationContext()).removeCanceledCallNotificationId(notifId);
+            ((App) getApplicationContext()).removeCanceledCallNotificationId(notifId);
         }
 
         // Enter profile from Contacts/Exploring/Chat, must have PROFILE_USER_ID intent
@@ -315,44 +316,62 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             String myUserId = loginUser.getUserId();
             Map<String, Boolean> myConnections = loginUser.getConnections();
 
-            new Thread(() -> {
-                // Fetch Contacts from Firebase
-                FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
-                        (List<Contact> fetchedContacts) -> {
-                            Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // Fetch Contacts from Firebase
+                    FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
+                            (List<Contact> fetchedContacts) -> {
+                                Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
 
-                            Set<String> contactsId = fetchedContacts.stream()
-                                    .map(Contact::getContactUserId).collect(Collectors.toSet());
+                                Set<String> contactsId = fetchedContacts.stream()
+                                        .map(Contact::getContactUserId).collect(Collectors.toSet());
 
-                            // Subscribe contacts online status from Agora Rtm (Realtime update)
-                            ((App) getApplication()).rtmSubscribePeer(contactsId);
+                                // Subscribe contacts online status from Agora Rtm (Realtime update)
+                                ((App) getApplication()).rtmSubscribePeer(contactsId);
 
-                            // Query contacts online status from Agora Rtm (one time)
-                            ((App) getApplication()).queryPeerOnlineStatus(contactsId,
-                                    new ResultCallback<Map<String, Boolean>>() {
-                                        @Override
-                                        public void onSuccess(Map<String, Boolean> peerOnlineStatus) {
-                                            Log.d(TAG, "onSuccess: query peers online status");
-                                            for (Map.Entry<String, Boolean> entry :
-                                                    peerOnlineStatus.entrySet()) {
-                                                String userId = entry.getKey();
-                                                Boolean isOnline = entry.getValue();
-                                                if (profileUserId.equals(userId)) {
-                                                    if (!isOnline) {
-                                                        ((ImageView) findViewById(R.id.image_profile_onlineStatus))
-                                                                .setImageResource(R.drawable.ic_unavailable_status);
+                                // Query contacts online status from Agora Rtm (one time)
+                                ((App) getApplication()).queryPeerOnlineStatus(contactsId,
+                                        new ResultCallback<Map<String, Boolean>>() {
+                                            @Override
+                                            public void onSuccess(Map<String, Boolean> peerOnlineStatus) {
+                                                Log.d(TAG, "onSuccess: query peers online status");
+                                                for (Map.Entry<String, Boolean> entry :
+                                                        peerOnlineStatus.entrySet()) {
+                                                    String userId = entry.getKey();
+                                                    Boolean isOnline = entry.getValue();
+                                                    if (isSelf) {
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                findViewById(R.id.image_profile_onlineStatus).setVisibility(View.GONE);
+                                                            }
+                                                        });
+
+                                                    } else if (profileUserId.equals(userId)) {
+                                                        if (!isOnline) {
+                                                            runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    ((ImageView) findViewById(R.id.image_profile_onlineStatus))
+                                                                            .setImageResource(R.drawable.ic_unavailable_status);
+                                                                }
+                                                            });
+
+                                                        }
+                                                        break;
                                                     }
-                                                    break;
                                                 }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onFailure(ErrorInfo errorInfo) {
-                                        }
-                                    });
-                        });
+                                            @Override
+                                            public void onFailure(ErrorInfo errorInfo) {
+                                            }
+                                        });
+                            });
+                }
             }).start();
+
         }
     }
 }
