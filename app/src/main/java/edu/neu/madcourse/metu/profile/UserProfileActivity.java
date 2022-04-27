@@ -51,8 +51,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
     private User profileUser;
     private User loginUser;
+
     private RecyclerView storyRecyclerView;
     private StoryAdapter storyAdapter;
+
     private List<Story> storyList = new ArrayList<>();
     private Handler handler = new Handler();
     private List<Tag> tagList = new ArrayList<>();
