@@ -306,11 +306,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
-
-    // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void sendCanceledCallNotification(RemoteInvitation remoteInvitation) {
+        if (loginUser == null || !loginUser.getAllowVideoNotif()) return;
+
         String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
         Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
         if (bitmap == null) {
@@ -342,6 +341,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         String connectionPoint = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALL_CONNECTION_POINT);
 
         Intent contentIntent = new Intent(this, UserProfileActivity.class);
+        contentIntent.putExtra("NOTIFICATION_ID", notifId);
         contentIntent.putExtra("PROFILE_USER_ID", callerId);
         contentIntent.putExtra("CONNECTION_ID", connectionId);
         contentIntent.putExtra("CONNECTION_POINT", connectionPoint);
@@ -368,9 +368,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-    // TODO: Check LoginUser's notification allowance
     @RequiresApi(api = Build.VERSION_CODES.S)
     public boolean sendCallNotification() {
+        if (loginUser == null || !loginUser.getAllowVideoNotif()) return false;
+
         if (foregroundActivityCount == 0) {
             String callerAvatarUrl = Utils.getRemoteInvitationContent(remoteInvitation, Utils.CALLER_AVATAR);
             Bitmap bitmap = Utils.getBitmapFromUri(callerAvatarUrl);
@@ -414,7 +415,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE)
+                    .setDefaults(loginUser.getAllowVibration() ?
+                            NotificationCompat.DEFAULT_SOUND :
+                            NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE)
                     .addAction(R.drawable.ic_launcher_metu_foreground, "Refuse", pendingRefuseIntent)
                     .addAction(R.drawable.ic_launcher_metu_foreground, "Accept", pendingAcceptIntent);
 

@@ -104,6 +104,11 @@ public class RegisterActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 });
                             } else {
+                                // Start showing loading progress bar
+                                runOnUiThread(() -> {
+                                    findViewById(R.id.progressBar_login_loading).setVisibility(View.VISIBLE);
+                                });
+
                                 String userId = email.replaceAll("\\.", "");
                                 User newUser = new User(userId, username, password, email, System.currentTimeMillis());
 
