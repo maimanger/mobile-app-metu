@@ -3,6 +3,8 @@ package edu.neu.madcourse.metu.explore.daos;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import edu.neu.madcourse.metu.models.ConnectionUser;
+
 public class RecommendedUser implements Parcelable {
     private String userId;
     private String nickname;
@@ -51,6 +53,16 @@ public class RecommendedUser implements Parcelable {
 
     public void setIsLiked(boolean liked) {
         isLiked = liked;
+    }
+
+    public ConnectionUser convertToConnectionUser() {
+        ConnectionUser user = new ConnectionUser();
+        user.setUserId(userId);
+        user.setNickname(nickname);
+        user.setAvatarUri(avatarUri);
+        user.setIsLiked(isLiked);
+
+        return user;
     }
 
     @Override

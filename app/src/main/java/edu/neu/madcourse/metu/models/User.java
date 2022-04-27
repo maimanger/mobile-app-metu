@@ -124,6 +124,7 @@ public class User implements Parcelable {
         @Override
         public User createFromParcel(Parcel in) {
             return new User(in);
+
         }
 
         @Override
@@ -210,6 +211,16 @@ public class User implements Parcelable {
 
     public void setAvatarUri(String avatarUri) {
         this.avatarUri = avatarUri;
+    }
+
+    public ConnectionUser convertToConnectionUser() {
+        ConnectionUser connectionUser = new ConnectionUser();
+        connectionUser.setUserId(userId);
+        connectionUser.setNickname(nickname);
+        connectionUser.setAvatarUri(avatarUri);
+        connectionUser.setIsLiked(false);
+
+        return connectionUser;
     }
 
     @Override

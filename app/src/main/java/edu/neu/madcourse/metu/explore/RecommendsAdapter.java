@@ -20,6 +20,7 @@ import java.util.List;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
+import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
@@ -95,11 +96,22 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // this.toggleButton.setLiked(profile.isLiked());
             if (recommendedUser.getIsLiked()) {
                 toggleButton.setBackgroundResource(R.drawable.ic_like);
+                toggleButton.setOnClickListener(null);
+                toggleButton.setClickable(false);
             } else {
                 toggleButton.setBackgroundResource(R.drawable.ic_unlike);
                 // set listener
                 // toggle button listener
-                toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
+                //toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
+                toggleButton.setOnClickListener(new AbstractLikeButtonOnClickListener(loginUser.convertToConnectionUser()
+                        , recommendedUser.convertToConnectionUser()) {
+                    @Override
+                    protected void switchViewToBeLiked() {
+                        toggleButton.setBackgroundResource(R.drawable.ic_like);
+                        toggleButton.setOnClickListener(null);
+                        toggleButton.setClickable(false);
+                    }
+                });
             }
 
 
@@ -127,7 +139,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             // add listener
-            sendMessage.setOnClickListener(new SendMessageOnClickListener(recommendedUser, loginUser));
+            sendMessage.setOnClickListener(new SendMessageOnClickListener(recommendedUser.convertToConnectionUser(), loginUser.convertToConnectionUser()));
         }
     }
 
@@ -155,11 +167,25 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void setData(RecommendedUser recommendedUser) {
 
+            // this.toggleButton.setLiked(profile.isLiked());
             if (recommendedUser.getIsLiked()) {
                 toggleButton.setBackgroundResource(R.drawable.ic_like);
+                toggleButton.setOnClickListener(null);
+                toggleButton.setClickable(false);
             } else {
                 toggleButton.setBackgroundResource(R.drawable.ic_unlike);
-                toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
+                // set listener
+                // toggle button listener
+                // toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
+                toggleButton.setOnClickListener(new AbstractLikeButtonOnClickListener(loginUser.convertToConnectionUser()
+                        , recommendedUser.convertToConnectionUser()) {
+                    @Override
+                    protected void switchViewToBeLiked() {
+                        toggleButton.setBackgroundResource(R.drawable.ic_like);
+                        toggleButton.setOnClickListener(null);
+                        toggleButton.setClickable(false);
+                    }
+                });
             }
 
 
@@ -191,7 +217,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             // add listener
-            sendMessage.setOnClickListener(new SendMessageOnClickListener(recommendedUser, loginUser));
+            sendMessage.setOnClickListener(new SendMessageOnClickListener(recommendedUser.convertToConnectionUser(), loginUser.convertToConnectionUser()));
 
         }
     }

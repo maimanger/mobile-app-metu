@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Callback;
 
 import java.util.List;
 
@@ -66,16 +67,23 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
         }
 
         public void setData(RecentConversation conversation) {
-            // todo: add default avatar
-            // todo: delete
-            System.out.println("connection id: " + conversation.getRecentContactNickname());
-            System.out.println("avatar: " + conversation.getContactAvatar());
-            String src = conversation.getContactAvatar();
-            if (src != null && src.length() > 0)  {
-                new Utils.DownloadImageTask(contactAvatar).execute(src);
-            }
 
-            //contactAvatar.setImageBitmap(BitmapUtils.getBitmapFromString(conversation.getContactAvatar()));
+            String src = conversation.getContactAvatar();
+
+            //new Utils.DownloadImageTask(contactAvatar).execute(src);
+            Utils.loadImgUri(src, contactAvatar, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    contactAvatar.setImageResource(R.drawable.ic_default_avatar);
+                }
+            });
+
+
             recentContact.setText(conversation.getRecentContactNickname());
             recentMessage.setText(conversation.getRecentMessage());
             messageTimestamp.setText(conversation.getConversationFormattedTimestamp());

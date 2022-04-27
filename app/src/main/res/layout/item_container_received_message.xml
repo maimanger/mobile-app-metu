@@ -18,16 +18,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-<!--    <com.makeramen.roundedimageview.RoundedImageView-->
-<!--        android:id="@+id/senderAvatar"-->
-<!--        android:layout_width="25dp"-->
-<!--        android:layout_height="25dp"-->
-<!--        android:background="@drawable/background_image"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        app:riv_oval="true"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/textMessageReceived"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/senderAvatar"
         android:layout_width="25dp"
@@ -59,7 +49,7 @@
         android:layout_marginLeft="4dp"
         android:background="@drawable/background_receive_message"
         android:padding="12dp"
-        android:textColor="@color/white"
+        android:textColor="@color/chat_background_input_color"
         android:textSize="13sp"
         android:text="ok"
         app:layout_constraintStart_toEndOf="@id/senderAvatar"

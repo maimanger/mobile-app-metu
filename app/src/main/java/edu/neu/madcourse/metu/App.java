@@ -297,11 +297,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 public void onFailure(ErrorInfo errorInfo) { }
             });
 
-            // remove the FCM token
-//            if (loginUser != null) {
-//                FCMTokenUtils.removeFCMToken(loginUser.getUserId());
-//                fcmToken = "";
-//            }
+            if (loginUser != null) {
+                // remove the FCM token
+                FCMTokenUtils.removeFCMToken(loginUser.getUserId());
+                fcmToken = "";
+                // set the user inactive
+                FCMTokenUtils.setStatusInactive(loginUser.getUserId());
+            }
+
         }
     }
 
