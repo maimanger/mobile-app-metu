@@ -156,7 +156,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -215,7 +214,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
 
-
     public void refreshLoginUser() {
         // TODO: compare old loginUser and the new one, if not equals, refresh Profile
         loginUser = ((App) getApplication()).getLoginUser();
@@ -223,7 +221,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         initStories(loginUser.getStories());
         initPrivateProfile();
     }
-
 
 
     private void initUserProfileData() {
@@ -258,7 +255,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         connection.getUser1().getUserId().equals(loginUserId) ?
                                 connection.getUser2() : connection.getUser1();
                 isLikedByLoginUser = loginConnectionUser.getIsLiked();
-                initConnectionFragments(isFriend, isLikedByLoginUser);
+                initConnectionFragments(isFriend, isLikedByLoginUser,
+                        connection.getUser2().getUserId(), connection.getUser2().getNickname(),
+                        connection.getUser2().getAvatarUri(), connectionPoint, connectionId);
             }
 
             @Override
@@ -306,13 +305,17 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                             new DataFetchCallback<User>() {
                                 @Override
                                 public void onCallback(User user) {
-                                    ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
-                                    ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
-                                    ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                                    ((TextView) findViewById(R.id.text_username)).setText(user
+                                    .getNickname());
+                                    ((TextView) findViewById(R.id.text_age)).setText(user.getAge
+                                    ().toString() + " years");
+                                    ((TextView) findViewById(R.id.text_location)).setText(user
+                                    .getLocation());
                                     String avatarUri = user.getAvatarUri();
                                     if (avatarUri != null && !avatarUri.isEmpty()) {
                                         Log.e("initUserProfileData", avatarUri);
-                                        new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
+                                        new Utils.DownloadImageTask((ImageView) findViewById(R.id
+                                        .imageProfile)).execute(avatarUri);
                                     }
                                 ImageView profileAvatar = findViewById(R.id.imageProfile);
                                 profileAvatar.setImageResource(R.drawable.user_avatar);
@@ -394,13 +397,17 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             public void run() {
                 FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                         user -> {
-                            ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
-                            ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
-                            ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
+                            ((TextView) findViewById(R.id.text_username)).setText(user
+                            .getNickname());
+                            ((TextView) findViewById(R.id.text_age)).setText(user.getAge()
+                            .toString() + " years");
+                            ((TextView) findViewById(R.id.text_location)).setText(user
+                            .getLocation());
                             String avatarUri = user.getAvatarUri();
                             if (avatarUri != null && !avatarUri.isEmpty()) {
                                 Log.e("initUserProfileData", avatarUri);
-                                new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
+                                new Utils.DownloadImageTask((ImageView) findViewById(R.id
+                                .imageProfile)).execute(avatarUri);
                             }
                         });
             }
@@ -451,7 +458,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private void initPrivateProfile() {
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.text_username)).setText(loginUser.getNickname());
-            ((TextView) findViewById(R.id.text_age)).setText(loginUser.getAge().toString() + " years");
+            ((TextView) findViewById(R.id.text_age)).setText(loginUser.getAge().toString() + " " +
+                    "years");
             ((TextView) findViewById(R.id.text_location)).setText(loginUser.getLocation());
             String avatarUri = loginUser.getAvatarUri();
             if (avatarUri != null && !avatarUri.isEmpty()) {
@@ -524,7 +532,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private void initUserProfile() {
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.text_username)).setText(profileUser.getNickname());
-            ((TextView) findViewById(R.id.text_age)).setText(profileUser.getAge().toString() + " years");
+            ((TextView) findViewById(R.id.text_age)).setText(profileUser.getAge().toString() + " " +
+                    "years");
             ((TextView) findViewById(R.id.text_location)).setText(profileUser.getLocation());
             String avatarUri = profileUser.getAvatarUri();
             if (avatarUri != null && !avatarUri.isEmpty()) {
@@ -563,7 +572,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         });
     }
 
-    private void initConnectionFragments(boolean isFriend, boolean isLikedByLoginUser) {
+    private void initConnectionFragments(boolean isFriend, boolean isLikedByLoginUser,
+                                         String contactUserId, String contactName,
+                                         String contactAvatarUri, int connectionPoint,
+                                         String connectionId) {
         runOnUiThread(() -> {
             if (isFriend) {
                 getSupportFragmentManager().beginTransaction()
@@ -574,7 +586,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 ChatButtonFragment.newInstance(profileUser,
                                         isLikedByLoginUser, loginUserId),
                                 "ChatButtonFragment")
-                        .add(R.id.video_button, VideoButtonFragment.newInstance(),
+                        .add(R.id.video_button, VideoButtonFragment.newInstance(contactUserId,
+                                contactName, contactAvatarUri, connectionPoint, connectionId),
                                 "VideoButtonFragment")
                         .commitAllowingStateLoss();
             } else {
@@ -634,7 +647,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 ((App) getApplication()).queryPeerOnlineStatus(contactsId,
                                         new ResultCallback<Map<String, Boolean>>() {
                                             @Override
-                                            public void onSuccess(Map<String, Boolean> peerOnlineStatus) {
+                                            public void onSuccess(Map<String, Boolean>
+                                            peerOnlineStatus) {
                                                 Log.d(TAG, "onSuccess: query peers online status");
                                                 for (Map.Entry<String, Boolean> entry :
                                                         peerOnlineStatus.entrySet()) {
@@ -644,7 +658,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                                         runOnUiThread(new Runnable() {
                                                             @Override
                                                             public void run() {
-                                                                findViewById(R.id.image_profile_onlineStatus).setVisibility(View.GONE);
+                                                                findViewById(R.id
+                                                                .image_profile_onlineStatus)
+                                                                .setVisibility(View.GONE);
                                                             }
                                                         });
                                                     } else if (profileUserId.equals(userId)) {
@@ -652,8 +668,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                                             runOnUiThread(new Runnable() {
                                                                 @Override
                                                                 public void run() {
-                                                                    ((ImageView) findViewById(R.id.image_profile_onlineStatus))
-                                                                            .setImageResource(R.drawable.ic_unavailable_status);
+                                                                    ((ImageView) findViewById(R
+                                                                    .id.image_profile_onlineStatus))
+                                                                            .setImageResource(R
+                                                                            .drawable
+                                                                            .ic_unavailable_status);
                                                                 }
                                                             });
                                                         }

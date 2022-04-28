@@ -166,9 +166,8 @@ public class EditProfileActivity extends BaseCalleeActivity {
             }
 
             // Write user data to firebase
-            // User loginUser = ((App) getApplication()).getLoginUser();
-            User loginUser = new User();
-            loginUser.setEmail("tom@tom.com");  // TODO(xin): to remove
+            User loginUser = ((App) getApplication()).getLoginUser();
+            Log.e(TAG, loginUser.toString());
             loginUser.setNickname(nickname);
             loginUser.setLocation(location);
             loginUser.setAge(age);
