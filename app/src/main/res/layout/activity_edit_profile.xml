@@ -39,26 +39,30 @@
 
             <ImageView
                 android:id="@+id/edit_profile_image"
-                android:layout_width="wrap_content"
+                android:layout_width="165dp"
                 android:layout_height="165dp"
                 android:layout_marginTop="24dp"
                 android:src="@drawable/profile_picture"
                 app:layout_constraintBottom_toTopOf="@+id/layout_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/user_avatar" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/image_editProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="#968C8B8B"
                 android:elevation="10dp"
+                android:padding="10dp"
                 android:src="@drawable/twotone_edit_24"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_profile_image"
                 app:layout_constraintEnd_toEndOf="@+id/edit_profile_image"
-                app:layout_constraintStart_toEndOf="@+id/edit_profile_image"
                 app:layout_constraintStart_toStartOf="@+id/edit_profile_image"
                 app:layout_constraintTop_toTopOf="@+id/edit_profile_image"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                app:shapeAppearanceOverlay="@style/Circular"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_name"
@@ -173,7 +177,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
-                android:background="@color/design_default_color_primary"
+                android:background="@drawable/rounded_shape_gradient"
                 android:elevation="2dp"
                 android:onClick="performEditProfile"
                 android:text="Update Profile"
