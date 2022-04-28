@@ -138,9 +138,10 @@ public class EditProfileActivity extends BaseCalleeActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) {
+                /*if (position > 0) {
                     gender = (String) parent.getItemAtPosition(position);
-                }
+                }*/
+                gender = (String) parent.getItemAtPosition(position);
             }
 
             @Override
@@ -167,10 +168,10 @@ public class EditProfileActivity extends BaseCalleeActivity {
             return false;
         }
 
-        if (etLocation.getText().toString().equals("")) {
+        /*if (etLocation.getText().toString().equals("")) {
             etLocation.setError("Please Enter Location");
             return false;
-        }
+        }*/
 
         if (etAge.getText().toString().equals("")) {
             etAge.setError("Please Enter Your Age");

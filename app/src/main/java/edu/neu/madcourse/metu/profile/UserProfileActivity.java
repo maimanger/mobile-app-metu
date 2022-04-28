@@ -512,6 +512,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         tagRecyclerView.setLayoutManager(new LinearLayoutManager(
                 UserProfileActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+        if (tagList != null && !tagList.isEmpty()) {
+            findViewById(R.id.text_profile_noTagsMsg).setVisibility(View.INVISIBLE);
+        }
 
         tagAdapter = new TagAdapter(tagList);
         tagRecyclerView.setAdapter(tagAdapter);
@@ -533,6 +536,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         storyRecyclerView.setLayoutManager(new LinearLayoutManager(
                 UserProfileActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
+
+        if (storyList != null && !storyList.isEmpty()) {
+            findViewById(R.id.text_profile_noStoryMsg).setVisibility(View.INVISIBLE);
+        }
 
         storyAdapter = new StoryAdapter(storyList);
         storyRecyclerView.setAdapter(storyAdapter);
