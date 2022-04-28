@@ -19,12 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.explore.AbstractLikeButtonOnClickListener;
-import edu.neu.madcourse.metu.explore.LikeButtonOnClickListener;
-import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
-import edu.neu.madcourse.metu.profile.imageUpload.Image;
-import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
 public class LikeButtonFragment extends Fragment {
