@@ -13,8 +13,8 @@
 
     <string-array name="genders">
         <item>Gender</item>
-        <item>male</item>
-        <item>female</item>
-        <item>undefined</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Undeclared</item>
     </string-array>
 </resources>

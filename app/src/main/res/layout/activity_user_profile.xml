@@ -37,7 +37,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/user_info_constraint_layout"
-                android:layout_width="350dp"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="80dp"
@@ -145,7 +145,7 @@
                 android:layout_height="138dp"
                 android:layout_marginTop="24dp"
                 android:elevation="5dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/user_avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -342,6 +342,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textStory" />
+
+            <TextView
+                android:id="@+id/text_profile_noTagsMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:elevation="20dp"
+                android:text="No tags yet..."
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/textStory"
+                app:layout_constraintStart_toStartOf="@+id/tag_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/textTags" />
+
+            <TextView
+                android:id="@+id/text_profile_noStoryMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:text="No stories yet..."
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/story_recycler_view"
+                app:layout_constraintStart_toStartOf="@+id/story_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/textStory" />
 
             <!--        <LinearLayout-->
             <!--            android:id="@+id/layoutButtons"-->
