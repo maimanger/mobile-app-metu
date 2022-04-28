@@ -134,6 +134,8 @@ public class SettingActivity extends BaseCalleeActivity {
                     public void onFailure(ErrorInfo errorInfo) { }
                 });
 
+                ((App)getApplication()).setLoginUser(null);
+
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

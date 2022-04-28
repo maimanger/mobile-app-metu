@@ -214,7 +214,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
 
     public void refreshLoginUser() {
-        // TODO: compare old loginUser and the new one, if not equals, refresh Profile
         loginUser = ((App) getApplication()).getLoginUser();
         initTags(loginUser.getTags());
         initStories(loginUser.getStories());

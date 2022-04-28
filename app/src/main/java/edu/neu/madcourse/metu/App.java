@@ -67,14 +67,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private AgoraEventListener agoraEventListener;
 
     private User loginUser;
-    private String userNickname;
-    private String userAvatarUrl = "https://" + userNickname + ".png";
 
     private String fcmToken = "";
 
-    private Boolean allowMessageNotif;
-    private Boolean allowVideoNotif;
-    private Boolean allowVibration;
 
     /*private Map<String, Integer> peersOnlineStatus;*/
 
@@ -606,17 +601,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
         this.fcmToken = s;
     }
 
-    public void setAllowMessageNotif(Boolean allowMessageNotif) {
-        this.allowMessageNotif = allowMessageNotif;
-    }
-
-    public void setAllowVideoNotif(Boolean allowVideoNotif) {
-        this.allowVideoNotif = allowVideoNotif;
-    }
-
-    public void setAllowVibration(Boolean allowVibration) {
-        this.allowVibration = allowVibration;
-    }
 
 
 }

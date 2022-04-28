@@ -41,12 +41,12 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/Circular"
-            tools:srcCompat="@drawable/user_avatar"
-            android:scaleType="fitXY"/>
+            tools:srcCompat="@drawable/user_avatar" />
 
         <ImageView
             android:id="@+id/image_onlineStatus"

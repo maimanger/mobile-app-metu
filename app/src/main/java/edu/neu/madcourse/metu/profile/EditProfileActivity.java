@@ -77,8 +77,21 @@ public class EditProfileActivity extends BaseCalleeActivity {
                         imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
                         imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
 
+                        runOnUiThread(() -> {
+                            Utils.loadImgUri(imageFirebaseUri.toString(), uploadImageView, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    uploadImageView.setImageResource(R.drawable.user_avatar);
+                                }
+                            });
+                        });
+
                         // TODO: Should be implemented in Button(R.id.bt_register) onclickListener
-                        FirebaseService.getInstance().updateUserAvatar(profileUserId,
+                        /*FirebaseService.getInstance().updateUserAvatar(profileUserId,
                                 imageFirebaseUri.toString());
                         try {
                             avatarBitmap = MediaStore.Images.Media.getBitmap(getContentResolver()
@@ -86,8 +99,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
                             uploadImageView.setImageBitmap(avatarBitmap);
                         } catch (IOException e) {
                             e.printStackTrace();
-
-                        }
+                        }*/
                     }
                 });
 
@@ -211,6 +223,10 @@ public class EditProfileActivity extends BaseCalleeActivity {
             loginUser.setLocation(location);
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
+
+            if (!imageFirebaseUri.equals(loginUser.getAvatarUri())) {
+                loginUser.setAvatarUri(imageFirebaseUri.toString());
+            }
 
             FirebaseService.getInstance().updateUserProfile(loginUser);
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
