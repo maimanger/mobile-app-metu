@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,9 +36,13 @@ import java.util.stream.Collectors;
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
+import edu.neu.madcourse.metu.home.HomeActivity;
+import edu.neu.madcourse.metu.home.LoginActivity;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
+import edu.neu.madcourse.metu.profile.imageUpload.Image;
 import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
@@ -69,14 +74,12 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     BottomNavigationView bottomNavigationView;
     private Boolean isLikedByLoginUser = true;
     private int connectionPoint;
-<<<<<<< HEAD
-    private List<Contact> contactsList;
-=======
     private String connectionId;
     private List<Contact> contactsList;
 
     private ValueEventListener firebaseEventListener;
->>>>>>> yifan
+
+    private ImageView setting;
 
 
     @Override
@@ -95,13 +98,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         /*initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
-<<<<<<< HEAD
-        initOnlineStatus();
-        initFragments();
-=======
         initOnlineStatus();*/
 
->>>>>>> yifan
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -133,6 +131,17 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 return false;
             }
         });
+
+        // setting
+        setting = findViewById(R.id.button_profile_setting);
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserProfileActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
@@ -270,8 +279,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     }
                                 ImageView profileAvatar = findViewById(R.id.imageProfile);
                                 profileAvatar.setImageResource(R.drawable.user_avatar);
-
-
                                 }
                             });
                 }
@@ -285,7 +292,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         if (savedInstanceState != null) {
         }
     }
-
     private void initStoryPager() {
         new Thread(new Runnable() {
             @Override
@@ -301,7 +307,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         storyList.add(new Story(storyUri));
                                     }
                                 }
-
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -310,7 +315,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         storyRecyclerView.setLayoutManager(new LinearLayoutManager(
                                                 UserProfileActivity.this,
                                                 LinearLayoutManager.HORIZONTAL, false));
-
                                         storyAdapter = new StoryAdapter(storyList);
                                         storyRecyclerView.setAdapter(storyAdapter);
                                     }
@@ -320,8 +324,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
     }
-
-
     private void initTagPager() {
         new Thread(new Runnable() {
             @Override
@@ -335,7 +337,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     tagList.add(new Tag(key));
                                 }
                             }
-
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -344,7 +345,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     tagRecyclerView.setLayoutManager(new LinearLayoutManager(
                                             UserProfileActivity.this,
                                             LinearLayoutManager.HORIZONTAL, false));
-
                                     tagAdapter = new TagAdapter(tagList);
                                     tagRecyclerView.setAdapter(tagAdapter);
                                 }
@@ -353,12 +353,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
     }
-
     private void initFragments() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                         user -> {
                             ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
@@ -372,8 +370,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         });
             }
         }).start();
-
-
         FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                 profileUser -> {
                     if (isSelf) {
@@ -457,10 +453,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }
     }
 
-<<<<<<< HEAD
-    private void initOnlineStatus() {
-        User loginUser = ((App) getApplication()).getLoginUser();
-=======
     private void initTagsView() {
         tagRecyclerView = findViewById(R.id.tag_recycler_view);
         tagRecyclerView.setHasFixedSize(true);
@@ -558,11 +550,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
 
         /*User loginUser = ((App) getApplication()).getLoginUser();
->>>>>>> yifan
         if (loginUser != null) {
             String myUserId = loginUser.getUserId();
             Map<String, Boolean> myConnections = loginUser.getConnections();
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -570,13 +560,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
                             (List<Contact> fetchedContacts) -> {
                                 Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
-
                                 Set<String> contactsId = fetchedContacts.stream()
                                         .map(Contact::getContactUserId).collect(Collectors.toSet());
-
                                 // Subscribe contacts online status from Agora Rtm (Realtime update)
                                 ((App) getApplication()).rtmSubscribePeer(contactsId);
-
                                 // Query contacts online status from Agora Rtm (one time)
                                 ((App) getApplication()).queryPeerOnlineStatus(contactsId,
                                         new ResultCallback<Map<String, Boolean>>() {
@@ -594,7 +581,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                                                 findViewById(R.id.image_profile_onlineStatus).setVisibility(View.GONE);
                                                             }
                                                         });
-
                                                     } else if (profileUserId.equals(userId)) {
                                                         if (!isOnline) {
                                                             runOnUiThread(new Runnable() {
@@ -604,13 +590,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                                                             .setImageResource(R.drawable.ic_unavailable_status);
                                                                 }
                                                             });
-
                                                         }
                                                         break;
                                                     }
                                                 }
                                             }
-
                                             @Override
                                             public void onFailure(ErrorInfo errorInfo) {
                                             }
@@ -618,15 +602,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                             });
                 }
             }).start();
-<<<<<<< HEAD
-
-        }
-    }
-=======
         }*/
     }
 
 
->>>>>>> yifan
 }
-

@@ -57,11 +57,11 @@
                             android:textSize="18dp" />
 
                         <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_message"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
                             android:layout_gravity="center"
                             android:layout_marginRight="10dp"
                             android:background="@null"
@@ -86,11 +86,11 @@
                             android:textSize="18dp" />
 
                         <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_video"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
                             android:layout_gravity="center"
                             android:layout_marginRight="10dp"
                             android:background="@null"
@@ -115,6 +115,7 @@
                             android:textSize="18dp" />
 
                         <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switch_vibration"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -154,11 +155,12 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/logout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text=" Logout"
+                        android:text="Logout"
                         android:textColor="@color/black"
 
                         android:textSize="18dp" />
@@ -170,6 +172,7 @@
     </ScrollView>
 
     <Button
+        android:id="@+id/logoutbtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

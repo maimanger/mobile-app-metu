@@ -3,51 +3,41 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/background_receive_message.xml" value="0.11944444444444445" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/background_sent_message.xml" value="0.11944444444444445" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/chat_background.xml" value="0.11944444444444445" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/chat_background_input.xml" value="0.11944444444444445" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/ic_baseline_arrow_back_ios_24.xml" value="0.11944444444444445" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/background_explore_recommend_username.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/background_exploring_recycler_view.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/background_image.xml" value="0.16203703703703703" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/chat_background_button.xml" value="0.1649122807017544" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/file_upload_round_button.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_available_status.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_gender_male.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_like.xml" value="0.1649122807017544" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_more.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_new_msg_notification.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_send.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_send_message.xml" value="0.17168949771689498" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_setting.xml" value="0.1649122807017544" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_start_chat.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_unlike.xml" value="0.1649122807017544" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/ic_unread.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/like_toggle_buttom_background.xml" value="0.17168949771689498" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/recent_conversation_background.xml" value="0.19583333333333333" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/recommend_card_button_background.xml" value="0.17168949771689498" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable/toggle_selector.xml" value="0.17407407407407408" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_chat.xml" value="0.125" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_contacts.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_edit_profile.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_exploring.xml" value="0.1513157894736842" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_recent_chat.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_recent_conversation.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/activity_user_profile.xml" value="0.335" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/call_dialog.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/card_contact.xml" value="0.335" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/explore_setting_dialog.xml" value="0.25" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/fragment_contacts.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card.xml" value="0.165" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card_left.xml" value="0.25" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_explore_card_right.xml" value="0.25" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_received_message.xml" value="0.25" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_recent_conversation.xml" value="0.2596401028277635" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/item_container_sent_message.xml" value="0.21201413427561838" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/layout/layout_top.xml" value="0.1796875" />
-        <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19583333333333333" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-anydpi/ic_chat.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-anydpi/ic_connection_level.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-anydpi/ic_user_avatar.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-hdpi/rounded_shape_gradient.xml" value="0.18958333333333333" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-mdpi/rounded_shape.xml" value="0.15092592592592594" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-mdpi/rounded_shape_gradient.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-mdpi/rounded_shape_transparent.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/background_image.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/header_background.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18958333333333333" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_chat.xml" value="0.12132725430597771" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_contact.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_contacts.xml" value="0.2" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_edit_profile.xml" value="0.15217391304347827" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_home.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_login.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_register.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_splash.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_video.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/call_dialog.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_contact.xml" value="0.2" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_contacts.xml" value="0.2" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_friend.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_friends.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_met.xml" value="0.1431159420289855" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_mets.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/activity_contacts.xml" value="0.10925925925925926" />
+        <entry key="app/src/main/res/layout/activity_exploring.xml" value="0.17907801418439717" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.10462962962962963" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.10507246376811594" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.10925925925925926" />
+        <entry key="app/src/main/res/layout/layout_top.xml" value="0.17907801418439717" />
       </map>
     </option>
   </component>
