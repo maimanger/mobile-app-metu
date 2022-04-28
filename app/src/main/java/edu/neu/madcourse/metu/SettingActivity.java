@@ -107,8 +107,9 @@ public class SettingActivity extends BaseCalleeActivity {
                 // logout firebase auth
                 mAuth.signOut();
 
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                finish();
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
     };
