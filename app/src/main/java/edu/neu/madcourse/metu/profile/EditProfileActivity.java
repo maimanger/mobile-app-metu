@@ -1,11 +1,5 @@
 package edu.neu.madcourse.metu.profile;
 
-//package com.example.handyopinion;
-
-import static edu.neu.madcourse.metu.utils.Constants.GENDER_MAP;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -33,22 +27,18 @@ import android.widget.Toast;
 import com.squareup.picasso.Callback;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
-import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Utils;
 
 public class EditProfileActivity extends BaseCalleeActivity {
 
-    EditText etNickname, etLocation, etAge, etGender;
+    EditText etNickname, etLocation, etAge;
     private Uri imageFilePath;
     private Uri imageFirebaseUri;
     private Bitmap avatarBitmap;
