@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,22 +30,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
-import edu.neu.madcourse.metu.home.HomeActivity;
-import edu.neu.madcourse.metu.home.LoginActivity;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
-import edu.neu.madcourse.metu.profile.imageUpload.Image;
 import edu.neu.madcourse.metu.utils.Utils;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
-import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 import io.agora.rtm.ErrorInfo;
 import io.agora.rtm.ResultCallback;
@@ -74,12 +67,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     BottomNavigationView bottomNavigationView;
     private Boolean isLikedByLoginUser = true;
     private int connectionPoint;
+
     private String connectionId;
     private List<Contact> contactsList;
 
     private ValueEventListener firebaseEventListener;
-
-    private ImageView setting;
 
 
     @Override
@@ -94,12 +86,13 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        initUserProfileData(savedInstanceState);
+        initUserProfileData();
+
         /*initItemData(savedInstanceState);
         initTagPager();
         initStoryPager();
+        initFragments();
         initOnlineStatus();*/
-
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -132,33 +125,27 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         });
 
-        // setting
-        setting = findViewById(R.id.button_profile_setting);
-        setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserProfileActivity.this, SettingActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
     }
+
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (!isSelf) {
             FirebaseDatabase.getInstance().getReference().child("users").child(profileUserId)
                     .removeEventListener(firebaseEventListener);
         }
+        super.onDestroy();
     }
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
         if (!isSelf) {
             initOnlineStatus(profileUserId);
+        } else {
+            refreshLoginUser();
         }
     }
 
@@ -168,6 +155,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         tagList.add(position, new Tag(data));
         tagAdapter.notifyItemInserted(position);
         FirebaseService.getInstance().addTag(profileUserId, data);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -204,11 +196,18 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
 
-    private void initUserProfileData(Bundle savedInstanceState) {
-        /*if (savedInstanceState != null && savedInstanceState.containsKey("PROFILE_USER")) {
-            initUserProfileDataFromBundle(savedInstanceState);
-            return;
-        }*/
+
+    private void refreshLoginUser() {
+        // TODO: compare old loginUser and the new one, if not equals, refresh Profile
+        loginUser = ((App) getApplication()).getLoginUser();
+        initTags(loginUser.getTags());
+        initStories(loginUser.getStories());
+        initPrivateProfile();
+    }
+
+
+
+    private void initUserProfileData() {
 
         // If Entering profile from CanceledCallNotification, remove this notification Id from App
         if (getIntent().hasExtra("NOTIFICATION_ID")) {
@@ -259,7 +258,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }).start();
 
 
-
         /*if (!isSelf) {
             new Thread(new Runnable() {
                 @Override
@@ -284,8 +282,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 }
             }).start();
         }*/
-
-
     }
 
     /*private void initItemData(Bundle savedInstanceState) {
@@ -453,6 +449,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }
     }
 
+
     private void initTagsView() {
         tagRecyclerView = findViewById(R.id.tag_recycler_view);
         tagRecyclerView.setHasFixedSize(true);
@@ -487,10 +484,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
     private void initUserProfile(boolean isFriend) {
         runOnUiThread(() -> {
-            ((TextView) findViewById(R.id.text_username)).setText(loginUser.getNickname());
-            ((TextView) findViewById(R.id.text_age)).setText(loginUser.getAge().toString() + " years");
-            ((TextView) findViewById(R.id.text_location)).setText(loginUser.getLocation());
-            String avatarUri = loginUser.getAvatarUri();
+            ((TextView) findViewById(R.id.text_username)).setText(profileUser.getNickname());
+            ((TextView) findViewById(R.id.text_age)).setText(profileUser.getAge().toString() + " years");
+            ((TextView) findViewById(R.id.text_location)).setText(profileUser.getLocation());
+            String avatarUri = profileUser.getAvatarUri();
             if (avatarUri != null && !avatarUri.isEmpty()) {
                 Log.e("initUserProfileData", avatarUri);
                 new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
@@ -547,9 +544,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         }
                     });
         }).start();
+    }
 
 
-        /*User loginUser = ((App) getApplication()).getLoginUser();
+ /*   private void initOnlineStatus() {
+        User loginUser = ((App) getApplication()).getLoginUser();
         if (loginUser != null) {
             String myUserId = loginUser.getUserId();
             Map<String, Boolean> myConnections = loginUser.getConnections();
@@ -602,8 +601,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                             });
                 }
             }).start();
-        }*/
-    }
-
-
+        }
+    }*/
 }

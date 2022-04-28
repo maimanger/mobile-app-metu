@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -47,6 +48,7 @@ import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
 
 import edu.neu.madcourse.metu.utils.Utils;
+import edu.neu.madcourse.metu.video.VideoActivity;
 
 public class ChatActivity extends BaseCalleeActivity {
     private String userId;
@@ -359,10 +361,7 @@ public class ChatActivity extends BaseCalleeActivity {
                     }
 
                 }
-
                 progressBar.setVisibility(View.GONE);
-
-
             }
 
             @Override
@@ -394,8 +393,7 @@ public class ChatActivity extends BaseCalleeActivity {
             onBackPressed();
         });
 
-        // send button
-        // todo: which is better
+        // send message button
         sendButton.setOnClickListener(v -> sendMessage());
 
         // todo: start video chat button
@@ -404,12 +402,32 @@ public class ChatActivity extends BaseCalleeActivity {
             if (receiver == null) {
                 return;
             }
-            if (!isReceiverOnline) {
+            // todo: edit
+            if (!isFriend) {
+              showToast("You are not friends yet!");
+            } else if (!isReceiverOnline) {
                 Toast.makeText(v.getContext(), receiver.getNickname() + "is not online", Toast.LENGTH_SHORT).show();
             } else if (Utils.calculateFriendLevel((int)connectionPoint) < 1) {
                 Toast.makeText(v.getContext(), "Your connection level is not getting there yet! " + Utils.calculateFriendLevel((int)connectionPoint), Toast.LENGTH_SHORT).show();
+            } else {
+                // open video activity
+                startVideoChat();
             }
+
         });
+    }
+
+    private void startVideoChat() {
+        // todo: check permission
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra("CALLEE_ID", receiver.getUserId());
+        intent.putExtra("CALLEE_NAME", receiver.getNickname());
+        intent.putExtra("CALLEE_AVATAR", receiver.getAvatarUri());
+        intent.putExtra("CONNECTION_POINT", connectionPoint);
+        intent.putExtra("CONNECTION_ID", connectionId);
+
+        startActivity(intent);
+
     }
 
     private void sendMessage() {

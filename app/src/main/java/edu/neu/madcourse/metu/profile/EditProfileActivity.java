@@ -22,8 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
+
 import java.io.IOException;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
@@ -40,6 +43,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
     private Bitmap avatarBitmap;
     private ActivityResultLauncher<Intent> uploadActivityResultLauncher;
     private String profileUserId;
+    ImageView uploadImageView;
 
 
     @Override
@@ -50,7 +54,19 @@ public class EditProfileActivity extends BaseCalleeActivity {
         profileUserId = getIntent().getExtras().getString("userId");
         viewInitializations();
 
-        ImageView uploadImageView = findViewById(R.id.edit_profile_image);
+        uploadImageView = findViewById(R.id.edit_profile_image);
+        String loginUserAvatarUri = ((App)getApplication()).getLoginUser().getAvatarUri();
+        Utils.loadImgUri(loginUserAvatarUri, uploadImageView, new Callback() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onError(Exception e) {
+                uploadImageView.setImageResource(R.drawable.user_avatar);
+            }
+        });
+
         uploadActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -74,8 +90,13 @@ public class EditProfileActivity extends BaseCalleeActivity {
         uploadImageView.setOnClickListener(view -> {
             Intent intent = new Intent(EditProfileActivity.this, UploadActivity.class);
             uploadActivityResultLauncher.launch(intent);
-
         });
+
+        findViewById(R.id.image_editProfile).setOnClickListener(view -> {
+            Intent intent = new Intent(EditProfileActivity.this, UploadActivity.class);
+            uploadActivityResultLauncher.launch(intent);
+        });
+
     }
 
     void viewInitializations() {

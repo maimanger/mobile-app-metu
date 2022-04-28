@@ -302,6 +302,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             });
 
             if (loginUser != null) {
+                Log.d("FCM token", "pre-remove");
                 // remove the FCM token
                 FCMTokenUtils.removeFCMToken(loginUser.getUserId());
                 fcmToken = "";
