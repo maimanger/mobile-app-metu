@@ -494,4 +494,34 @@ public class MessageSendingUtils {
                 });
     }
 
+    public static void countConnections(String userId, DataFetchCallback<Long> callback) {
+        if (userId == null || userId.length() == 0) {
+            callback.onCallback(0l);
+            return;
+        }
+        FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!snapshot.exists()
+                                || !snapshot.hasChild(userId)
+                                || !snapshot.child(userId).hasChild(Constants.CONNECTIONS_STORE)) {
+                            Log.d("COUNT CONNECTIONS METHOD", "return 0l");
+                            callback.onCallback(0l);
+                            return;
+                        }
+
+                        Log.d("COUNT CONNECTIONS METHOD", "return with value");
+                        callback.onCallback(snapshot
+                                .child(userId)
+                                .child(Constants.CONNECTIONS_STORE).getChildrenCount());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callback.onCallback(0l);
+                    }
+                });
+    }
+
 }

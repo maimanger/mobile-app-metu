@@ -58,6 +58,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
                         Intent data = result.getData();
                         imageFilePath = Uri.parse(data.getStringExtra("imageFilePath"));
                         imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
+
                         // TODO: Should be implemented in Button(R.id.bt_register) onclickListener
                         FirebaseService.getInstance().updateUserAvatar(profileUserId, imageFirebaseUri.toString());
                         try {

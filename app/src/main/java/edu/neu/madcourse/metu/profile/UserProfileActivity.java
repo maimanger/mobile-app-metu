@@ -69,8 +69,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     BottomNavigationView bottomNavigationView;
     private Boolean isLikedByLoginUser = true;
     private int connectionPoint;
-    private String connectionId;
 
+    private String connectionId;
     private List<Contact> contactsList;
 
     private ValueEventListener firebaseEventListener;
@@ -449,6 +449,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }
     }
 
+
     private void initTagsView() {
         tagRecyclerView = findViewById(R.id.tag_recycler_view);
         tagRecyclerView.setHasFixedSize(true);
@@ -543,11 +544,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         }
                     });
         }).start();
+    }
 
 
-        /*User loginUser = ((App) getApplication()).getLoginUser();
-
-    private void initOnlineStatus() {
+ /*   private void initOnlineStatus() {
         User loginUser = ((App) getApplication()).getLoginUser();
         if (loginUser != null) {
             String myUserId = loginUser.getUserId();
@@ -609,10 +609,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 }
             }).start();
 
-        }*/
-    }
 
-
+        }
+    }*/
 }
 
 

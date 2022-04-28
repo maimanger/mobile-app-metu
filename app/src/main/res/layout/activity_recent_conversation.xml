@@ -29,10 +29,25 @@
         app:layout_constraintEnd_toEndOf="@+id/recentChatBackground"
         />
 
+    <TextView
+        android:id="@+id/noRecentConversation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Messages"
+        android:textSize="30dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintTop_toTopOf="@+id/recentChatBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recentConversationRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:overScrollMode="never"
         android:orientation="vertical"
         android:padding="6dp"
