@@ -118,7 +118,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_birthday"
+                android:id="@+id/layout_age"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -152,23 +152,30 @@
                 android:textColorHint="#808080"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_birthday"
+                app:layout_constraintTop_toBottomOf="@+id/layout_age"
                 app:layout_constraintWidth_percent="0.7">
 
-                <EditText
-                    android:id="@+id/et_gender"
+<!--                <EditText-->
+<!--                    android:id="@+id/et_gender"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="#00000000"-->
+<!--                    android:gravity="center"-->
+<!--                    android:hint="Gender"-->
+<!--                    android:inputType="text"-->
+<!--                    android:paddingTop="25dp"-->
+<!--                    android:paddingBottom="15dp"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textColorHint="#808080"-->
+<!--                    android:textSize="15sp" />-->
+                <Spinner
+                    android:id="@+id/gender_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#00000000"
-                    android:gravity="center"
-                    android:hint="Gender"
-                    android:inputType="text"
-                    android:paddingTop="25dp"
-                    android:paddingBottom="15dp"
-                    android:textColor="#000000"
-                    android:textColorHint="#808080"
-                    android:textSize="15sp" />
+                    android:textAlignment="center"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+
 
             <Button
                 android:id="@+id/bt_register"
