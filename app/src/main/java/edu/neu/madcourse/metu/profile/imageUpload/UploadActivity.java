@@ -67,6 +67,8 @@ public class UploadActivity extends BaseCalleeActivity {
         Button btnUpload = findViewById(R.id.create_item);
         imageView = findViewById(R.id.img);
 
+        findViewById(R.id.btn_upload_back).setOnClickListener(View -> onBackPressed());
+
         // get the Firebase storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();

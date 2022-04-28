@@ -251,4 +251,5 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
     protected void refreshAppLoginUser() {
         loginUser = ((App) getApplication()).getLoginUser();
     }
+
 }

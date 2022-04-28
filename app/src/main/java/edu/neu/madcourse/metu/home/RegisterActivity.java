@@ -80,9 +80,6 @@ public class RegisterActivity extends AppCompatActivity {
                     });
                     //Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
-                    /*runOnUiThread(() -> {
-                        findViewById(R.id.progressBar_register_loading).setVisibility(View.VISIBLE);
-                    });*/
                     // TODO: Show Privacy policy dialog
                     //  if(!isAgreedPrivacyPolicy) {...}
                     autoRegister(username, email, password);

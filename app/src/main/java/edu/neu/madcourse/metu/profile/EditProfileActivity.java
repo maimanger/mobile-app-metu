@@ -109,9 +109,13 @@ public class EditProfileActivity extends BaseCalleeActivity {
         etAge = findViewById(R.id.et_age);
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
 
+
+        findViewById(R.id.btn_editProfile_back).setOnClickListener(View -> onBackPressed());
+
         Spinner spinner = findViewById(R.id.gender_spinner);
 
         String[] genders = getResources().getStringArray(R.array.genders);
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, genders) {
