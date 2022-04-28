@@ -247,6 +247,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         isSelf = profileUserId.equals(loginUserId);
         isFriend = connectionPoint > 0;
 
+        // TODO: After initializing isSelf, determine whether to show bottom navigation bar / setting button / back button
+
         connectionEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

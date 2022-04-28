@@ -44,7 +44,7 @@ public class FirebaseService {
 
     public void updateUserProfile(User user) {
         // Firebase does not allow '.' character in key.
-        HashMap<String, Object> userValues = new HashMap<>();
+        /*HashMap<String, Object> userValues = new HashMap<>();
         userValues.put("email", user.getEmail());
         userValues.put("userId", user.getUserId());
         userValues.put("nickname", user.getNickname());
@@ -56,8 +56,9 @@ public class FirebaseService {
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + user.getUserId(), userValues);
+        databaseRef.updateChildren(childUpdates);*/
 
-        databaseRef.updateChildren(childUpdates);
+        databaseRef.child("users").child(user.getUserId()).setValue(user);
     }
 
     public void updateUserAvatar(String userId, String imageFirebaseUri) {
