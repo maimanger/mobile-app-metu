@@ -48,6 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // TODO: boolean flag: isAgreedPrivacyPolicy=false;
+
         mAuth = FirebaseAuth.getInstance();
 
         /*firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -78,9 +80,11 @@ public class RegisterActivity extends AppCompatActivity {
                     });
                     //Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
-                    runOnUiThread(() -> {
+                    /*runOnUiThread(() -> {
                         findViewById(R.id.progressBar_register_loading).setVisibility(View.VISIBLE);
-                    });
+                    });*/
+                    // TODO: Show Privacy policy dialog
+                    //  if(!isAgreedPrivacyPolicy) {...}
                     autoRegister(username, email, password);
                 }
             }

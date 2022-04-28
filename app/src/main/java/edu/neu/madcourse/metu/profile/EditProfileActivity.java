@@ -105,6 +105,8 @@ public class EditProfileActivity extends BaseCalleeActivity {
         etGender = findViewById(R.id.et_gender);
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
 
+
+
         FirebaseService.getInstance().fetchUserProfileData(profileUserId, user -> {
             etNickname.setText(user.getNickname());
             etLocation.setText(user.getLocation());
@@ -113,6 +115,8 @@ public class EditProfileActivity extends BaseCalleeActivity {
             new Utils.DownloadImageTask(uploadImageView).execute(user.getAvatarUri());
         });
     }
+
+
 
     // Checking if the input in form is valid
     boolean validateInput() {

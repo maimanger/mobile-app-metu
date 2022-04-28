@@ -138,7 +138,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     }
 
 
-    
+
     @Override
     protected void onResume() {
         super.onResume();
