@@ -3,6 +3,9 @@ package edu.neu.madcourse.metu.profile;
 //package com.example.handyopinion;
 
 import static edu.neu.madcourse.metu.utils.Constants.GENDER_MAP;
+import static edu.neu.madcourse.metu.utils.Constants.GENDER_REVERSE_MAP;
+import static edu.neu.madcourse.metu.utils.Constants.GENDER_UNDECLARED_INT;
+import static edu.neu.madcourse.metu.utils.Constants.GENDER_UNDECLARED_STRING;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -18,12 +21,16 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.IOException;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
@@ -32,7 +39,7 @@ import edu.neu.madcourse.metu.service.DataFetchCallback;
 import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Utils;
 
-public class EditProfileActivity extends BaseCalleeActivity {
+public class EditProfileActivity extends BaseCalleeActivity implements AdapterView.OnItemSelectedListener {
 
     EditText etNickname, etLocation, etAge, etGender;
     private Uri imageFilePath;
@@ -77,24 +84,49 @@ public class EditProfileActivity extends BaseCalleeActivity {
         });
     }
 
-    void viewInitializations() {
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        String gender = (String) parent.getItemAtPosition(pos);
+
+        // Write user data to firebase
+        User loginUser = ((App) getApplication()).getLoginUser();
+//        User loginUser = new User();
+//        loginUser.setEmail("tom@tom.com");  // TODO(xin): to remove
+        loginUser.setGender(GENDER_REVERSE_MAP.getOrDefault(gender, GENDER_UNDECLARED_INT));
+        // TODO(xin): bug: the following will remove user data due to partial loginUser
+        new Thread(() -> FirebaseService.getInstance().updateUserProfile(loginUser)).start();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    private void viewInitializations() {
         etNickname = findViewById(R.id.et_username);
         etLocation = findViewById(R.id.et_location);
         etAge = findViewById(R.id.et_age);
         etGender = findViewById(R.id.et_gender);
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
 
-        FirebaseService.getInstance().fetchUserProfileData(profileUserId, user -> {
+        Spinner spinner = findViewById(R.id.gender_spinner);
+        spinner.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.gender_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        new Thread(() -> FirebaseService.getInstance().fetchUserProfileData(profileUserId, user -> {
             etNickname.setText(user.getNickname());
             etLocation.setText(user.getLocation());
             etAge.setText(String.valueOf(user.getAge()));
             etGender.setText(GENDER_MAP.get(user.getGender()));
             new Utils.DownloadImageTask(uploadImageView).execute(user.getAvatarUri());
-        });
+        })).start();
     }
 
     // Checking if the input in form is valid
-    boolean validateInput() {
+    private boolean validateInput() {
         if (etNickname.getText().toString().equals("")) {
             etNickname.setError("Please Enter Username");
             return false;
@@ -118,7 +150,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
         return true;
     }
 
-    boolean isEmailValid(String email) {
+    private boolean isEmailValid(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
@@ -140,15 +172,15 @@ public class EditProfileActivity extends BaseCalleeActivity {
             }
 
             // Write user data to firebase
-            // User loginUser = ((App) getApplication()).getLoginUser();
-            User loginUser = new User();
-            loginUser.setEmail("tom@tom.com");  // TODO(xin): to remove
+            User loginUser = ((App) getApplication()).getLoginUser();
+//            User loginUser = new User();
+//            loginUser.setEmail("tom@tomcom");  // TODO(xin): to remove
             loginUser.setNickname(nickname);
             loginUser.setLocation(location);
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
 
-            FirebaseService.getInstance().updateUserProfile(loginUser);
+            new Thread(() -> FirebaseService.getInstance().updateUserProfile(loginUser)).start();
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
             finish();
         }

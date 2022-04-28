@@ -46,13 +46,33 @@ public class FirebaseService {
         // Firebase does not allow '.' character in key.
         String key = user.getEmail().replace(".", "");
         HashMap<String, Object> userValues = new HashMap<>();
-        userValues.put("userId", user.getUserId());
-        userValues.put("nickname", user.getNickname());
-        userValues.put("password", user.getPassword());
-        userValues.put("location", user.getLocation());
-        userValues.put("age", user.getAge());
-        userValues.put("gender", user.getGender());
-        userValues.put("avatarUri", user.getAvatarUri());
+        if (user.getUserId() != null) {
+            userValues.put("userId", user.getUserId());
+        }
+
+        if (user.getNickname() != null) {
+            userValues.put("nickname", user.getNickname());
+        }
+
+        if (user.getPassword() != null) {
+            userValues.put("password", user.getPassword());
+        }
+
+        if (user.getLocation() != null) {
+            userValues.put("location", user.getLocation());
+        }
+
+        if (user.getAge() != null) {
+            userValues.put("age", user.getAge());
+        }
+
+        if (user.getGender() != null) {
+            userValues.put("gender", user.getGender());
+        }
+
+        if (user.getAvatarUri() != null) {
+            userValues.put("avatarUri", user.getAvatarUri());
+        }
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/users/" + key, userValues);

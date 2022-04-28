@@ -80,16 +80,24 @@ public class Constants {
     // todo: add more gender
     public static final int GENDER_MALE_INT = 0;
     public static final int GENDER_FEMALE_INT = 1;
-    public static final int GENDER_UNDEFINE_INT = 2;
+    public static final int GENDER_UNDECLARED_INT = 2;
     public static final String GENDER_MALE_STRING = "male";
     public static final String GENDER_FEMALE_STRING = "female";
-    public static final String GENDER_UNDEFINED_STRING = "undefined";
+    public static final String GENDER_UNDECLARED_STRING = "undeclared";
 
     public static final Map<Integer, String> GENDER_MAP = new HashMap<Integer, String>() {
         {
             put(GENDER_MALE_INT, GENDER_MALE_STRING);
             put(GENDER_FEMALE_INT, GENDER_FEMALE_STRING);
-            put(GENDER_UNDEFINE_INT, GENDER_UNDEFINED_STRING);
+            put(GENDER_UNDECLARED_INT, GENDER_UNDECLARED_STRING);
+        }
+    };
+
+    public static final Map<String, Integer> GENDER_REVERSE_MAP = new HashMap<String, Integer>() {
+        {
+            put(GENDER_MALE_STRING, GENDER_MALE_INT);
+            put(GENDER_FEMALE_STRING, GENDER_FEMALE_INT);
+            put(GENDER_UNDECLARED_STRING, GENDER_UNDECLARED_INT);
         }
     };
 
