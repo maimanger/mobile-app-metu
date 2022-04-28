@@ -182,7 +182,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             profileUserId = profileUser.getUserId();
             isSelf = profileUserId.equals(loginUserId);
             isFriend = connectionPoint > 0;
-            connectionId = savedInstanceState.getParcelable("CONNECTION_ID");
+            connectionId = savedInstanceState.getString("CONNECTION_ID");
+
+            // TODO: Create a Firebase EventListener to connectionId.connectionPoints,
+            //  if changed (isFriend -> true), Re-Render UserProfile
+
             if (!isSelf) {
                 initTags(profileUser.getTags());
                 initStories(profileUser.getStories());
@@ -197,7 +201,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
 
 
-    private void refreshLoginUser() {
+    public void refreshLoginUser() {
         // TODO: compare old loginUser and the new one, if not equals, refresh Profile
         loginUser = ((App) getApplication()).getLoginUser();
         initTags(loginUser.getTags());
@@ -524,7 +528,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         });
     }
 
-    //TODO: Check friend/public profile online status and update UI
     private void initOnlineStatus(String peerId) {
         new Thread(() -> {
             Set<String> peersIdSet = new HashSet<>();
@@ -603,4 +606,13 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }).start();
         }
     }*/
+
+
+    @Override
+    protected void refreshAppLoginUser() {
+        super.refreshAppLoginUser();
+        if (isSelf) {
+            refreshLoginUser();
+        }
+    }
 }

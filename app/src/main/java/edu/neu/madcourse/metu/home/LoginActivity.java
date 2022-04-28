@@ -129,7 +129,8 @@ public class LoginActivity extends AppCompatActivity {
             Long currentTime = System.currentTimeMillis();
             FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
                     .child(userId).child("lastLoginTime").setValue(currentTime);
-            // fetch the user info from the database
+
+            // fetch the user info from the database && bind a long-lived listener to User change in Database
             FirebaseService.getInstance().fetchUserProfileData(userId,
                     (User user) -> {
                         if (user != null) {

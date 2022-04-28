@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -55,11 +56,10 @@ public class ContactsActivity extends BaseCalleeActivity {
         contactsTabs.getTabAt(0).setText("Friends");
         contactsTabs.getTabAt(1).setText("Mets");
 
-        if (!initFromBundle(savedInstanceState)) {
+        /*if (!initFromBundle(savedInstanceState)) {
             initFromFetching();
         }
-
-        initFromBundle(savedInstanceState);
+        initFromBundle(savedInstanceState);*/
 
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
@@ -95,7 +95,6 @@ public class ContactsActivity extends BaseCalleeActivity {
 
 
 
-
     private void renderContactsPager() {
         runOnUiThread(() -> {
             loadingProgress.setVisibility(ProgressBar.INVISIBLE);
@@ -113,7 +112,7 @@ public class ContactsActivity extends BaseCalleeActivity {
     }
 
 
-    private boolean initFromBundle(Bundle savedInstanceState) {
+/*    private boolean initFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
             int size = savedInstanceState.getInt("SIZE");
             contactsList = new ArrayList<>();
@@ -125,10 +124,16 @@ public class ContactsActivity extends BaseCalleeActivity {
             return true;
         }
         return false;
-    }
+    }*/
 
     private void initFromFetching() {
-        User loginUser = ((App)getApplication()).getLoginUser();
+        if (loadingProgress.getVisibility() == View.INVISIBLE) {
+            runOnUiThread(() -> {
+                loadingProgress.setVisibility(View.VISIBLE);
+            });
+        }
+
+        loginUser = ((App)getApplication()).getLoginUser();
         if (loginUser != null) {
             String myUserId = loginUser.getUserId();
             Map<String, Boolean> myConnections = loginUser.getConnections();
@@ -146,6 +151,7 @@ public class ContactsActivity extends BaseCalleeActivity {
                                     contactsList.add(c);
                                 }
                             }
+
                             renderContactsPager();
 
                             Set<String> contactsId = fetchedContacts.stream()
@@ -186,9 +192,10 @@ public class ContactsActivity extends BaseCalleeActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
+        initFromFetching();
+        /*if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);
-        }
+        }*/
     }
 
 
@@ -196,6 +203,7 @@ public class ContactsActivity extends BaseCalleeActivity {
     protected void onStop() {
         super.onStop();
         contactsViewPager.setAdapter(null);
+        loadingProgress.setVisibility(ProgressBar.VISIBLE);
     }
 
 
@@ -228,5 +236,11 @@ public class ContactsActivity extends BaseCalleeActivity {
                 contactsViewPager.setAdapter(contactsPagerAdapter);
             });
         }
+    }
+
+    @Override
+    protected void refreshAppLoginUser() {
+        super.refreshAppLoginUser();
+        initFromFetching();
     }
 }

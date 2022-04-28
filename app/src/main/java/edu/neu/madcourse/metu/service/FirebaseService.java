@@ -148,7 +148,7 @@ public class FirebaseService {
 
     public void fetchContacts(String userId, Map<String, Boolean> connections,
                               DataFetchCallback<List<Contact>> callback) {
-        databaseRef.child("connections").addValueEventListener(new ValueEventListener() {
+        databaseRef.child("connections").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Contact> fetchedContacts = new ArrayList<>();

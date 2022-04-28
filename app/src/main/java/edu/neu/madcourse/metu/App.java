@@ -55,6 +55,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private int aliveActivityCount = 0;
     private boolean isActivityChangingConfigurations = false;
     private String currActivityName;
+    private Activity currActivity;
 
     // Call invitation function members
     private int callNotificationId = -1;
@@ -260,6 +261,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
+        currActivity = activity;
         currActivityName = activity.getClass().getSimpleName();
         Log.d("App", "onActivityResumed: " + currActivityName);
     }
@@ -586,6 +588,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public void setLoginUser(User loginUser) {
         this.loginUser = loginUser;
+
+        if (!currActivityName.equals("LoginActivity") && !currActivityName.equals("RegisterActivity")) {
+            ((BaseCalleeActivity)currActivity).refreshAppLoginUser();
+        }
     }
 
     public String getFcmToken() {

@@ -119,8 +119,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 // Save new User in Firebase database
                                 FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userId).setValue(newUser);
 
-                                // Save new User locally
-                                ((App) getApplication()).setLoginUser(newUser);
+                                // Save new User locally && bind a long-lived listener to User change in Database
+                                FirebaseService.getInstance().fetchUserProfileData(userId,
+                                        (User user) -> {
+                                            ((App) getApplication()).setLoginUser(user);
+                                        });
 
                                 // update FCM token and FCM status
                                 FCMTokenUtils.updateFCMToken(userId);

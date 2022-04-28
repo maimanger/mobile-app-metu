@@ -39,6 +39,7 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
     protected final String TAG = getClass().getSimpleName();
     protected Dialog callInvitationDialog;
     protected Vibrator callInvitationVibrator;
+    protected User loginUser;
 
 
     @Override
@@ -47,6 +48,8 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
         // Register activity RtmClient in App
         ((App) getApplication()).registerClientListener(this);
         ((App) getApplication()).registerCallEventListener(this);
+
+        loginUser = ((App) getApplication()).getLoginUser();
     }
 
     @Override
@@ -245,7 +248,7 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
 
     }
 
-
-
-
+    protected void refreshAppLoginUser() {
+        loginUser = ((App) getApplication()).getLoginUser();
+    }
 }

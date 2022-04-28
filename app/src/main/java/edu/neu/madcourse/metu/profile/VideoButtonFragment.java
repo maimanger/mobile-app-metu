@@ -44,6 +44,11 @@ public class VideoButtonFragment extends Fragment {
         ImageView videoChat = view.findViewById(R.id.button_profile_video);
         videoChat.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), VideoActivity.class);
+/*            intent.putExtra("CALLEE_ID", getContactUserId());
+            intent.putExtra("CALLEE_NAME", clickedItem.getContactName());
+            intent.putExtra("CALLEE_AVATAR", clickedItem.getContactAvatarUri());
+            intent.putExtra("CONNECTION_POINT", clickedItem.getConnectionPoint());
+            intent.putExtra("CONNECTION_ID", clickedItem.getConnectionId());*/
             startActivity(intent);
         });
     }
