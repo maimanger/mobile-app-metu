@@ -148,6 +148,11 @@ public class FirebaseService {
 
     public void fetchContacts(String userId, Map<String, Boolean> connections,
                               DataFetchCallback<List<Contact>> callback) {
+        if (connections == null || connections.isEmpty()) {
+            callback.onCallback(new ArrayList<>());
+            return;
+        }
+
         databaseRef.child("connections").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

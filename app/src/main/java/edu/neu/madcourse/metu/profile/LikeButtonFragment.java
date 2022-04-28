@@ -1,6 +1,8 @@
 package edu.neu.madcourse.metu.profile;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -58,7 +60,7 @@ public class LikeButtonFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // init the like button
-        Button profile_like_button = view.findViewById(R.id.profile_like_button);
+        FloatingActionButton profile_like_button = view.findViewById(R.id.profile_like_button);
         // get current loginUser
         User loginUser = ((App) getActivity().getApplication()).getLoginUser();
         // fetch profile user
@@ -70,7 +72,9 @@ public class LikeButtonFragment extends Fragment {
                     receiver) {
                 @Override
                 protected void switchViewToBeLiked() {
-                    profile_like_button.setBackgroundResource(R.drawable.ic_like);
+                    profile_like_button.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
+                    profile_like_button.getDrawable().mutate().setTint(getResources().getColor(R.color.like));
+                    //profile_like_button.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.like)));
                     profile_like_button.setOnClickListener(null);
                     profile_like_button.setClickable(false);
                 }
