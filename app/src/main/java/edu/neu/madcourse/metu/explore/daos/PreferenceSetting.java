@@ -1,5 +1,7 @@
 package edu.neu.madcourse.metu.explore.daos;
 
+import edu.neu.madcourse.metu.utils.Constants;
+
 public class PreferenceSetting {
     private String userId;
     private String locationPreference;
@@ -8,8 +10,9 @@ public class PreferenceSetting {
     private float ageMax;
 
     public PreferenceSetting() {
-        ageMax = 25;
-        ageMin = 70;
+        ageMax = 18;
+        ageMin = 100;
+        genderPreference = Constants.EXPLORE_ALL;
     }
 
     public String getUserId() {

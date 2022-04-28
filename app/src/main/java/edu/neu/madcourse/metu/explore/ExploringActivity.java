@@ -154,7 +154,8 @@ public class ExploringActivity extends BaseCalleeActivity {
     private void initRecyclerView() {
         // init and set the adapter
         User loginUser = ((App) getApplication()).getLoginUser();
-        recommendsAdapter = new RecommendsAdapter(getApplicationContext(), recommends, loginUser);
+//        recommendsAdapter = new RecommendsAdapter(getApplicationContext(), recommends, loginUser);
+        recommendsAdapter = new RecommendsAdapter(this, recommends, loginUser);
         exploringPage.setAdapter(recommendsAdapter);
         // init the layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

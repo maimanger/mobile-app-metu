@@ -11,6 +11,9 @@ public class RecommendedUser implements Parcelable {
     private String avatarUri;
     private int gender;
     private boolean isLiked;
+    // add new fields
+    private String connectionId;
+    private long connectionPoint;
 
     public RecommendedUser() {
     }
@@ -55,6 +58,22 @@ public class RecommendedUser implements Parcelable {
         isLiked = liked;
     }
 
+    public String getConnectionId() {
+        return connectionId;
+    }
+
+    public void setConnectionId(String connectionId) {
+        this.connectionId = connectionId;
+    }
+
+    public long getConnectionPoint() {
+        return connectionPoint;
+    }
+
+    public void setConnectionPoint(long connectionPoint) {
+        this.connectionPoint = connectionPoint;
+    }
+
     public ConnectionUser convertToConnectionUser() {
         ConnectionUser user = new ConnectionUser();
         user.setUserId(userId);
@@ -77,6 +96,8 @@ public class RecommendedUser implements Parcelable {
         parcel.writeString(this.avatarUri);
         parcel.writeInt(this.gender);
         parcel.writeInt(this.isLiked? 1:0);
+        parcel.writeString(this.connectionId);
+        parcel.writeLong(this.connectionPoint);
     }
 
     private RecommendedUser(Parcel in) {
@@ -85,6 +106,8 @@ public class RecommendedUser implements Parcelable {
         this.avatarUri = in.readString();
         this.gender = in.readInt();
         this.isLiked = in.readInt() == 1;
+        this.connectionId = in.readString();
+        this.connectionPoint = in.readLong();
     }
 
     private static final Parcelable.Creator<RecommendedUser> CREATOR

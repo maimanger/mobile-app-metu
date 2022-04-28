@@ -75,6 +75,15 @@ public class Constants {
     public static final String USER_SETTING_VIDEO = "settingVideo";
     public static final String USER_SETTING_VIBRATION = "settingVibration";
 
+    // for recommendations
+    // recommendations {
+    //      userId
+    //          yyyymmdd:
+    //              recommended userId: true
+    //              ....
+    // }
+    public static final String RECOMMENDATIONS_STORE = "recommendations";
+
 
     // user gender
     // todo: add more gender

@@ -15,7 +15,7 @@
         android:background="@drawable/recent_conversation_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="50dp"
         />
 
