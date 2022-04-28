@@ -37,7 +37,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/user_info_constraint_layout"
-                android:layout_width="320dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="80dp"
@@ -82,7 +82,7 @@
                     android:gravity="center"
                     android:text="@string/monica"
                     android:textColor="@color/colorTextPrimary"
-                    android:textSize="24sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="0dp" />
@@ -121,6 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
+                    android:elevation="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_location" />
@@ -143,6 +144,8 @@
                 android:layout_width="138dp"
                 android:layout_height="138dp"
                 android:layout_marginTop="24dp"
+                android:elevation="20dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/user_avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -151,14 +154,14 @@
                 app:riv_border_color="#FFFFFF"
                 app:riv_border_width="4dp"
                 app:riv_oval="true"
-                android:scaleType="fitXY"
-                app:shapeAppearanceOverlay="@style/Circular"/>
+                app:shapeAppearanceOverlay="@style/Circular" />
 
             <ImageView
                 android:id="@+id/image_profile_onlineStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
+                android:elevation="20dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
                 app:layout_constraintEnd_toEndOf="@+id/imageProfile"
                 app:srcCompat="@drawable/ic_available_status" />
@@ -168,30 +171,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="8dp"
+                android:elevation="10dp"
                 android:text="@string/_tags"
                 android:textAllCaps="true"
                 android:textColor="@color/purple_500"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_info_constraint_layout" />
+
 
             <FrameLayout
                 android:id="@+id/add_tag_button_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="256dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textTags"
                 app:layout_constraintStart_toEndOf="@+id/textTags"
-                app:layout_constraintTop_toTopOf="@id/textTags" />
-
+                app:layout_constraintTop_toTopOf="@+id/textTags" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tag_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_shape_transparent"
+                android:elevation="5dp"
                 android:scrollbars="horizontal"
                 app:layout_constraintBottom_toTopOf="@+id/textStory"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -277,22 +286,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="24dp"
+                android:elevation="10dp"
                 android:text="@string/story"
                 android:textAllCaps="true"
                 android:textColor="@color/purple_500"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tag_recycler_view" />
-
-            <FrameLayout
-                android:id="@+id/add_story_button_fragment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textStory"
-                app:layout_constraintTop_toTopOf="@id/textStory" />
 
             <!--        <HorizontalScrollView-->
             <!--            android:id="@+id/layoutStory"-->
@@ -318,10 +320,23 @@
             <!--            </LinearLayout>-->
             <!--        </HorizontalScrollView>-->
 
+            <FrameLayout
+                android:id="@+id/add_story_button_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textStory"
+                app:layout_constraintStart_toEndOf="@+id/textStory"
+                app:layout_constraintTop_toTopOf="@+id/textStory" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/story_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="65dp"
+                android:elevation="5dp"
+                android:paddingHorizontal="15dp"
                 android:scrollbars="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

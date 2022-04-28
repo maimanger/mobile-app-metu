@@ -6,10 +6,15 @@
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_unlike.xml" value="0.26979166666666665" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_contacts.xml" value="0.213768115942029" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_edit_profile.xml" value="0.2" />
-        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_user_profile.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_user_profile.xml" value="0.264" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_contact.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_story.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_tag.xml" value="0.4" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_add_story_button.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_add_tag_button.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_chat_button.xml" value="0.1" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_like_button.xml" value="0.4" />
-        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_video_button.xml" value="0.12335359675785208" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_video_button.xml" value="0.536" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/item_container_explore_card_left.xml" value="0.1" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/item_container_explore_card_right.xml" value="0.6" />
         <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/layout_top.xml" value="0.17798913043478262" />
