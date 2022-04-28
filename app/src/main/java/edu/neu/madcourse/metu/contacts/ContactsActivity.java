@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
@@ -43,6 +46,8 @@ public class ContactsActivity extends BaseCalleeActivity {
     BottomNavigationView bottomNavigationView;
 
     private List<Contact> contactsList;
+
+    private ImageView setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +94,16 @@ public class ContactsActivity extends BaseCalleeActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        // setting
+        setting = findViewById(R.id.btn_contacts_setting);
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContactsActivity.this, SettingActivity.class);
+                startActivity(intent);
             }
         });
     }

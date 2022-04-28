@@ -82,6 +82,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
                             uploadImageView.setImageBitmap(avatarBitmap);
                         } catch (IOException e) {
                             e.printStackTrace();
+
                         }
                     }
                 });

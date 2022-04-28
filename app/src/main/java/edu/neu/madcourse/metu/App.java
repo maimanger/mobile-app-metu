@@ -72,6 +72,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     private String fcmToken = "";
 
+    private Boolean allowMessageNotif;
+    private Boolean allowVideoNotif;
+    private Boolean allowVibration;
+
     /*private Map<String, Integer> peersOnlineStatus;*/
 
     class AgoraEventListener implements RtmClientListener, RtmCallEventListener {
@@ -601,4 +605,18 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public void setFcmToken(String s) {
         this.fcmToken = s;
     }
+
+    public void setAllowMessageNotif(Boolean allowMessageNotif) {
+        this.allowMessageNotif = allowMessageNotif;
+    }
+
+    public void setAllowVideoNotif(Boolean allowVideoNotif) {
+        this.allowVideoNotif = allowVideoNotif;
+    }
+
+    public void setAllowVibration(Boolean allowVibration) {
+        this.allowVibration = allowVibration;
+    }
+
+
 }
