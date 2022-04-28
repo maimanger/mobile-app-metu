@@ -46,6 +46,7 @@ public class FirebaseService {
         // Firebase does not allow '.' character in key.
         String key = user.getEmail().replace(".", "");
         HashMap<String, Object> userValues = new HashMap<>();
+        userValues.put("email", user.getEmail());
         userValues.put("userId", user.getUserId());
         userValues.put("nickname", user.getNickname());
         userValues.put("password", user.getPassword());

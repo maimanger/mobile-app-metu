@@ -25,16 +25,18 @@ public class User implements Parcelable {
     private Boolean allowMessageNotif;
     private Boolean allowVideoNotif;
     private Boolean allowVibration;
-    //private Map<Integer, Boolean> settings; // 1 represent new messages; 2 represent video calls; 3 represent vibration
+    //private Map<Integer, Boolean> settings; // 1 represent new messages; 2 represent video
+    // calls; 3 represent vibration
 
 
     public User() {
     }
 
     public User(String userId, String nickname, String password, String email, String location,
-                Integer age, Integer gender, Map<String, Boolean> tags, Map<String, String> stories,
-                String avatarUri, Map<String, Boolean> connections, Long lastLoginTime,
-                Boolean settingMessage, Boolean settingVideo, Boolean settingVibration) {
+                Integer age, Integer gender, Map<String, Boolean> tags,
+                Map<String, String> stories, String avatarUri, Map<String, Boolean> connections,
+                Long lastLoginTime, Boolean allowMessageNotif, Boolean allowVideoNotif,
+                Boolean allowVibration) {
         this.userId = userId;
         this.nickname = nickname;
         this.password = password;
@@ -47,11 +49,10 @@ public class User implements Parcelable {
         this.avatarUri = avatarUri;
         this.connections = connections;
         this.lastLoginTime = lastLoginTime;
-        this.allowMessageNotif = settingMessage;
-        this.allowVideoNotif = settingVideo;
-        this.allowVibration = settingVibration;
+        this.allowMessageNotif = allowMessageNotif;
+        this.allowVideoNotif = allowVideoNotif;
+        this.allowVibration = allowVibration;
     }
-
 
     public User(String userId, String nickname, String password, String email, long lastLoginTime) {
         this.userId = userId;
