@@ -106,7 +106,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
         etGender = findViewById(R.id.et_gender);
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
 
-
+        findViewById(R.id.btn_editProfile_back).setOnClickListener(View -> onBackPressed());
 
         FirebaseService.getInstance().fetchUserProfileData(profileUserId, user -> {
             etNickname.setText(user.getNickname());

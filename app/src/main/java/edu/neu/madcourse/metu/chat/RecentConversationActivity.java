@@ -36,6 +36,7 @@ import edu.neu.madcourse.metu.App;
 
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.contacts.ContactsActivity;
 import edu.neu.madcourse.metu.explore.ExploringActivity;
 import edu.neu.madcourse.metu.models.ChatItem;
@@ -83,6 +84,17 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         recentConversation.setLayoutManager(linearLayoutManager);
         // textview
         noRecentChatsTextview = findViewById(R.id.noRecentConversation);
+
+        // setting
+        setting = findViewById(R.id.button_conversation_setting);
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContactsActivity.this, SettingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
         // load username
         loadUser();

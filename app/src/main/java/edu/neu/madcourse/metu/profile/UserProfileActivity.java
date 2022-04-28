@@ -137,6 +137,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(UserProfileActivity.this, SettingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
@@ -275,7 +276,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 initStories(profileUser.getStories());
                 initUserProfile();
                 FirebaseDatabase.getInstance().getReference().child("connections")
-                        .child(connectionId).addListenerForSingleValueEvent(connectionEventListener);
+                        .child(connectionId).addValueEventListener(connectionEventListener);
             }
 
             @Override
@@ -288,8 +289,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             if (!isSelf) {
                 FirebaseDatabase.getInstance().getReference().child("users").child(profileUserId)
                         .addValueEventListener(profileUserEventListener);
-                FirebaseDatabase.getInstance().getReference().child("connections")
-                        .child(connectionId).addValueEventListener(connectionEventListener);
+               /* FirebaseDatabase.getInstance().getReference().child("connections")
+                        .child(connectionId).addValueEventListener(connectionEventListener);*/
             } else {
                 initTags(loginUser.getTags());
                 initStories(loginUser.getStories());
@@ -452,7 +453,15 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.text_username)).setText(loginUser.getNickname());
             ((TextView) findViewById(R.id.text_age)).setText(loginUser.getAge().toString() + " years");
-            ((TextView) findViewById(R.id.text_location)).setText(loginUser.getLocation());
+
+            TextView locationTextView = findViewById(R.id.text_location);
+            if (loginUser.getLocation().equals("")) {
+                locationTextView.setVisibility(View.INVISIBLE);
+            } else {
+                locationTextView.setVisibility(View.VISIBLE);
+                locationTextView.setText(loginUser.getLocation());
+            }
+
             String avatarUri = loginUser.getAvatarUri();
             if (avatarUri != null && !avatarUri.isEmpty()) {
                 Log.e("initUserProfileData", avatarUri);
@@ -525,7 +534,15 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.text_username)).setText(profileUser.getNickname());
             ((TextView) findViewById(R.id.text_age)).setText(profileUser.getAge().toString() + " years");
-            ((TextView) findViewById(R.id.text_location)).setText(profileUser.getLocation());
+
+            TextView locationTextView = findViewById(R.id.text_location);
+            if (loginUser.getLocation().equals("")) {
+                locationTextView.setVisibility(View.INVISIBLE);
+            } else {
+                locationTextView.setVisibility(View.VISIBLE);
+                locationTextView.setText(profileUser.getLocation());
+            }
+
             String avatarUri = profileUser.getAvatarUri();
             if (avatarUri != null && !avatarUri.isEmpty()) {
                 Log.e("initUserProfileData", avatarUri);
