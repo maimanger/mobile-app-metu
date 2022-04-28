@@ -25,18 +25,23 @@ import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.service.FirebaseService;
 
+
+// TODO: add isLiked boolean
 public class LikeButtonFragment extends Fragment {
     private static final String ARG_PROFILE_USER_ID = "profileUserId";
+    private static final String ARG_IS_LIKED_PROFILE_USER = "isLiked";
     private String profileUserId;
+    private boolean isLiked;
 
     public LikeButtonFragment() {
         // Required empty public constructor
     }
 
-    public static LikeButtonFragment newInstance(String profileUserId) {
+    public static LikeButtonFragment newInstance(String profileUserId, boolean isLiked) {
         LikeButtonFragment fragment = new LikeButtonFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PROFILE_USER_ID, profileUserId);
+        args.putBoolean(ARG_IS_LIKED_PROFILE_USER, isLiked);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,6 +51,7 @@ public class LikeButtonFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             profileUserId = getArguments().getString(ARG_PROFILE_USER_ID);
+            isLiked = getArguments().getBoolean(ARG_IS_LIKED_PROFILE_USER);
         }
     }
 
@@ -61,6 +67,13 @@ public class LikeButtonFragment extends Fragment {
 
         // init the like button
         FloatingActionButton profile_like_button = view.findViewById(R.id.profile_like_button);
+        if (isLiked) {
+            profile_like_button.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
+            profile_like_button.getDrawable().mutate().setTint(getResources().getColor(R.color.like));
+            profile_like_button.setOnClickListener(null);
+            profile_like_button.setEnabled(false);
+        }
+
         // get current loginUser
         User loginUser = ((App) getActivity().getApplication()).getLoginUser();
         // fetch profile user
@@ -74,7 +87,6 @@ public class LikeButtonFragment extends Fragment {
                 protected void switchViewToBeLiked() {
                     profile_like_button.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.browser_actions_bg_grey)));
                     profile_like_button.getDrawable().mutate().setTint(getResources().getColor(R.color.like));
-                    //profile_like_button.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.like)));
                     profile_like_button.setOnClickListener(null);
                     profile_like_button.setClickable(false);
                 }

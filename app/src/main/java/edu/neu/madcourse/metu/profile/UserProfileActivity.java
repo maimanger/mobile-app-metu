@@ -13,8 +13,6 @@ import android.view.MenuItem;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,8 +36,8 @@ import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
-import edu.neu.madcourse.metu.home.HomeActivity;
-import edu.neu.madcourse.metu.home.LoginActivity;
+import edu.neu.madcourse.metu.models.Connection;
+import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.Utils;
@@ -55,8 +53,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         AddStoryButtonFragment.OnStoryDataPass {
     private String profileUserId;
     private String loginUserId;
-    private Boolean isSelf;
-    private Boolean isFriend;
+    private boolean isSelf;
+    private boolean isFriend;
 
     private User profileUser;
     private User loginUser;
@@ -70,13 +68,14 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private RecyclerView tagRecyclerView;
     private TagAdapter tagAdapter;
     BottomNavigationView bottomNavigationView;
-    private Boolean isLikedByLoginUser = true;
+    private boolean isLikedByLoginUser;
     private int connectionPoint;
 
     private String connectionId;
     private List<Contact> contactsList;
 
-    private ValueEventListener firebaseEventListener;
+    private ValueEventListener profileUserEventListener;
+    private ValueEventListener connectionEventListener;
 
     private ImageView setting;
 
@@ -149,7 +148,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     protected void onDestroy() {
         if (!isSelf) {
             FirebaseDatabase.getInstance().getReference().child("users").child(profileUserId)
-                    .removeEventListener(firebaseEventListener);
+                    .removeEventListener(profileUserEventListener);
+            FirebaseDatabase.getInstance().getReference().child("connections")
+                    .child(connectionId).removeEventListener(connectionEventListener);
         }
         super.onDestroy();
     }
@@ -201,13 +202,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             isFriend = connectionPoint > 0;
             connectionId = savedInstanceState.getString("CONNECTION_ID");
 
-            // TODO: Create a Firebase EventListener to connectionId.connectionPoints,
-            //  if changed (isFriend -> true), Re-Render UserProfile
-
             if (!isSelf) {
                 initTags(profileUser.getTags());
                 initStories(profileUser.getStories());
-                initUserProfile(isFriend);
+                initUserProfile();
             } else {
                 initTags(loginUser.getTags());
                 initStories(loginUser.getStories());
@@ -251,15 +249,16 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         isSelf = profileUserId.equals(loginUserId);
         isFriend = connectionPoint > 0;
 
-
-        firebaseEventListener = new ValueEventListener() {
+        connectionEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                profileUser = snapshot.getValue(User.class);
-                assert profileUser != null;
-                initTags(profileUser.getTags());
-                initStories(profileUser.getStories());
-                initUserProfile(isFriend);
+                Connection connection = snapshot.getValue(Connection.class);
+                connectionPoint = connection.getConnectionPoint();
+                ConnectionUser loginConnectionUser =
+                        connection.getUser1().getUserId().equals(loginUserId) ?
+                                connection.getUser2() : connection.getUser1();
+                isLikedByLoginUser = loginConnectionUser.getIsLiked();
+                initConnectionFragments(isFriend, isLikedByLoginUser);
             }
 
             @Override
@@ -267,10 +266,30 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         };
 
+        profileUserEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                profileUser = snapshot.getValue(User.class);
+                assert profileUser != null;
+                initTags(profileUser.getTags());
+                initStories(profileUser.getStories());
+                initUserProfile();
+                FirebaseDatabase.getInstance().getReference().child("connections")
+                        .child(connectionId).addListenerForSingleValueEvent(connectionEventListener);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+
+
         new Thread(() -> {
             if (!isSelf) {
                 FirebaseDatabase.getInstance().getReference().child("users").child(profileUserId)
-                        .addValueEventListener(firebaseEventListener);
+                        .addValueEventListener(profileUserEventListener);
+                FirebaseDatabase.getInstance().getReference().child("connections")
+                        .child(connectionId).addValueEventListener(connectionEventListener);
             } else {
                 initTags(loginUser.getTags());
                 initStories(loginUser.getStories());
@@ -291,7 +310,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     ((TextView) findViewById(R.id.text_age)).setText(user.getAge().toString() + " years");
                                     ((TextView) findViewById(R.id.text_location)).setText(user.getLocation());
                                     String avatarUri = user.getAvatarUri();
-                                    //TODO: set default profile avatar
                                     if (avatarUri != null && !avatarUri.isEmpty()) {
                                         Log.e("initUserProfileData", avatarUri);
                                         new Utils.DownloadImageTask((ImageView) findViewById(R.id.imageProfile)).execute(avatarUri);
@@ -503,7 +521,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         storyRecyclerView.setAdapter(storyAdapter);
     }
 
-    private void initUserProfile(boolean isFriend) {
+    private void initUserProfile() {
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.text_username)).setText(profileUser.getNickname());
             ((TextView) findViewById(R.id.text_age)).setText(profileUser.getAge().toString() + " years");
@@ -516,7 +534,37 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
             initStoriesView();
             initTagsView();
+            //initConnectionFragments(isFriend, isLikedByLoginUser);
 
+
+            /*if (isFriend) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.star_button,
+                                StarButtonFragment.newInstance(this.connectionPoint),
+                                "StarButtonFragment")
+                        .add(R.id.chat_button,
+                                ChatButtonFragment.newInstance(profileUser,
+                                        isLikedByLoginUser, loginUserId),
+                                "ChatButtonFragment")
+                        .add(R.id.video_button, VideoButtonFragment.newInstance(),
+                                "VideoButtonFragment")
+                        .commitAllowingStateLoss();
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.like_button,
+                                LikeButtonFragment.newInstance(profileUserId, isLikedByLoginUser),
+                                "LikeButtonFragment")
+                        .add(R.id.chat_button,
+                                ChatButtonFragment.newInstance(profileUser,
+                                        isLikedByLoginUser, loginUserId),
+                                "ChatButtonFragment")
+                        .commitAllowingStateLoss();
+            }*/
+        });
+    }
+
+    private void initConnectionFragments(boolean isFriend, boolean isLikedByLoginUser) {
+        runOnUiThread(() -> {
             if (isFriend) {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.star_button,
@@ -532,7 +580,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             } else {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.like_button,
-                                LikeButtonFragment.newInstance(profileUserId),
+                                LikeButtonFragment.newInstance(profileUserId, isLikedByLoginUser),
                                 "LikeButtonFragment")
                         .add(R.id.chat_button,
                                 ChatButtonFragment.newInstance(profileUser,
@@ -540,10 +588,9 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                 "ChatButtonFragment")
                         .commitAllowingStateLoss();
             }
-
-
         });
     }
+
 
     private void initOnlineStatus(String peerId) {
         new Thread(() -> {
