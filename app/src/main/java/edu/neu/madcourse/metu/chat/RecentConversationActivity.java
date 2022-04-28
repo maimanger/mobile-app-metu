@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import android.widget.TextView;
@@ -86,11 +87,11 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         noRecentChatsTextview = findViewById(R.id.noRecentConversation);
 
         // setting
-        setting = findViewById(R.id.button_conversation_setting);
+        ImageView setting = findViewById(R.id.button_conversation_setting);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContactsActivity.this, SettingActivity.class);
+                Intent intent = new Intent(RecentConversationActivity.this, SettingActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
