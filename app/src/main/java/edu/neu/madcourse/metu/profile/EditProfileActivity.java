@@ -179,4 +179,3 @@ public class EditProfileActivity extends BaseCalleeActivity {
         }
     }
 }
-

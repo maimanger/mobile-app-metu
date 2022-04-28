@@ -277,8 +277,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     }
                                 ImageView profileAvatar = findViewById(R.id.imageProfile);
                                 profileAvatar.setImageResource(R.drawable.user_avatar);
-
-
                                 }
                             });
                 }
@@ -290,7 +288,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         if (savedInstanceState != null) {
         }
     }
-
     private void initStoryPager() {
         new Thread(new Runnable() {
             @Override
@@ -306,7 +303,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         storyList.add(new Story(storyUri));
                                     }
                                 }
-
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -315,7 +311,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                         storyRecyclerView.setLayoutManager(new LinearLayoutManager(
                                                 UserProfileActivity.this,
                                                 LinearLayoutManager.HORIZONTAL, false));
-
                                         storyAdapter = new StoryAdapter(storyList);
                                         storyRecyclerView.setAdapter(storyAdapter);
                                     }
@@ -325,8 +320,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
     }
-
-
     private void initTagPager() {
         new Thread(new Runnable() {
             @Override
@@ -340,7 +333,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     tagList.add(new Tag(key));
                                 }
                             }
-
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -349,7 +341,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                     tagRecyclerView.setLayoutManager(new LinearLayoutManager(
                                             UserProfileActivity.this,
                                             LinearLayoutManager.HORIZONTAL, false));
-
                                     tagAdapter = new TagAdapter(tagList);
                                     tagRecyclerView.setAdapter(tagAdapter);
                                 }
@@ -358,12 +349,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             }
         }).start();
     }
-
     private void initFragments() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                         user -> {
                             ((TextView) findViewById(R.id.text_username)).setText(user.getNickname());
@@ -377,8 +366,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         });
             }
         }).start();
-
-
         FirebaseService.getInstance().fetchUserProfileData(profileUserId,
                 profileUser -> {
                     if (isSelf) {
@@ -565,7 +552,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         if (loginUser != null) {
             String myUserId = loginUser.getUserId();
             Map<String, Boolean> myConnections = loginUser.getConnections();
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -573,13 +559,10 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     FirebaseService.getInstance().fetchContacts(myUserId, myConnections,
                             (List<Contact> fetchedContacts) -> {
                                 Log.d(TAG, "fetchContactsList: " + fetchedContacts.size());
-
                                 Set<String> contactsId = fetchedContacts.stream()
                                         .map(Contact::getContactUserId).collect(Collectors.toSet());
-
                                 // Subscribe contacts online status from Agora Rtm (Realtime update)
                                 ((App) getApplication()).rtmSubscribePeer(contactsId);
-
                                 // Query contacts online status from Agora Rtm (one time)
                                 ((App) getApplication()).queryPeerOnlineStatus(contactsId,
                                         new ResultCallback<Map<String, Boolean>>() {
@@ -597,7 +580,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                                                 findViewById(R.id.image_profile_onlineStatus).setVisibility(View.GONE);
                                                             }
                                                         });
-
                                                     } else if (profileUserId.equals(userId)) {
                                                         if (!isOnline) {
                                                             runOnUiThread(new Runnable() {
@@ -607,13 +589,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                                                                             .setImageResource(R.drawable.ic_unavailable_status);
                                                                 }
                                                             });
-
                                                         }
                                                         break;
                                                     }
                                                 }
                                             }
-
                                             @Override
                                             public void onFailure(ErrorInfo errorInfo) {
                                             }
@@ -621,10 +601,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                             });
                 }
             }).start();
-
-
         }
     }*/
 }
-
-
