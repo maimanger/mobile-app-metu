@@ -47,8 +47,8 @@ public class MessagingService extends FirebaseMessagingService {
         String channelId = "chat_message";
 
         Intent intent = new Intent(this, RecentConversationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
         builder.setSmallIcon(R.drawable.ic_new_msg_notification);
