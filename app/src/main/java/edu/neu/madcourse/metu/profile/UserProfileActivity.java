@@ -77,7 +77,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private ValueEventListener profileUserEventListener;
     private ValueEventListener connectionEventListener;
 
-    private ImageView setting;
 
 
     @Override
@@ -91,8 +90,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
-        initUserProfileData();
 
         /*initItemData(savedInstanceState);
         initTagPager();
@@ -132,8 +129,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         });
 
         // setting
-        setting = findViewById(R.id.button_profile_setting);
-        setting.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_profile_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(UserProfileActivity.this, SettingActivity.class);
@@ -141,6 +137,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 startActivity(intent);
             }
         });
+
+        initUserProfileData();
 
     }
 
@@ -247,7 +245,14 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         isSelf = profileUserId.equals(loginUserId);
         isFriend = connectionPoint > 0;
 
-        // TODO: After initializing isSelf, determine whether to show bottom navigation bar / setting button / back button
+        // After initializing isSelf, determine whether to show bottom navigation bar / setting button / back button
+        if (isSelf) {
+            findViewById(R.id.button_profile_back).setVisibility(View.INVISIBLE);
+        } else {
+            findViewById(R.id.button_profile_back).setOnClickListener(view -> onBackPressed());
+            findViewById(R.id.button_profile_setting).setVisibility(View.INVISIBLE);
+            bottomNavigationView.setVisibility(View.INVISIBLE);
+        }
 
         connectionEventListener = new ValueEventListener() {
             @Override
