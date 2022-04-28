@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,7 +36,10 @@ import java.util.Set;
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
+import edu.neu.madcourse.metu.SettingActivity;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
+import edu.neu.madcourse.metu.home.HomeActivity;
+import edu.neu.madcourse.metu.home.LoginActivity;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.Utils;
@@ -72,6 +77,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private List<Contact> contactsList;
 
     private ValueEventListener firebaseEventListener;
+
+    private ImageView setting;
 
 
     @Override
@@ -122,6 +129,16 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                         return true;
                 }
                 return false;
+            }
+        });
+
+        // setting
+        setting = findViewById(R.id.button_profile_setting);
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserProfileActivity.this, SettingActivity.class);
+                startActivity(intent);
             }
         });
 
