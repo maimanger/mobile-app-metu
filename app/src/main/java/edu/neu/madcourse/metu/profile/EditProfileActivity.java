@@ -1,5 +1,7 @@
 package edu.neu.madcourse.metu.profile;
 
+import static edu.neu.madcourse.metu.utils.Constants.LOCATION_STATE;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -11,8 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +29,6 @@ import com.squareup.picasso.Callback;
 
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,7 +37,6 @@ import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
-import edu.neu.madcourse.metu.service.CountryStateCityService;
 import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Utils;
 
@@ -191,18 +187,11 @@ public class EditProfileActivity extends BaseCalleeActivity {
     private void initStatePicker() {
         new Thread(() -> {
             statePicker = findViewById(R.id.state_picker);
-            List<String> states = null;
-            try {
-                states = CountryStateCityService.getStates();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            assert states != null;
+            String[] statesArray = LOCATION_STATE;
+            assert statesArray != null;
 
-            Log.e(TAG, "states: " + states.toString());
-            final String[] statesArray = states.toArray(new String[states.size()]);
             statePicker.setMinValue(0);
-            statePicker.setMaxValue(states.size() - 1);
+            statePicker.setMaxValue(statesArray.length - 1);
             statePicker.setDisplayedValues(statesArray);
             statePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
             statePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
