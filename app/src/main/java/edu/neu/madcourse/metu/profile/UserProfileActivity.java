@@ -72,7 +72,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private int connectionPoint;
 
     private String connectionId;
-    private List<Contact> contactsList;
 
     private ValueEventListener profileUserEventListener;
     private ValueEventListener connectionEventListener;
@@ -103,7 +102,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
-        bottomNavigationView.setSelectedItemId(R.id.menu_me);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -158,6 +156,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_me);
         if (!isSelf) {
             initOnlineStatus(profileUserId);
         } else {
@@ -258,13 +257,14 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Connection connection = snapshot.getValue(Connection.class);
                 connectionPoint = connection.getConnectionPoint();
-                ConnectionUser loginConnectionUser =
+                ConnectionUser connectionUser =
                         connection.getUser1().getUserId().equals(loginUserId) ?
                                 connection.getUser2() : connection.getUser1();
-                isLikedByLoginUser = loginConnectionUser.getIsLiked();
+                isLikedByLoginUser = connectionUser.getIsLiked();
+
                 initConnectionFragments(isFriend, isLikedByLoginUser,
-                        connection.getUser2().getUserId(), connection.getUser2().getNickname(),
-                        connection.getUser2().getAvatarUri(), connectionPoint, connectionId);
+                        connectionUser.getUserId(), connectionUser.getNickname(),
+                        connectionUser.getAvatarUri(), connectionPoint, connectionId);
             }
 
             @Override

@@ -72,9 +72,9 @@
 
     <ImageView
         android:id="@+id/button_conversation_setting"
-        android:layout_width="28dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="18dp"
         android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

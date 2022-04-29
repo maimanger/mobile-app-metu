@@ -138,11 +138,18 @@ public class Utils {
 
         public DownloadImageTask(ImageView bmImage) {
             this.bmImage = bmImage;
+            bmImage.setImageResource(R.drawable.ic_loading);
         }
 
         protected Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];
             Bitmap mIcon11 = null;
+            if (urldisplay == null
+                    || (!urldisplay.startsWith("http://") && !urldisplay.startsWith("https://"))
+                    || (!Patterns.WEB_URL.matcher(urldisplay).matches())) {
+                return mIcon11;
+            }
+
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
@@ -154,7 +161,11 @@ public class Utils {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            if (result == null) {
+                bmImage.setImageResource(R.drawable.user_avatar);
+            } else {
+                bmImage.setImageBitmap(result);
+            }
         }
     }
 
@@ -169,6 +180,42 @@ public class Utils {
         Picasso.get().load(uri).into(imageView, callback);
 
     }
+
+
+    public static class PicassoLoadingTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public PicassoLoadingTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+            bmImage.setImageResource(R.drawable.ic_loading);
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mBitmap = null;
+            if (urldisplay == null
+                    || (!urldisplay.startsWith("http://") && !urldisplay.startsWith("https://"))
+                    || (!Patterns.WEB_URL.matcher(urldisplay).matches())) {
+                return mBitmap;
+            }
+
+            try {
+                mBitmap = Picasso.get().load(urldisplay).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return mBitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if (result == null) {
+                bmImage.setImageResource(R.drawable.user_avatar);
+            } else {
+                bmImage.setImageBitmap(result);
+            }
+        }
+    }
+
 
     public static Bitmap getBitmapFromUri(String uri) {
         Bitmap mBitmap = null;

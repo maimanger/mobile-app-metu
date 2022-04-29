@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import edu.neu.madcourse.metu.R;
+
 public class BitmapUtils {
     public static Bitmap getBitmapFromString(String encodedImage) {
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
@@ -97,6 +99,7 @@ public class BitmapUtils {
             this.bmImage = bmImage;
             this.context = context;
             this.radius = radius;
+            bmImage.setImageResource(R.drawable.ic_loading);
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -113,7 +116,11 @@ public class BitmapUtils {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            if (result == null) {
+                bmImage.setImageResource(R.drawable.ic_default_avatar);
+            } else {
+                bmImage.setImageBitmap(result);
+            }
         }
     }
 

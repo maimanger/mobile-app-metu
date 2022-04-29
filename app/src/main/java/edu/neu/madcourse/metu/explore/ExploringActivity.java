@@ -60,6 +60,8 @@ public class ExploringActivity extends BaseCalleeActivity {
     // for multi threading
     private ExecutorService executorService;
 
+
+
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -92,7 +94,6 @@ public class ExploringActivity extends BaseCalleeActivity {
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
-        bottomNavigationView.setSelectedItemId(R.id.menu_explore);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -254,6 +255,12 @@ public class ExploringActivity extends BaseCalleeActivity {
         bundle.putString("USER_ID", userId);
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "Explore Setting Dialog");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_explore);
     }
 
 

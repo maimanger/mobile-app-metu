@@ -238,6 +238,7 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
 
     }
 
+
     @Override
     public void onTokenExpired() {
 
@@ -250,6 +251,13 @@ public class BaseCalleeActivity extends AppCompatActivity implements RtmClientLi
 
     protected void refreshAppLoginUser() {
         loginUser = ((App) getApplication()).getLoginUser();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (((App)getApplication()).getAliveActivityCount() > 1) {
+            super.onBackPressed();
+        }
     }
 
 }
