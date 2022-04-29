@@ -225,4 +225,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (((App)getApplication()).getAliveActivityCount() > 1) {
+            super.onBackPressed();
+        }
+    }
 }

@@ -250,4 +250,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (((App)getApplication()).getAliveActivityCount() > 1) {
+            super.onBackPressed();
+        }
+    }
+
 }
