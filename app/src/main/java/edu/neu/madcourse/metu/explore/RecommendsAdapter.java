@@ -1,6 +1,7 @@
 package edu.neu.madcourse.metu.explore;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
+import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
 
@@ -83,6 +85,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         FloatingActionButton sendMessage;
         //LikeButton toggleButton;
         FloatingActionButton toggleButton;
+        CardView card;
 
         public RecommendProfileLeftViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,9 +96,23 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             recommendUserGender = itemView.findViewById(R.id.recUserGenderLeft);
             sendMessage = itemView.findViewById(R.id.sendMessageLeft);
             toggleButton = itemView.findViewById(R.id.likeToggleLeft);
+            card = itemView.findViewById(R.id.recProfileCardLeft);
         }
 
         public void setData(RecommendedUser recommendedUser) {
+
+            // add click listener for card
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context.getApplicationContext(), UserProfileActivity.class);
+                    intent.putExtra("PROFILE_USER_ID", recommendedUser.getUserId());
+                    intent.putExtra("CONNECTION_POINT", recommendedUser.getConnectionPoint());
+                    intent.putExtra("CONNECTION_ID", recommendedUser.getConnectionId()==null? "":recommendedUser.getConnectionId());
+
+                    context.startActivity(intent);
+                }
+            });
 
             // this.toggleButton.setLiked(profile.isLiked());
             if (recommendedUser.getIsLiked()) {
@@ -162,6 +179,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView recommendUserGender;
         FloatingActionButton sendMessage;
         FloatingActionButton toggleButton;
+        CardView card;
 
         public RecommendProfileRightViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -172,9 +190,23 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             recommendUserGender = itemView.findViewById(R.id.recUserGenderRight);
             sendMessage = itemView.findViewById(R.id.sendMessageRight);
             toggleButton = itemView.findViewById(R.id.likeToggleRight);
+            card = itemView.findViewById(R.id.recProfileCardRight);
         }
 
         public void setData(RecommendedUser recommendedUser) {
+            // add click listener for card
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context.getApplicationContext(), UserProfileActivity.class);
+                    intent.putExtra("PROFILE_USER_ID", recommendedUser.getUserId());
+                    intent.putExtra("CONNECTION_POINT", recommendedUser.getConnectionPoint());
+                    intent.putExtra("CONNECTION_ID", recommendedUser.getConnectionId()==null? "":recommendedUser.getConnectionId());
+
+                    context.startActivity(intent);
+                }
+            });
+
 
             // this.toggleButton.setLiked(profile.isLiked());
             if (recommendedUser.getIsLiked()) {

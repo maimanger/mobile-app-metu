@@ -38,6 +38,7 @@ public class SendMessageOnClickListener implements View.OnClickListener {
         Intent intent = new Intent(view.getContext(), ChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+
         // fetch the connectionId
         MessageSendingUtils.fetchConnectionId(receiver.getUserId(), sender.getUserId(), (connectionId) -> {
             if (connectionId == null) {

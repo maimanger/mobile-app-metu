@@ -24,6 +24,7 @@ import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.Contact;
 import edu.neu.madcourse.metu.models.User;
+import edu.neu.madcourse.metu.utils.Constants;
 
 public class FirebaseService {
     private static FirebaseService singleton_instance = null;
@@ -42,22 +43,26 @@ public class FirebaseService {
         return singleton_instance;
     }
 
+    // todo:
     public void updateUserProfile(User user) {
         // Firebase does not allow '.' character in key.
-        String key = user.getEmail().replace(".", "");
-        HashMap<String, Object> userValues = new HashMap<>();
-        userValues.put("userId", user.getUserId());
-        userValues.put("nickname", user.getNickname());
-        userValues.put("password", user.getPassword());
-        userValues.put("location", user.getLocation());
-        userValues.put("age", user.getAge());
-        userValues.put("gender", user.getGender());
-        userValues.put("avatarUri", user.getAvatarUri());
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + key, userValues);
-
-        databaseRef.updateChildren(childUpdates);
+//        HashMap<String, Object> userValues = new HashMap<>();
+//        userValues.put("email", user.getEmail());
+//        userValues.put("userId", user.getUserId());
+//        userValues.put("nickname", user.getNickname());
+//        userValues.put("password", user.getPassword());
+//        userValues.put("location", user.getLocation());
+//        userValues.put("age", user.getAge());
+//        userValues.put("gender", user.getGender());
+//        userValues.put("avatarUri", user.getAvatarUri());
+//
+//        Map<String, Object> childUpdates = new HashMap<>();
+//        childUpdates.put("/users/" + user.getUserId(), userValues);
+//
+//        databaseRef.updateChildren(childUpdates);
+        System.out.println("edit user profile: ");
+        System.out.println(user);
+        databaseRef.child("users").child(user.getUserId()).setValue(user);
     }
 
     public void updateUserAvatar(String userId, String imageFirebaseUri) {
@@ -148,7 +153,12 @@ public class FirebaseService {
 
     public void fetchContacts(String userId, Map<String, Boolean> connections,
                               DataFetchCallback<List<Contact>> callback) {
-        databaseRef.child("connections").addValueEventListener(new ValueEventListener() {
+        if (connections == null || connections.isEmpty()) {
+            callback.onCallback(new ArrayList<>());
+            return;
+        }
+
+        databaseRef.child("connections").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Contact> fetchedContacts = new ArrayList<>();

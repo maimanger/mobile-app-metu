@@ -11,13 +11,13 @@
     <string name="books">books</string>
     <string name="skiing">skiing</string>
     <string name="collection">Collection</string>
-    <string name="story">story</string>
+    <string name="story">stories</string>
     <string name="sunset">sunset</string>
     <string name="road">road</string>
     <string name="post">post</string>
     <string name="gone_with_wind">gone_with_wind</string>
     <string name="like">like</string>
-    <string name="update_profile_information">Update Profile Information</string>
+    <string name="update_profile_information">Update Profile</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

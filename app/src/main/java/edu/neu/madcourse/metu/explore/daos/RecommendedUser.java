@@ -6,14 +6,47 @@ import android.os.Parcelable;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 
 public class RecommendedUser implements Parcelable {
+    // basic info
     private String userId;
     private String nickname;
     private String avatarUri;
     private int gender;
-    private boolean isLiked;
-    // add new fields
+    private int age;
+    private String location;
+    private long lastLoginTime;
+
+    // for connection
     private String connectionId;
     private long connectionPoint;
+    private boolean isLiked;
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.userId);
+        parcel.writeString(this.nickname);
+        parcel.writeString(this.avatarUri);
+        parcel.writeInt(this.gender);
+        parcel.writeInt(this.age);
+        parcel.writeString(this.location);
+        parcel.writeLong(lastLoginTime);
+        parcel.writeInt(this.isLiked? 1:0);
+        parcel.writeString(this.connectionId);
+        parcel.writeLong(this.connectionPoint);
+
+    }
+
+    private RecommendedUser(Parcel in) {
+        this.userId = in.readString();
+        this.nickname = in.readString();
+        this.avatarUri = in.readString();
+        this.gender = in.readInt();
+        this.age = in.readInt();
+        this.location = in.readString();
+        this.lastLoginTime = in.readLong();
+        this.isLiked = in.readInt() == 1;
+        this.connectionId = in.readString();
+        this.connectionPoint = in.readLong();
+    }
 
     public RecommendedUser() {
     }
@@ -74,6 +107,30 @@ public class RecommendedUser implements Parcelable {
         this.connectionPoint = connectionPoint;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public long getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(long lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public ConnectionUser convertToConnectionUser() {
         ConnectionUser user = new ConnectionUser();
         user.setUserId(userId);
@@ -89,27 +146,6 @@ public class RecommendedUser implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.userId);
-        parcel.writeString(this.nickname);
-        parcel.writeString(this.avatarUri);
-        parcel.writeInt(this.gender);
-        parcel.writeInt(this.isLiked? 1:0);
-        parcel.writeString(this.connectionId);
-        parcel.writeLong(this.connectionPoint);
-    }
-
-    private RecommendedUser(Parcel in) {
-        this.userId = in.readString();
-        this.nickname = in.readString();
-        this.avatarUri = in.readString();
-        this.gender = in.readInt();
-        this.isLiked = in.readInt() == 1;
-        this.connectionId = in.readString();
-        this.connectionPoint = in.readLong();
-    }
-
     private static final Parcelable.Creator<RecommendedUser> CREATOR
             = new Creator<RecommendedUser>() {
         @Override
@@ -122,4 +158,20 @@ public class RecommendedUser implements Parcelable {
             return new RecommendedUser[i];
         }
     };
+
+    @Override
+    public String toString() {
+        return "RecommendedUser{" +
+                "userId='" + userId + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", avatarUri='" + avatarUri + '\'' +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", location='" + location + '\'' +
+                ", lastLoginTime=" + lastLoginTime +
+                ", connectionId='" + connectionId + '\'' +
+                ", connectionPoint=" + connectionPoint +
+                ", isLiked=" + isLiked +
+                '}';
+    }
 }

@@ -54,4 +54,36 @@ public class PreferenceSetting {
     public void setAgeMax(float ageMax) {
         this.ageMax = ageMax;
     }
+
+    public boolean maleSelected() {
+        return genderPreference == Constants.EXPLORE_ALL
+                || genderPreference == Constants.EXPLORE_MAN_ONLY
+                || genderPreference == Constants.EXPLORE_MAN_WOMAN
+                || genderPreference == Constants.EXPLORE_MAN_OTHER;
+    }
+
+    public boolean femaleSelected() {
+        return genderPreference == Constants.EXPLORE_ALL
+                || genderPreference == Constants.EXPLORE_WOMAN_ONLY
+                || genderPreference == Constants.EXPLORE_MAN_WOMAN
+                || genderPreference == Constants.EXPLORE_WOMAN_OTHER;
+    }
+
+    public boolean otherSelected() {
+        return genderPreference == Constants.EXPLORE_ALL
+                || genderPreference == Constants.EXPLORE_OTHER_ONLY
+                || genderPreference == Constants.EXPLORE_WOMAN_OTHER
+                || genderPreference == Constants.EXPLORE_MAN_OTHER;
+    }
+
+    @Override
+    public String toString() {
+        return "PreferenceSetting{" +
+                "userId='" + userId + '\'' +
+                ", locationPreference='" + locationPreference + '\'' +
+                ", genderPreference=" + genderPreference +
+                ", ageMin=" + ageMin +
+                ", ageMax=" + ageMax +
+                '}';
+    }
 }

@@ -44,6 +44,7 @@ import edu.neu.madcourse.metu.models.Connection;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 
 import edu.neu.madcourse.metu.models.User;
+import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
 
@@ -388,6 +389,22 @@ public class ChatActivity extends BaseCalleeActivity {
     }
 
     private void setListeners() {
+        // receiver name to profile
+        // add click listener for card
+        receiverName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                intent.putExtra("PROFILE_USER_ID", receiver.getUserId());
+                intent.putExtra("CONNECTION_POINT", connectionPoint);
+                intent.putExtra("CONNECTION_ID", connectionId == null? "":connectionId);
+
+                startActivity(intent);
+            }
+        });
+
+
+
         // back button
         backButton.setOnClickListener(v -> {
             onBackPressed();

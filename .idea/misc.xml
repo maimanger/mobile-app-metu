@@ -3,6 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
+=======
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/drawable/ic_unlike.xml" value="0.26979166666666665" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_chat.xml" value="0.44809688581314877" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_contacts.xml" value="0.213768115942029" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_edit_profile.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_recent_conversation.xml" value="0.15579710144927536" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_setting.xml" value="0.14339622641509434" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_upload.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/activity_user_profile.xml" value="0.20652173913043478" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_contact.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_story.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/card_tag.xml" value="0.4" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_add_story_button.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_add_tag_button.xml" value="0.264" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_chat_button.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_like_button.xml" value="0.4" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_star_button.xml" value="0.15579710144927536" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/fragment_video_button.xml" value="0.536" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/item_container_explore_card_left.xml" value="0.1" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/item_container_explore_card_right.xml" value="0.6" />
+        <entry key="..\:/NEU CourseWork/CS5520/MetU/app/src/main/res/layout/layout_top.xml" value="0.17798913043478262" />
+>>>>>>> origin/master
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/background_receive_message.xml" value="0.11944444444444445" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/background_sent_message.xml" value="0.11944444444444445" />
         <entry key="..\:/Users/heyif/OneDrive/Desktop/NEU-2022Spring/CS5520/mobile-app-metu/app/src/main/res/drawable-v24/chat_background.xml" value="0.11944444444444445" />

@@ -45,7 +45,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/Circular"
-            tools:srcCompat="@drawable/user_avatar" />
+            tools:srcCompat="@drawable/user_avatar"
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:id="@+id/image_onlineStatus"

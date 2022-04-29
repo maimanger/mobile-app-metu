@@ -48,6 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // TODO: boolean flag: isAgreedPrivacyPolicy=false;
+
         mAuth = FirebaseAuth.getInstance();
 
         /*firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -78,9 +80,8 @@ public class RegisterActivity extends AppCompatActivity {
                     });
                     //Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
-                    runOnUiThread(() -> {
-                        findViewById(R.id.progressBar_register_loading).setVisibility(View.VISIBLE);
-                    });
+                    // TODO: Show Privacy policy dialog
+                    //  if(!isAgreedPrivacyPolicy) {...}
                     autoRegister(username, email, password);
                 }
             }
@@ -115,8 +116,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 // Save new User in Firebase database
                                 FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE).child(userId).setValue(newUser);
 
-                                // Save new User locally
-                                ((App) getApplication()).setLoginUser(newUser);
+                                // Save new User locally && bind a long-lived listener to User change in Database
+                                FirebaseService.getInstance().fetchUserProfileData(userId,
+                                        (User user) -> {
+                                            ((App) getApplication()).setLoginUser(user);
+                                        });
 
                                 // update FCM token and FCM status
                                 FCMTokenUtils.updateFCMToken(userId);
