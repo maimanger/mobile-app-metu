@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
                     .child(userId).child("lastLoginTime").setValue(currentTime);
 
-            boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
+            //boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
 
 
             // fetch the user info from the database && bind a long-lived listener to User change in Database
@@ -150,7 +150,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Update Current loginUser
                         ((App)getApplication()).setLoginUser(user);
 
-                        if (isFirstLogin) {
+                        // todo: delete
+                        if (((App) getApplication()).getCurrActivityName().equals("loginActivity")) {
                             // update FCM token and FCM status
                             FCMTokenUtils.updateFCMToken(userId);
                             ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);

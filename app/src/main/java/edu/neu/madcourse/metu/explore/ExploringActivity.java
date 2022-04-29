@@ -155,12 +155,10 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
     }
 
     private void initRecyclerView() {
-//        recommendsAdapter = new RecommendsAdapter(getApplicationContext(), recommends, loginUser);
         if (recommendsAdapter == null) {
             recommendsAdapter = new RecommendsAdapter(this, recommends, loginUser);
         }
         exploringPage.setAdapter(recommendsAdapter);
-
     }
 
     private void fetchData() throws Exception {
@@ -203,19 +201,6 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
 
                     }
                 });
-
-
-
-//                RecommendationUtils.fetchRecommendUsers(userId, (users) -> {
-//                    for (RecommendedUser user: users) {
-//                        if (user != null) {
-//                            recommends.add(user);
-//                        }
-//                    }
-//
-//                    progressBar.setVisibility(View.GONE);
-//                    initRecyclerView();
-//                });
             }
         }).start();
 
@@ -256,7 +241,6 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
     public void applyPreference(PreferenceSetting setting) {
         this.setting = setting;
         initRecommendUsers();
-        System.out.println(setting);
     }
 
 

@@ -89,61 +89,10 @@ public class RecommendationUtils {
 
     }
 
-    public static void fetchRecommendUsers(String userId, DataFetchCallback<List<RecommendedUser>> callback) {
-        // if we already have saved recommendation list for today
-        List<RecommendedUser> recommendedUsers = new ArrayList<>();
-
-        fetchRecommendUserIdsFromDatabase(userId, (ids) -> {
-            if (ids != null && ids.size() > 0) {
-                System.out.println("not the first time fetch recommends");
-                // get recommendedUsers by ids
-                for (String id: ids) {
-                    System.out.println(id);
-                    getSingleRecommendedUserById(userId, id, (u) -> {
-                        System.out.println(u);
-                        recommendedUsers.add(u);
-                        if (recommendedUsers.size() == ids.size()) {
-                            //recommendedUsers.sort(new RecommendedUserComparator());
-                            callback.onCallback(recommendedUsers);
-                        }
-                    });
-                }
-
-            } else {
-                String key = getDateKey();
-                // fetch for the first time
-
-                // 1. get the preference
-                fetchPreference(userId, (preferenceSetting) -> {
-                    Log.d("recommended utils", "preference setting: " + preferenceSetting);
-
-                    getRecommendedUsersByPreference(userId, preferenceSetting, (users) -> {
-                        Log.d("recommended utils", "fetch recommended users for the first time today: " + users.size());
-                        // callback
-                        callback.onCallback(users);
-                        // todo: put the list of users into firebase
-                        for (RecommendedUser u:users) {
-                            System.out.println(u);
-                            FirebaseDatabase.getInstance().getReference(Constants.RECOMMENDATIONS_STORE)
-                                    .child(userId)
-                                    .child(key)
-                                    .child(u.getUserId()).setValue(true);
-                        }
-                    });
-
-                });
-
-            }
-        });
-    }
 
     public static void getRecommendedUsersByPreference(String userId, PreferenceSetting preferenceSetting, DataFetchCallback<List<RecommendedUser>> callback) {
-        Log.d("recommended utils", "getRecommendedUsersByPreference called");
-
 
         List<RecommendedUser> recommendedUsers = new ArrayList<>();
-//        Map<String, Long> currentCount = new HashMap<>();
-//        currentCount.put("count", 0l);
 
         FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -151,7 +100,6 @@ public class RecommendationUtils {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             long childrenCount = snapshot.getChildrenCount();
-                            System.out.println("children count: " + childrenCount);
                             for (DataSnapshot s: snapshot.getChildren()) {
                                 RecommendedUser recommendedUser = s.getValue(RecommendedUser.class);
 
@@ -161,15 +109,8 @@ public class RecommendationUtils {
                                 // fetch the connection
 
                                 updateConnectionUserByConnection(userId, recommendedUser.getUserId(), recommendedUser, updatedUser -> {
-//                                    currentCount.put("count", currentCount.get("count") + 1);
-//                                    // todo: delete
-//                                    if (!recommendedUser.getIsLiked() && !userId.equals(recommendedUser.getUserId())) {
-//                                        recommendedUsers.add(updatedUser);
-//                                    }
 
                                     recommendedUsers.add(updatedUser);
-                                    // last one
-//                                    System.out.println(currentCount.get("count"));
                                     if (recommendedUsers.size() == childrenCount - 1) {
                                         // sort the recommends
                                         recommendedUsers.sort(new RecommendedUserComparator(preferenceSetting));
@@ -192,12 +133,6 @@ public class RecommendationUtils {
 
                     }
                 });
-
-
-
-
-
-
 
     }
 
@@ -334,12 +269,6 @@ public class RecommendationUtils {
                         callback.onCallback(null);
                     }
                 });
-
     }
-
-
-
-
-
 
 }

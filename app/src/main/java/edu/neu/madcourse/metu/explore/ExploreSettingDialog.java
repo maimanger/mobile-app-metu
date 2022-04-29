@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +43,8 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
     private CheckBox womanSelected;
     private CheckBox manSelected;
     private CheckBox otherSelected;
-    // acticity
+    private TextView title;
+    // activity
     private ExploringSettingDialogListener listener;
 
     @Override
@@ -63,24 +65,19 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.explore_setting_dialog, null);
 
+        progressBar = view.findViewById(R.id.progressBarExploreSetting);
+        progressBar.setVisibility(View.VISIBLE);
+        ageRangeSlider = view.findViewById(R.id.ageRangeSlider);
+        womanSelected = view.findViewById(R.id.genderWoman);
+        manSelected = view.findViewById(R.id.genderMan);
+        otherSelected = view.findViewById(R.id.genderMore);
+        title = view.findViewById(R.id.exploringSettingTitle);
+
         if (isFirstTime) {
+            title.setText("Set your preference and meet new friends!");
             builder.setView(view)
                     .setCancelable(false)
-                    .setTitle("Set your preference and meet new friends!")
-//                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                        @Override
-//                        public void onDismiss(DialogInterface dialogInterface) {
-//                            System.out.println("dismiss but saving");
-//                            saveSettings(view);
-//                        }
-//                    })
-//                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-//                        @Override
-//                        public void onCancel(DialogInterface dialogInterface) {
-//                            System.out.println("dismiss but saving");
-//                            saveSettings(view);
-//                        }
-//                    })
+                    //.setTitle("Set your preference and meet new friends!")
                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -89,11 +86,12 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
                         }
                     });
         } else {
+            title.setText("Edit your explore preference");
             builder.setView(view)
-                    .setTitle("Edit your explore preference")
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    //.setTitle("Edit your explore preference")
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onCancel(DialogInterface dialogInterface) {
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
                         }
                     })
@@ -101,17 +99,17 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             PreferenceSetting setting = saveSettings(view);
-                            listener.applyPreference(setting);
+                            //listener.applyPreference(setting);
                         }
                     });
         }
 
-        progressBar = view.findViewById(R.id.progressBarExploreSetting);
-        progressBar.setVisibility(View.VISIBLE);
-        ageRangeSlider = view.findViewById(R.id.ageRangeSlider);
-        womanSelected = view.findViewById(R.id.genderWoman);
-        manSelected = view.findViewById(R.id.genderMan);
-        otherSelected = view.findViewById(R.id.genderMore);
+//        progressBar = view.findViewById(R.id.progressBarExploreSetting);
+//        progressBar.setVisibility(View.VISIBLE);
+//        ageRangeSlider = view.findViewById(R.id.ageRangeSlider);
+//        womanSelected = view.findViewById(R.id.genderWoman);
+//        manSelected = view.findViewById(R.id.genderMan);
+//        otherSelected = view.findViewById(R.id.genderMore);
 
         
         // read previous setting

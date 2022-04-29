@@ -47,15 +47,16 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
         int score = 0;
         // if the user has been liked
         if (user.getIsLiked()) {
-            score -= 200;
+            Log.d("comparator", user.getNickname() + " has been liked: -100");
+            score -= 100;
         }
 
-        // if gender not matches -70 points
+        // if gender not matches -200 points
         if ((user.getGender() == Constants.GENDER_MALE_INT && !maleSelected)
                 || (user.getGender() == Constants.GENDER_FEMALE_INT && !femaleSelected)
                 || (user.getGender() == Constants.GENDER_UNDEFINE_INT && !otherSelected)
         ) {
-            score -= 100;
+            score -= 200;
             Log.d("comparator", user.getNickname() + " gender not matched -70: " + user.getGender());
         } else {
             Log.d("comparator", user.getNickname() + " gender matched " + user.getGender());

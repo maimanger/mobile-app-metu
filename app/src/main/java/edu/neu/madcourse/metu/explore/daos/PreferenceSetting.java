@@ -8,6 +8,7 @@ public class PreferenceSetting {
     private int genderPreference;
     private float ageMin;
     private float ageMax;
+    private boolean showPeopleNear;
 
     public PreferenceSetting() {
         ageMax = 18;
@@ -33,6 +34,14 @@ public class PreferenceSetting {
 
     public int getGenderPreference() {
         return genderPreference;
+    }
+
+    public boolean isShowPeopleNear() {
+        return showPeopleNear;
+    }
+
+    public void setShowPeopleNear(boolean showPeopleNear) {
+        this.showPeopleNear = showPeopleNear;
     }
 
     public void setGenderPreference(int genderPreference) {

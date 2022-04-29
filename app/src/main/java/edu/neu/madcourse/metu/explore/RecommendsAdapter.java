@@ -120,7 +120,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 toggleButton.setImageResource(R.drawable.ic_like);
                 toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                 toggleButton.setOnClickListener(null);
-                toggleButton.setClickable(false);
+                //toggleButton.setClickable(false);
             } else {
                 //toggleButton.setBackgroundResource(R.drawable.ic_unlike);
                 toggleButton.setImageResource(R.drawable.ic_unlike);
@@ -135,7 +135,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         toggleButton.setImageResource(R.drawable.ic_like);
                         toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                         toggleButton.setOnClickListener(null);
-                        toggleButton.setClickable(false);
+                        //toggleButton.setClickable(false);
                     }
                 });
             }
@@ -152,16 +152,16 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             recommendUsername.setText(recommendedUser.getNickname());
-            // add text view effect
-            // recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
-            // todo: more gender identity
             if (recommendedUser.getGender() == Constants.GENDER_FEMALE_INT) {
                 recommendUserGender.setImageResource(R.drawable.ic_gender_female);
                 ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pink)));
-            } if (recommendedUser.getGender() == Constants.GENDER_MALE_INT) {
+            } else if (recommendedUser.getGender() == Constants.GENDER_MALE_INT) {
                 recommendUserGender.setImageResource(R.drawable.ic_gender_male);
                 ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
+            } else {
+                recommendUserGender.setImageResource(R.drawable.ic_gender_undefine);
+                ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.purple_200)));
             }
 
             // add listener
@@ -214,7 +214,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 toggleButton.setImageResource(R.drawable.ic_like);
                 toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                 toggleButton.setOnClickListener(null);
-                toggleButton.setClickable(false);
+                //toggleButton.setClickable(false);
             } else {
                 //toggleButton.setBackgroundResource(R.drawable.ic_unlike);
                 toggleButton.setImageResource(R.drawable.ic_unlike);
@@ -229,7 +229,7 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         toggleButton.setImageResource(R.drawable.ic_like);
                         toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                         toggleButton.setOnClickListener(null);
-                        toggleButton.setClickable(false);
+                        //toggleButton.setClickable(false);
                     }
                 });
             }
@@ -247,14 +247,11 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
             recommendUsername.setText(recommendedUser.getNickname());
-            // add text view effect
-            //recommendUsername.setShadowLayer(15, 0, 0, ContextCompat.getColor(context, R.color.white));
 
-            // todo: more gender identity
             if (recommendedUser.getGender() == Constants.GENDER_FEMALE_INT) {
                 recommendUserGender.setImageResource(R.drawable.ic_gender_female);
                 ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.pink)));
-            } if (recommendedUser.getGender() == Constants.GENDER_MALE_INT) {
+            } else if (recommendedUser.getGender() == Constants.GENDER_MALE_INT) {
                 recommendUserGender.setImageResource(R.drawable.ic_gender_male);
                 ImageViewCompat.setImageTintList(recommendUserGender, ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue)));
             } else {

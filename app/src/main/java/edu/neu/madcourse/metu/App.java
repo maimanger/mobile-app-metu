@@ -598,6 +598,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         this.fcmToken = s;
     }
 
-
-
+    public String getCurrActivityName() {
+        return currActivityName;
+    }
 }

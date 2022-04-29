@@ -309,8 +309,11 @@ public class EditProfileActivity extends BaseCalleeActivity {
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
 
-            if (!imageFirebaseUri.equals(loginUser.getAvatarUri())) {
-                loginUser.setAvatarUri(imageFirebaseUri.toString());
+            if (imageFirebaseUri != null) {
+                if (!imageFirebaseUri.toString().equals(loginUser.getAvatarUri())) {
+                    loginUser.setAvatarUri(imageFirebaseUri.toString());
+                }
+
             }
 
             FirebaseService.getInstance().updateUserProfile(loginUser);
