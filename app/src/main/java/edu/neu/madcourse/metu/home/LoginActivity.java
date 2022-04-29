@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                     grantResults[1] != PackageManager.PERMISSION_GRANTED) {
                 this.runOnUiThread(() -> {
                     Toast.makeText(getApplicationContext(),
-                            "Without your permission, MetU can't recommend a more precise match for you.",
+                            "Without your permission, MetU can't recommend a precise match for you.",
                             Toast.LENGTH_LONG).show();
                 });
             }

@@ -122,6 +122,15 @@ public class Constants {
     public static final int EXPLORE_MAN_OTHER = 4;
     public static final int EXPLORE_WOMAN_OTHER = 5;
     public static final int EXPLORE_ALL = 6;
+    public static final String[] LOCATION_STATE = new String[]{"Alabama", "Alaska", "Arizona",
+            "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia"
+            , "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana"
+            , "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New " +
+            "Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+            "Pennsylvania", "Rhode Island", "South " + "Carolina", "South Dakota", "Tennessee",
+            "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin",
+            "Wyoming"};
 
 
     // for user availability
@@ -133,8 +142,10 @@ public class Constants {
             remoteMsgHeaders.put(
                     REMOTE_MSG_AUTH,
                     // todo: update it
-                    "key=AAAA9MOrMTs:APA91bExIh_BrVhWyBNLfIEv5V2uFwgyTV3XIMAKYoQayy-JtJ4dfeNus31bwwZx1P22ln29n0PDgVWZ-Zrtk26RcWvRhHyNvX7U6tcuRgLowAauXAldBbqMg-TzYu38bLuCGIcbU9sh"
-                    );
+                    "key=AAAA9MOrMTs:APA91bExIh_BrVhWyBNLfIEv5V2uFwgyTV3XIMAKYoQayy" +
+                            "-JtJ4dfeNus31bwwZx1P22ln29n0PDgVWZ" +
+                            "-Zrtk26RcWvRhHyNvX7U6tcuRgLowAauXAldBbqMg-TzYu38bLuCGIcbU9sh"
+            );
             remoteMsgHeaders.put(
                     REMOTE_MSG_CONTENT_TYPE,
                     "application/json"

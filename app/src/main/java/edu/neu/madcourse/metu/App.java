@@ -346,6 +346,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         contentIntent.putExtra("PROFILE_USER_ID", callerId);
         contentIntent.putExtra("CONNECTION_ID", connectionId);
         contentIntent.putExtra("CONNECTION_POINT", connectionPoint);
+        contentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingContentIntent =PendingIntent.getActivity(
                 this, notifId * 2, contentIntent, 0);
