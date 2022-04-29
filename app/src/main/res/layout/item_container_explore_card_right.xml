@@ -1,70 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
-
-    <FrameLayout
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        app:layout_constraintTop_toTopOf="@id/recProfileCardRight"
-        app:layout_constraintEnd_toEndOf="@id/recProfileCardRight"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/recommend_card_button_background"
-        android:elevation="20dp">
-<!--    <com.like.LikeButton-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:icon_type="heart"-->
-<!--        app:icon_size="7dp"-->
-<!--        android:id="@+id/likeToggleRight"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_marginTop="1dp"-->
-<!--        />-->
-
-<!--    <ToggleButton-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:id="@+id/likeToggleRight"-->
-<!--        android:layout_width="20dp"-->
-<!--        android:layout_height="20dp"-->
-<!--        android:textOff=""-->
-<!--        android:textOn=""-->
-<!--        android:elevation="40dp"-->
-<!--        android:background="@drawable/toggle_selector"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_marginTop="1dp"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-        <Button
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/ic_unlike"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            android:id="@+id/likeToggleRight"
-            />
-
-    </FrameLayout>
+    android:padding="2dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/recProfileCardRight"
         android:layout_width="320dp"
         android:layout_height="420dp"
-        app:cardElevation="10dp"
+        app:cardElevation="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="50dp"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:cardMaxElevation="10dp"
         android:clipToPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        >
+        app:cardPreventCornerOverlap="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -80,7 +37,7 @@
                 app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoRight"
                 />
 
-            <ImageView
+            <com.jgabrielfreitas.core.BlurImageView
                 android:id="@+id/blurredProfilePhotoRight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -95,67 +52,346 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <FrameLayout
-                android:id="@+id/recUsernameRightWrapper"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/likeToggleRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="18dp"
-                android:layout_marginStart="15dp"
-                android:maxWidth="250dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:elevation="20dp">
+                android:elevation="15dp"
+                app:layout_constraintTop_toTopOf="@id/blurredProfilePhotoRight"
+                app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoRight"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                app:backgroundTint="@color/white"
+                app:srcCompat="@drawable/ic_unlike"
+                app:tint="#8E1818"
+                android:clickable="true"
+                android:focusable="true"
+                app:fabSize="mini"
+                />
 
-                <TextView
-                    android:id="@+id/recUsernameRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:shadowColor="@color/black"
-                    android:shadowRadius="8"
-                    android:text="Luna Lovegood"
-                    android:textColor="@color/white"
-                    android:textSize="25sp" />
-            </FrameLayout>
+            <TextView
+                android:id="@+id/recUsernameRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:shadowColor="@color/black"
+                android:shadowRadius="8"
+                android:text="Harry Potter"
+                android:textColor="@color/chat_contact_image_color"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="18dp"
+                android:elevation="20dp"
+                android:maxWidth="250dp"
+                />
 
             <ImageView
                 android:id="@+id/recUserGenderRight"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_gender_male"
-                app:tint="@color/pink"
-                app:layout_constraintStart_toEndOf="@+id/recUsernameRightWrapper"
-                app:layout_constraintTop_toTopOf="@+id/recUsernameRightWrapper"
-                app:layout_constraintBottom_toBottomOf="@+id/recUsernameRightWrapper"
-                android:layout_marginStart="2dp"
+                app:layout_constraintStart_toEndOf="@+id/recUsernameRight"
+                app:layout_constraintTop_toTopOf="@+id/recUsernameRight"
+                app:layout_constraintBottom_toBottomOf="@+id/recUsernameRight"
+                android:layout_marginStart="5dp"
+                app:tint="@color/blue" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/sendMessageRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="15dp"
+                app:backgroundTint="@color/white"
+                app:srcCompat="@drawable/ic_send_message"
+                app:tint="@color/purple_200"
+                android:layout_marginBottom="60dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:fabCustomSize="60dp"
+                app:maxImageSize="40dp"
                 />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.cardview.widget.CardView>
 
-    <FrameLayout
-        android:id="@+id/sendMessageWrapperRight"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:elevation="20dp"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recProfileCardRight"
-        app:layout_constraintEnd_toEndOf="@+id/recProfileCardRight"
-        android:background="@drawable/recommend_card_button_background"
-        >
-        <androidx.appcompat.widget.AppCompatImageView
-            android:elevation="30dp"
-            android:id="@+id/sendMessageRight"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_send_message"
-            android:tint="@color/chat_send_color"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            />
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/recProfileCardRight"-->
+<!--    android:layout_width="320dp"-->
+<!--    android:layout_height="420dp"-->
+<!--    app:cardElevation="5dp"-->
+<!--    app:cardBackgroundColor="@color/white"-->
+<!--    app:cardCornerRadius="50dp"-->
+<!--    android:layout_marginTop="20dp"-->
+<!--    android:layout_gravity="right"-->
+<!--    app:cardMaxElevation="10dp"-->
+<!--    android:clipToPadding="false"-->
+<!--    android:clickable="true"-->
+<!--    android:foreground="?android:attr/selectableItemBackground"-->
+<!--    app:cardPreventCornerOverlap="true">-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/loadPhotoRight"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/blurredProfilePhotoRight"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/blurredProfilePhotoRight"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/blurredProfilePhotoRight"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoRight"-->
+<!--            />-->
+
+<!--        <com.jgabrielfreitas.core.BlurImageView-->
+<!--            android:id="@+id/blurredProfilePhotoRight"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginEnd="5dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/ic_default_avatar"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/likeToggleRight"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:elevation="15dp"-->
+<!--            app:layout_constraintTop_toTopOf="@id/blurredProfilePhotoRight"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoRight"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            app:backgroundTint="@color/white"-->
+<!--            app:srcCompat="@drawable/ic_unlike"-->
+<!--            app:tint="#8E1818"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            app:fabSize="mini"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/recUsernameRight"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="sans-serif-black"-->
+<!--            android:shadowColor="@color/black"-->
+<!--            android:shadowRadius="8"-->
+<!--            android:text="Harry Potter"-->
+<!--            android:textColor="@color/chat_contact_image_color"-->
+<!--            android:textSize="25sp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:layout_marginStart="24dp"-->
+<!--            android:layout_marginBottom="18dp"-->
+<!--            android:elevation="20dp"-->
+<!--            android:maxWidth="250dp"-->
+<!--            />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/recUserGenderRight"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:src="@drawable/ic_gender_male"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/recUsernameRight"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/recUsernameRight"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/recUsernameRight"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            app:tint="@color/blue" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/sendMessageRight"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:elevation="15dp"-->
+<!--            app:backgroundTint="@color/white"-->
+<!--            app:srcCompat="@drawable/ic_send_message"-->
+<!--            app:tint="@color/purple_200"-->
+<!--            android:layout_marginBottom="60dp"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:fabCustomSize="60dp"-->
+<!--            app:maxImageSize="40dp"-->
+<!--            />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+<!--</androidx.cardview.widget.CardView>-->
+
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:padding="10dp">-->
+
+<!--    <FrameLayout-->
+<!--        android:layout_width="35dp"-->
+<!--        android:layout_height="35dp"-->
+<!--        app:layout_constraintTop_toTopOf="@id/recProfileCardRight"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/recProfileCardRight"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:background="@drawable/recommend_card_button_background"-->
+<!--        android:elevation="20dp">-->
+<!--&lt;!&ndash;    <com.like.LikeButton&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:icon_type="heart"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:icon_size="7dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/likeToggleRight"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="1dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        />&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <ToggleButton&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_centerHorizontal="true"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/likeToggleRight"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="20dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="20dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textOff=""&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textOn=""&ndash;&gt;-->
+<!--&lt;!&ndash;        android:elevation="40dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:background="@drawable/toggle_selector"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginTop="1dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:layout_constraintStart_toStartOf="parent" />&ndash;&gt;-->
+<!--        <Button-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:background="@drawable/ic_unlike"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            android:id="@+id/likeToggleRight"-->
+<!--            />-->
+
+<!--    </FrameLayout>-->
+
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:id="@+id/recProfileCardRight"-->
+<!--        android:layout_width="320dp"-->
+<!--        android:layout_height="420dp"-->
+<!--        app:cardElevation="10dp"-->
+<!--        app:cardBackgroundColor="@color/white"-->
+<!--        app:cardCornerRadius="50dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:clickable="true"-->
+<!--        android:foreground="?android:attr/selectableItemBackground"-->
+<!--        >-->
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--            <ProgressBar-->
+<!--                android:id="@+id/loadPhotoRight"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/blurredProfilePhotoRight"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/blurredProfilePhotoRight"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/blurredProfilePhotoRight"-->
+<!--                app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoRight"-->
+<!--                />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/blurredProfilePhotoRight"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:layout_marginEnd="5dp"-->
+<!--                android:layout_marginBottom="5dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/ic_default_avatar"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <FrameLayout-->
+<!--                android:id="@+id/recUsernameRightWrapper"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                android:layout_marginBottom="18dp"-->
+<!--                android:layout_marginStart="15dp"-->
+<!--                android:maxWidth="250dp"-->
+<!--                android:paddingLeft="10dp"-->
+<!--                android:paddingRight="10dp"-->
+<!--                android:elevation="20dp">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/recUsernameRight"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:fontFamily="sans-serif-black"-->
+<!--                    android:shadowColor="@color/black"-->
+<!--                    android:shadowRadius="8"-->
+<!--                    android:text="Luna Lovegood"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="25sp" />-->
+<!--            </FrameLayout>-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/recUserGenderRight"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:src="@drawable/ic_gender_male"-->
+<!--                app:tint="@color/pink"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/recUsernameRightWrapper"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/recUsernameRightWrapper"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/recUsernameRightWrapper"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                />-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    </androidx.cardview.widget.CardView>-->
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/sendMessageWrapperRight"-->
+<!--        android:layout_width="70dp"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:elevation="20dp"-->
+<!--        android:layout_marginBottom="60dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/recProfileCardRight"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/recProfileCardRight"-->
+<!--        android:background="@drawable/recommend_card_button_background"-->
+<!--        >-->
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:elevation="30dp"-->
+<!--            android:id="@+id/sendMessageRight"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:src="@drawable/ic_send_message"-->
+<!--            android:tint="@color/chat_send_color"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            />-->
+<!--    </FrameLayout>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

@@ -1,6 +1,7 @@
 package edu.neu.madcourse.metu.home;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import edu.neu.madcourse.metu.App;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,14 +43,14 @@ public class RegisterActivity extends AppCompatActivity {
     private Button mRegister;
     private EditText mUsername, mEmail, mPassword;
     private FirebaseAuth mAuth;
+    private Boolean isAgreedPrivatePolicy = false;
+
     //private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        // TODO: boolean flag: isAgreedPrivacyPolicy=false;
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -80,10 +82,46 @@ public class RegisterActivity extends AppCompatActivity {
                     });
                     //Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
-                    // TODO: Show Privacy policy dialog
-                    //  if(!isAgreedPrivacyPolicy) {...}
-                    autoRegister(username, email, password);
+
+                    if (isAgreedPrivatePolicy == true) {
+                        autoRegister(username, email, password);
+                    }
+                    else {
+                        showDialog();
+                    }
                 }
+            }
+        });
+    }
+
+    public void showDialog() {
+        String username = mUsername.getText().toString();
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.privacy_policy_dialog, null);
+
+        Button agreeButton = view.findViewById(R.id.agreeButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setView(view).create();
+        alertDialog.show();
+
+        agreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isAgreedPrivatePolicy = true;
+                alertDialog.dismiss();
+                autoRegister(username, email, password);
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isAgreedPrivatePolicy = false;
+                alertDialog.dismiss();
             }
         });
     }

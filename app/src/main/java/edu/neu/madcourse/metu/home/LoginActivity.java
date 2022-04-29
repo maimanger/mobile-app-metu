@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
 
             boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
 
+
             // fetch the user info from the database && bind a long-lived listener to User change in Database
             FirebaseService.getInstance().fetchUserProfileData(userId,
                     (User user) -> {
@@ -140,6 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Log.d("LoginActivity", "login profile fetched null");
                         }
+
                         // Update Current loginUser
                         ((App)getApplication()).setLoginUser(user);
 

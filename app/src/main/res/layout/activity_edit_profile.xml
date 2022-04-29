@@ -123,20 +123,59 @@
                 app:layout_constraintTop_toBottomOf="@+id/layout_name"
                 app:layout_constraintWidth_percent="0.7">
 
-                <EditText
-                    android:id="@+id/et_location"
+<!--                <EditText-->
+<!--                    android:id="@+id/et_location"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="#00000000"-->
+<!--                    android:gravity="center"-->
+<!--                    android:hint="Location"-->
+<!--                    android:inputType="textEmailAddress"-->
+<!--                    android:paddingHorizontal="15dp"-->
+<!--                    android:paddingTop="25dp"-->
+<!--                    android:paddingBottom="15dp"-->
+<!--                    android:textColor="#000000"-->
+<!--                    android:textColorHint="#808080"-->
+<!--                    android:textSize="15sp" />-->
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#00000000"
-                    android:gravity="center"
-                    android:hint="Location"
-                    android:inputType="textEmailAddress"
-                    android:paddingHorizontal="15dp"
-                    android:paddingTop="25dp"
-                    android:paddingBottom="15dp"
-                    android:textColor="#000000"
-                    android:textColorHint="#808080"
-                    android:textSize="15sp" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
+                        android:text="State"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></TextView>
+                    <TextView
+                        android:text="City"
+                        android:layout_marginEnd="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        >
+                    </TextView>
+
+                    <NumberPicker
+                        android:id="@+id/state_picker"
+                        android:layout_width="128dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></NumberPicker>
+                    <NumberPicker
+                        android:id="@+id/city_picker"
+                        android:layout_width="128dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        >
+                    </NumberPicker>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
