@@ -287,27 +287,20 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
         isActivityChangingConfigurations = activity.isChangingConfigurations();
-        if (--aliveActivityCount == 0 && !isActivityChangingConfigurations) {
-            rtmClient.logout(new ResultCallback<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d("App", "onSuccess: Logout RTM");
-                }
-
-                @Override
-                public void onFailure(ErrorInfo errorInfo) { }
-            });
-
+        if (--aliveActivityCount > 0 && !isActivityChangingConfigurations) {
+            return;
+        } else {
             if (loginUser != null) {
-                Log.d("FCM token", "pre-remove");
                 // remove the FCM token
                 FCMTokenUtils.removeFCMToken(loginUser.getUserId());
                 fcmToken = "";
                 // set the user inactive
                 FCMTokenUtils.setStatusInactive(loginUser.getUserId());
             }
-
+            rtmClient.logout(null);
+            Log.d("App", "onActivityDestroyed: rtm logout");
         }
+
     }
 
 
