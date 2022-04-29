@@ -275,6 +275,12 @@ public class EditProfileActivity extends BaseCalleeActivity {
             return false;
         }
 
+        if (locationState == null || locationCity == null) {
+            Toast.makeText(getApplicationContext(), "Please select a location", Toast.LENGTH_SHORT).show();
+            return false;
+
+        }
+
         return true;
     }
 
