@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         Animation fadeout = new AlphaAnimation(1,0);
         fadeout.setInterpolator(new AccelerateInterpolator());
         fadeout.setStartOffset(500);
-        fadeout.setDuration(1700);
+        fadeout.setDuration(2000);
         ImageView image = findViewById(R.id.metu_pinkheart);
         image.setAnimation(fadeout);
 
