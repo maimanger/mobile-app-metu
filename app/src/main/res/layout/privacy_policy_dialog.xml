@@ -1,40 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:padding="16dp"
-    >
+    android:padding="10dp">
 
     <ScrollView
+        android:id="@+id/dialog_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="70dp">
 
         <TextView
             android:id="@+id/private_policy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." />
+            android:layout_margin="10dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/privacy_policy" />
     </ScrollView>
 
-    <Button
-        android:layout_marginTop="300dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agree"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:id="@+id/agreeButton"
-        />
+        android:layout_below="@+id/dialog_scroll"
+        android:layout_marginTop="-50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:textColor="@color/purple_500"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="380dp"
-        android:text="Cancel" />
+        <Button
+            android:id="@+id/cancelButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Cancel"
+            app:cornerRadius="50dp"
+            android:textColor="#8c09e0" />
+
+        <Button
+            android:id="@+id/agreeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#8c09e0"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_marginLeft="60dp"
+            android:text="Agree" />
+
+    </LinearLayout>
 
 
 </RelativeLayout>
