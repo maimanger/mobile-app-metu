@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,8 @@ import edu.neu.madcourse.metu.utils.Utils;
 public class EditProfileActivity extends BaseCalleeActivity {
 
     EditText etNickname, etLocation, etAge;
+    Spinner genderSpinner;
+    NumberPicker statePicker, cityPicker;
     private Uri imageFilePath;
     private Uri imageFirebaseUri;
     private Bitmap avatarBitmap;
@@ -117,17 +120,29 @@ public class EditProfileActivity extends BaseCalleeActivity {
 
     void viewInitializations() {
         etNickname = findViewById(R.id.et_username);
-        etLocation = findViewById(R.id.et_location);
+//        etLocation = findViewById(R.id.et_location);
         etAge = findViewById(R.id.et_age);
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
 
-
         findViewById(R.id.btn_editProfile_back).setOnClickListener(View -> onBackPressed());
 
-        Spinner spinner = findViewById(R.id.gender_spinner);
+        initStatePicker();
+//        initCityPicker();
+        initGenderSpinner();
 
+        FirebaseService.getInstance().fetchUserProfileDataOneTime(profileUserId, user -> {
+            etNickname.setText(user.getNickname());
+//            etLocation.setText(user.getLocation());
+            etAge.setText(String.valueOf(user.getAge()));
+            genderSpinner.setSelection(user.getGender() + 1);
+
+            new Utils.DownloadImageTask(uploadImageView).execute(user.getAvatarUri());
+        });
+    }
+
+    private void initGenderSpinner() {
+        genderSpinner = findViewById(R.id.gender_spinner);
         String[] genders = getResources().getStringArray(R.array.genders);
-
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, genders) {
@@ -146,14 +161,13 @@ public class EditProfileActivity extends BaseCalleeActivity {
             }
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        genderSpinner.setAdapter(adapter);
+        genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                /*if (position > 0) {
+                if (position > 0) {
                     gender = (String) parent.getItemAtPosition(position);
-                }*/
-                gender = (String) parent.getItemAtPosition(position);
+                }
             }
 
             @Override
@@ -161,20 +175,15 @@ public class EditProfileActivity extends BaseCalleeActivity {
 
             }
         });
+    }
 
-        FirebaseService.getInstance().fetchUserProfileDataOneTime(profileUserId, user -> {
-            etNickname.setText(user.getNickname());
-            etLocation.setText(user.getLocation());
-            etAge.setText(String.valueOf(user.getAge()));
-            spinner.setSelection(user.getGender() + 1);
-
-            new Utils.DownloadImageTask(uploadImageView).execute(user.getAvatarUri());
-        });
+    private void initStatePicker() {
+        statePicker = findViewById(R.id.state_picker);
     }
 
 
     // Checking if the input in form is valid
-    boolean validateInput() {
+    private boolean validateInput() {
         if (etNickname.getText().toString().equals("")) {
             etNickname.setError("Please Enter Username");
             return false;
@@ -207,7 +216,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
         if (validateInput()) {
             // Input is valid, here send data to your server
             String nickname = etNickname.getText().toString();
-            String location = etLocation.getText().toString();
+//            String location = etLocation.getText().toString();
             Integer age = Integer.parseInt(etAge.getText().toString());
 
             Integer genderInt = 2;
@@ -220,7 +229,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             // Write user data to firebase
             User loginUser = ((App) getApplication()).getLoginUser();
             loginUser.setNickname(nickname);
-            loginUser.setLocation(location);
+//            loginUser.setLocation(location);
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
 
