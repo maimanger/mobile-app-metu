@@ -65,9 +65,6 @@
             android:name=".SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".home.SplashActivity"
-            android:exported="false" />
-        <activity
             android:name=".home.HomeActivity"
             android:exported="false" />
         <activity
