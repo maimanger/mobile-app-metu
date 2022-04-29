@@ -292,17 +292,24 @@ public class EditProfileActivity extends BaseCalleeActivity {
             }
 
             // Write user data to firebase
-            User loginUser = ((App) getApplication()).getLoginUser();
-            loginUser.setNickname(nickname);
-            loginUser.setLocation(locationState);
-            loginUser.setAge(age);
-            loginUser.setGender(genderInt);
-
-            if (imageFirebaseUri != null && !imageFirebaseUri.toString().equals(loginUser.getAvatarUri())) {
-                loginUser.setAvatarUri(imageFirebaseUri.toString());
+            User newLoginUser = ((App) getApplication()).getLoginUser();
+            newLoginUser.setNickname(nickname);
+            newLoginUser.setLocation(locationCity + ", " + locationState);
+            newLoginUser.setAge(age);
+            newLoginUser.setGender(genderInt);
+            if (imageFirebaseUri != null &&
+                    !imageFirebaseUri.toString().equals(newLoginUser.getAvatarUri())) {
+                newLoginUser.setAvatarUri(imageFirebaseUri.toString());
             }
 
-            FirebaseService.getInstance().updateUserProfile(loginUser);
+            new Thread(() -> {
+                FirebaseService.getInstance().updateUserProfile(newLoginUser);
+            }).start();
+
+            new Thread(() -> {
+                FirebaseService.getInstance().updateConnectionUser(newLoginUser);
+            }).start();
+
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
             finish();
         }

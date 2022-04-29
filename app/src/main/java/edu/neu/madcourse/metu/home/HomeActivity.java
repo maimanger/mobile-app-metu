@@ -29,10 +29,6 @@ public class HomeActivity extends AppCompatActivity {
         getWindow().setEnterTransition(fade);
         setContentView(R.layout.activity_home);
 
-
-        /*Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
-        getWindow().setEnterTransition(fade);*/
-
         bgLayout = findViewById(R.id.frame_homeBackground);
         gifView = new GifView(this);
 
