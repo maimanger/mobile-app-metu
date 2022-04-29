@@ -10,11 +10,12 @@
         android:id="@+id/add_tag_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fabCustomSize="15dp"
         android:clickable="true"
         android:focusable="true"
-        app:srcCompat="@android:drawable/ic_input_add"
         app:backgroundTint="@color/browser_actions_bg_grey"
-        app:tint="@color/gray"/>
+        app:elevation="1dp"
+        app:fabCustomSize="20dp"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/gray" />
 
 </FrameLayout>
