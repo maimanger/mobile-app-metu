@@ -2,16 +2,21 @@ package edu.neu.madcourse.metu.home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.service.FirebaseService;
+import edu.neu.madcourse.metu.service.LocatorService;
 import edu.neu.madcourse.metu.utils.Constants;
 import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,9 +43,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final int PERMISSION_REQ_ID = 22;
+    private static final String[] REQUESTED_PERMISSIONS = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+
     private Button mRegister;
     private EditText mUsername, mEmail, mPassword;
     private FirebaseAuth mAuth;
+    private String inputUserId;
     //private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
     @Override
@@ -82,6 +94,8 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     // TODO: Show Privacy policy dialog
                     //  if(!isAgreedPrivacyPolicy) {...}
+                    inputUserId = email.replaceAll("\\.", "");
+                    updateLatestLocation(inputUserId);
                     autoRegister(username, email, password);
                 }
             }
@@ -152,6 +166,49 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         //mAuth.removeAuthStateListener(firebaseAuthStateListener);
+    }
+
+    private void updateLatestLocation(String inputUserId) {
+        if (checkLocatingPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+                checkLocatingPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+            // start locating service
+            Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
+            locatingServiceIntent.putExtra("USER_ID", inputUserId);
+            startService(locatingServiceIntent);
+        }
+    }
+
+    private boolean checkLocatingPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQ_ID) {
+            // Permission denied, cannot start precisely locating
+            if (grantResults.length < 2 || grantResults[0] != PackageManager.PERMISSION_GRANTED ||
+                    grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                this.runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(),
+                            "Without your permission, MetU can't recommend a more precise match for you.",
+                            Toast.LENGTH_LONG).show();
+                });
+            }
+            // Permission granted, start locating service
+            else {
+                //start locating service
+                Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
+                locatingServiceIntent.putExtra("USER_ID", inputUserId);
+                startService(locatingServiceIntent);
+            }
+        }
     }
 
 }

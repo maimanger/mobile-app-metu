@@ -1,7 +1,6 @@
 package edu.neu.madcourse.metu.home;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,19 +23,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.service.FirebaseService;
+import edu.neu.madcourse.metu.service.LocatorService;
 import edu.neu.madcourse.metu.utils.Constants;
 import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 
@@ -52,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmail, mPassword;
     private TextView linkSignUp;
     private FirebaseAuth mAuth;
+    private String inputUserId;
     //private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
     @Override
@@ -97,16 +91,13 @@ public class LoginActivity extends AppCompatActivity {
                     });
                     //Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_LONG).show();
                 } else {
-                    /*if (checkPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-                            checkPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
-                        // TODO: start locating service
-                    }*/
+                    inputUserId = email.replaceAll("\\.", "");
+                    updateLatestLocation(inputUserId);
                     authLogin(email, password);
                 }
             }
         });
     }
-
 
     private void authLogin(String email, String password) {
         new Thread(() -> {
@@ -189,7 +180,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private boolean checkPermission(String permission, int requestCode) {
+    private void updateLatestLocation(String inputUserId) {
+        if (checkLocatingPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+                checkLocatingPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+            // start locating service
+            Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
+            locatingServiceIntent.putExtra("USER_ID", inputUserId);
+            startService(locatingServiceIntent);
+        }
+    }
+
+
+    private boolean checkLocatingPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
@@ -214,7 +216,10 @@ public class LoginActivity extends AppCompatActivity {
             }
             // Permission granted, start locating service
             else {
-                // TODO: start locating service
+                //start locating service
+                Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
+                locatingServiceIntent.putExtra("USER_ID", inputUserId);
+                startService(locatingServiceIntent);
             }
         }
     }

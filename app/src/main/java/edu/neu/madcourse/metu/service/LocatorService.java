@@ -40,7 +40,7 @@ import java.util.concurrent.Executor;
 
 public class LocatorService extends Service {
 
-    private String TAG = getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
     private boolean finished = false;
     private FusedLocationProviderClient locationProviderClient;
     private LocationRequest locationRequest;
@@ -93,7 +93,7 @@ public class LocatorService extends Service {
                             locationMap.put("country", countryName);
                             locationMap.put("city", cityName);
                             FirebaseDatabase.getInstance().getReference().child("latestLocation")
-                                    .child(userId).child("country").setValue(locationMap);
+                                    .child(userId).setValue(locationMap);
 
                             finished = true;
                             Log.d(TAG, "onStartCommand: Location fetched -- " + countryName + ", " + cityName);
@@ -117,7 +117,7 @@ public class LocatorService extends Service {
 
     @SuppressLint("MissingPermission")
     private void getLocation() {
-        Task<LocationSettingsResponse> settingsTask = checkLocationSetting();
+        /*Task<LocationSettingsResponse> settingsTask = checkLocationSetting();
         // Start updating location (Make sure all permissions and settings are checked)
         settingsTask.addOnSuccessListener((Executor) this, new OnSuccessListener<LocationSettingsResponse>() {
             @SuppressLint("MissingPermission")
@@ -135,10 +135,10 @@ public class LocatorService extends Service {
                 Log.d(TAG, "Location setting failed");
                 stopSelf();
             }
-        });
+        });*/
 
-        /*locationProviderClient.requestLocationUpdates(locationRequest, locationCallback,
-                Looper.getMainLooper());*/
+        locationProviderClient.requestLocationUpdates(locationRequest, locationCallback,
+                Looper.getMainLooper());
     }
 
     private Task<LocationSettingsResponse> checkLocationSetting() {
