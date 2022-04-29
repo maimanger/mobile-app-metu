@@ -321,7 +321,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
                 FirebaseService.getInstance().updateConnectionUser(newLoginUser);
             }).start();
 
-            Toast.makeText(              this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
