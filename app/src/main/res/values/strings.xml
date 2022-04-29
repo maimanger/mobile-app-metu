@@ -123,6 +123,19 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
 
+    <string name="privacy_policy">
+"<b># PRIVACY POLICY\n\n</b>"
+"We takes your privacy seriously. To better protect your privacy we provide this privacy policy notice explaining the way your personal information is collected and used.\n\n"
+"## Collection of Routine Information\n"
+"This app track basic information about their users. This information includes, but is not limited to, IP addresses, app details, timestamps and referring pages. None of this information can personally identify specific users to this app. The information is tracked for routine administration and maintenance purposes.\n\n"
+"## Cookies\n"
+"Where necessary, this app uses cookies to store information about a user’s preferences and history in order to better serve the users and/or present the users with customized content.\n\n"
+"## Security\n"
+"The security of your personal information is important to us, but remember that no method of transmission over the Internet, or method of electronic storage, is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.\n\n"
+"## Changes To This Privacy Policy\n"
+"This Privacy Policy is effective as of April 28th 2022 and will remain in effect except with respect to any changes in its provisions in the future, which will be in effect immediately after being posted on this page. We reserve the right to update or change our Privacy Policy at any time and you should check this Privacy Policy periodically. If we make any material changes to this Privacy Policy, we will notify you either through the email address you have provided us, or by placing a prominent notice on our app.\n\n"
+    </string>
+
     <string name="agora_app_id">
         0a7d20050160438ebe4d47e571566f6d
     </string>

@@ -12,11 +12,13 @@
         android:id="@+id/recentChatBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="50dp"
         android:background="@drawable/recent_conversation_background"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="60dp"
+        />
+
 
     <ProgressBar
         android:id="@+id/progressBarRecentConversation"

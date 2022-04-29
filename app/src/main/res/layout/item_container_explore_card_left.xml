@@ -1,70 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="4dp"
-    tools:ignore="MissingClass">
-
-    <FrameLayout
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        app:layout_constraintTop_toTopOf="@id/recProfileCardLeft"
-        app:layout_constraintEnd_toEndOf="@id/recProfileCardLeft"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/recommend_card_button_background"
-        android:elevation="15dp">
-<!--        <com.like.LikeButton-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:icon_type="heart"-->
-<!--            app:icon_size="7dp"-->
-<!--            android:id="@+id/likeToggleLeft"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="1dp"-->
-<!--            />-->
-<!--        <ToggleButton-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:id="@+id/likeToggleLeft"-->
-<!--            android:layout_width="20dp"-->
-<!--            android:layout_height="20dp"-->
-<!--            android:textOff=""-->
-<!--            android:textOn=""-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="1dp"-->
-<!--            android:elevation="40dp"-->
-<!--            android:background="@drawable/toggle_selector" />-->
-        <Button
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/ic_unlike"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            android:elevation="40dp"
-            android:id="@+id/likeToggleLeft"
-            />
-
-    </FrameLayout>
+    android:padding="2dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/recProfileCardLeft"
         android:layout_width="320dp"
         android:layout_height="420dp"
-        app:cardElevation="10dp"
-        app:cardBackgroundColor="@color/bg_black1"
-        app:cardCornerRadius="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        app:cardBackgroundColor="@color/bg_black1"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="10dp"
         android:clipToPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        >
+        app:cardPreventCornerOverlap="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -95,69 +52,347 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <FrameLayout
-                android:id="@+id/recUsernameLeftWrapper"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/likeToggleLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:elevation="15dp"
+                app:layout_constraintTop_toTopOf="@id/blurredProfilePhotoLeft"
+                app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoLeft"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                app:backgroundTint="@color/white"
+                app:srcCompat="@drawable/ic_unlike"
+                app:tint="#8E1818"
+                android:clickable="true"
+                android:focusable="true"
+                app:fabSize="mini"
+                />
+
+            <TextView
+                android:id="@+id/recUsernameLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:shadowColor="@color/black"
+                android:shadowRadius="8"
+                android:text="Harry Potter"
+                android:textColor="@color/chat_contact_image_color"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="24dp"
                 android:layout_marginBottom="18dp"
                 android:elevation="20dp"
                 android:maxWidth="250dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/recUsernameLeft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:shadowColor="@color/black"
-                    android:shadowRadius="8"
-                    android:text="Harry Potter"
-                    android:textColor="@color/chat_contact_image_color"
-                    android:textSize="25sp" />
-
-
-            </FrameLayout>
+                />
 
             <ImageView
                 android:id="@+id/recUserGenderLeft"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_gender_male"
-                app:layout_constraintStart_toEndOf="@+id/recUsernameLeftWrapper"
-                app:layout_constraintTop_toTopOf="@+id/recUsernameLeftWrapper"
-                app:layout_constraintBottom_toBottomOf="@+id/recUsernameLeftWrapper"
-                android:layout_marginStart="2dp"
+                app:layout_constraintStart_toEndOf="@+id/recUsernameLeft"
+                app:layout_constraintTop_toTopOf="@+id/recUsernameLeft"
+                app:layout_constraintBottom_toBottomOf="@+id/recUsernameLeft"
+                android:layout_marginStart="5dp"
                 app:tint="@color/blue" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/sendMessageLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="15dp"
+                app:backgroundTint="@color/white"
+                app:srcCompat="@drawable/ic_send_message"
+                app:tint="@color/purple_200"
+                android:layout_marginBottom="60dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:fabCustomSize="60dp"
+                app:maxImageSize="40dp"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     </androidx.cardview.widget.CardView>
 
-    <FrameLayout
-        android:id="@+id/sendMessageWrapperLeft"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:elevation="20dp"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recProfileCardLeft"
-        app:layout_constraintEnd_toEndOf="@+id/recProfileCardLeft"
-        android:background="@drawable/recommend_card_button_background"
-        >
-        <androidx.appcompat.widget.AppCompatImageView
-            android:elevation="30dp"
-            android:id="@+id/sendMessageLeft"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_send_message"
-            android:tint="@color/chat_send_color"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            />
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/recProfileCardLeft"-->
+<!--    android:layout_width="320dp"-->
+<!--    android:layout_height="420dp"-->
+<!--    android:layout_marginTop="20dp"-->
+<!--    android:layout_marginStart="20dp"-->
+<!--    app:cardBackgroundColor="@color/bg_black1"-->
+<!--    app:cardCornerRadius="50dp"-->
+<!--    app:cardElevation="5dp"-->
+<!--    app:cardMaxElevation="10dp"-->
+<!--    android:clipToPadding="false"-->
+<!--    android:clickable="true"-->
+<!--    android:foreground="?android:attr/selectableItemBackground"-->
+<!--    app:cardPreventCornerOverlap="true">-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/loadPhotoLeft"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/blurredProfilePhotoLeft"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/blurredProfilePhotoLeft"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/blurredProfilePhotoLeft"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoLeft"-->
+<!--            />-->
+
+<!--        <com.jgabrielfreitas.core.BlurImageView-->
+<!--            android:id="@+id/blurredProfilePhotoLeft"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginEnd="5dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/ic_default_avatar"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/likeToggleLeft"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:elevation="15dp"-->
+<!--            app:layout_constraintTop_toTopOf="@id/blurredProfilePhotoLeft"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoLeft"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            app:backgroundTint="@color/white"-->
+<!--            app:srcCompat="@drawable/ic_unlike"-->
+<!--            app:tint="#8E1818"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            app:fabSize="mini"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/recUsernameLeft"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="sans-serif-black"-->
+<!--            android:shadowColor="@color/black"-->
+<!--            android:shadowRadius="8"-->
+<!--            android:text="Harry Potter"-->
+<!--            android:textColor="@color/chat_contact_image_color"-->
+<!--            android:textSize="25sp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:layout_marginStart="24dp"-->
+<!--            android:layout_marginBottom="18dp"-->
+<!--            android:elevation="20dp"-->
+<!--            android:maxWidth="250dp"-->
+<!--            />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/recUserGenderLeft"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:src="@drawable/ic_gender_male"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/recUsernameLeft"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/recUsernameLeft"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/recUsernameLeft"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            app:tint="@color/blue" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/sendMessageLeft"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:elevation="15dp"-->
+<!--            app:backgroundTint="@color/white"-->
+<!--            app:srcCompat="@drawable/ic_send_message"-->
+<!--            app:tint="@color/purple_200"-->
+<!--            android:layout_marginBottom="60dp"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:fabCustomSize="60dp"-->
+<!--            app:maxImageSize="40dp"-->
+<!--            />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+<!--</androidx.cardview.widget.CardView>-->
+
+
+
+
+
+
+
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:padding="4dp">-->
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+
+<!--        android:id="@+id/cardLeft_floatingButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:fabSize="mini"-->
+
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:elevation="20dp"-->
+
+<!--        app:layout_constraintTop_toTopOf="@id/recProfileCardLeft"-->
+<!--        app:layout_constraintStart_toStartOf="@id/recProfileCardLeft"-->
+
+<!--        />-->
+
+<!--    <FrameLayout-->
+<!--        android:layout_width="35dp"-->
+<!--        android:layout_height="35dp"-->
+<!--        app:layout_constraintTop_toTopOf="@id/recProfileCardLeft"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/recProfileCardLeft"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:background="@drawable/recommend_card_button_background"-->
+<!--        android:elevation="15dp">-->
+<!--        <Button-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:background="@drawable/ic_unlike"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            android:elevation="40dp"-->
+<!--            android:id="@+id/likeToggleLeft"-->
+<!--            />-->
+
+<!--    </FrameLayout>-->
+
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:id="@+id/recProfileCardLeft"-->
+<!--        android:layout_width="320dp"-->
+<!--        android:layout_height="420dp"-->
+<!--        app:cardElevation="10dp"-->
+<!--        app:cardBackgroundColor="@color/bg_black1"-->
+<!--        app:cardCornerRadius="50dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:clickable="true"-->
+<!--        android:foreground="?android:attr/selectableItemBackground"-->
+<!--        >-->
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--            <ProgressBar-->
+<!--                android:id="@+id/loadPhotoLeft"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/blurredProfilePhotoLeft"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/blurredProfilePhotoLeft"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/blurredProfilePhotoLeft"-->
+<!--                app:layout_constraintEnd_toEndOf="@id/blurredProfilePhotoLeft"-->
+<!--                />-->
+
+<!--            <com.jgabrielfreitas.core.BlurImageView-->
+<!--                android:id="@+id/blurredProfilePhotoLeft"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:layout_marginEnd="5dp"-->
+<!--                android:layout_marginBottom="5dp"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:src="@drawable/ic_default_avatar"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <FrameLayout-->
+<!--                android:id="@+id/recUsernameLeftWrapper"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="24dp"-->
+<!--                android:layout_marginBottom="18dp"-->
+<!--                android:elevation="20dp"-->
+<!--                android:maxWidth="250dp"-->
+<!--                android:paddingLeft="10dp"-->
+<!--                android:paddingRight="10dp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/recUsernameLeft"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:fontFamily="sans-serif-black"-->
+<!--                    android:shadowColor="@color/black"-->
+<!--                    android:shadowRadius="8"-->
+<!--                    android:text="Harry Potter"-->
+<!--                    android:textColor="@color/chat_contact_image_color"-->
+<!--                    android:textSize="25sp" />-->
+
+
+<!--            </FrameLayout>-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/recUserGenderLeft"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:src="@drawable/ic_gender_male"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/recUsernameLeftWrapper"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/recUsernameLeftWrapper"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/recUsernameLeftWrapper"-->
+<!--                android:layout_marginStart="2dp"-->
+<!--                app:tint="@color/blue" />-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    </androidx.cardview.widget.CardView>-->
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/sendMessageWrapperLeft"-->
+<!--        android:layout_width="70dp"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:elevation="20dp"-->
+<!--        android:layout_marginBottom="60dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/recProfileCardLeft"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/recProfileCardLeft"-->
+<!--        android:background="@drawable/recommend_card_button_background"-->
+<!--        >-->
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:elevation="30dp"-->
+<!--            android:id="@+id/sendMessageLeft"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:src="@drawable/ic_send_message"-->
+<!--            android:tint="@color/chat_send_color"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="1dp"-->
+<!--            />-->
+<!--    </FrameLayout>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
