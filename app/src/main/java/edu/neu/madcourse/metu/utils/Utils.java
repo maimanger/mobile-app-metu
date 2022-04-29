@@ -171,7 +171,6 @@ public class Utils {
 
 
     public static void loadImgUri(String uri, ImageView imageView, Callback callback) {
-        imageView.setImageResource(R.drawable.ic_loading);
         if (uri == null
                 || (!uri.startsWith("http://") && !uri.startsWith("https://"))
                 || (!Patterns.WEB_URL.matcher(uri).matches())) {
@@ -181,6 +180,42 @@ public class Utils {
         Picasso.get().load(uri).into(imageView, callback);
 
     }
+
+
+    public static class PicassoLoadingTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public PicassoLoadingTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+            bmImage.setImageResource(R.drawable.ic_loading);
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mBitmap = null;
+            if (urldisplay == null
+                    || (!urldisplay.startsWith("http://") && !urldisplay.startsWith("https://"))
+                    || (!Patterns.WEB_URL.matcher(urldisplay).matches())) {
+                return mBitmap;
+            }
+
+            try {
+                mBitmap = Picasso.get().load(urldisplay).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return mBitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if (result == null) {
+                bmImage.setImageResource(R.drawable.user_avatar);
+            } else {
+                bmImage.setImageBitmap(result);
+            }
+        }
+    }
+
 
     public static Bitmap getBitmapFromUri(String uri) {
         Bitmap mBitmap = null;
