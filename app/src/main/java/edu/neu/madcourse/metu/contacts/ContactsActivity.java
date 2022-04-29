@@ -208,6 +208,7 @@ public class ContactsActivity extends BaseCalleeActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_contacts);
         initFromFetching();
         /*if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);

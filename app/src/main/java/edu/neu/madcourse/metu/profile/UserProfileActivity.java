@@ -158,6 +158,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_me);
         if (!isSelf) {
             initOnlineStatus(profileUserId);
         } else {
