@@ -64,8 +64,8 @@ public class LocatorService extends Service {
                 fineLocationPermission == PackageManager.PERMISSION_GRANTED) {
             locationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
             locationRequest = LocationRequest.create();
-            locationRequest.setInterval(10000);
-            locationRequest.setFastestInterval(5000);
+            /*locationRequest.setInterval(10000);
+            locationRequest.setFastestInterval(5000);*/
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
             locationCallback = new LocationCallback() {
@@ -74,9 +74,12 @@ public class LocatorService extends Service {
                     super.onLocationResult(locationResult);
                     if (locationResult != null && locationResult.getLocations().size() > 0) {
                         Location lastLocation = locationResult.getLastLocation();
+
                         // Retrieve coordinates
                         double latitude = lastLocation.getLatitude();
                         double longitude = lastLocation.getLongitude();
+
+                        // Retrieve location
                         Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
                         List<Address> addresses = null;
                         try {
@@ -94,24 +97,20 @@ public class LocatorService extends Service {
                             locationMap.put("city", cityName);
                             FirebaseDatabase.getInstance().getReference().child("latestLocation")
                                     .child(userId).setValue(locationMap);
-
-                            finished = true;
                             Log.d(TAG, "onStartCommand: Location fetched -- " + countryName + ", " + cityName);
                         }
                     }
+                    finished = true;
+                    Log.d(TAG, "onLocationResult: stopService");
+                    stopService();
                 }
             };
+
             getLocation();
         } else {
-            Log.d(TAG, "onStartCommand: No location permissions");
-            stopSelf();
+            Log.d(TAG, "onStartCommand: No location permissions, stopService");
+            stopService();
         }
-
-        if (finished) {
-            locationProviderClient.removeLocationUpdates(locationCallback);
-        }
-
-        stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -141,18 +140,25 @@ public class LocatorService extends Service {
                 Looper.getMainLooper());
     }
 
-    private Task<LocationSettingsResponse> checkLocationSetting() {
+/*    private Task<LocationSettingsResponse> checkLocationSetting() {
         // check location settings
         LocationSettingsRequest.Builder settingRequestBuilder = new LocationSettingsRequest.Builder();
         settingRequestBuilder.addLocationRequest(locationRequest);
         SettingsClient settingsClient = LocationServices.getSettingsClient(getApplicationContext());
         return settingsClient.checkLocationSettings(settingRequestBuilder.build());
-    }
+    }*/
 
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void stopService() {
+        if (finished) {
+            locationProviderClient.removeLocationUpdates(locationCallback);
+        }
+        stopSelf();
     }
 }
