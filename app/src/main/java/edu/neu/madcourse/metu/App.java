@@ -70,6 +70,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     private String fcmToken = "";
 
+    public int getAliveActivityCount() {
+        return aliveActivityCount;
+    }
+
 
     /*private Map<String, Integer> peersOnlineStatus;*/
 
@@ -287,7 +291,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
         isActivityChangingConfigurations = activity.isChangingConfigurations();
-        if (--aliveActivityCount > 0 && !isActivityChangingConfigurations) {
+        if (--aliveActivityCount > 0 || isActivityChangingConfigurations) {
             return;
         } else {
             if (loginUser != null) {

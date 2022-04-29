@@ -339,6 +339,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_chats);
         Log.d("Recent Conversation", "onResume");
         if (recentConversationAdapter != null && recentConversation != null) {
             recentConversation.setAdapter(recentConversationAdapter);

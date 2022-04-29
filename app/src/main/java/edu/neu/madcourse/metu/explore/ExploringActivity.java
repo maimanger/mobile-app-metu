@@ -60,6 +60,8 @@ public class ExploringActivity extends BaseCalleeActivity {
     // for multi threading
     private ExecutorService executorService;
 
+
+
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -254,6 +256,12 @@ public class ExploringActivity extends BaseCalleeActivity {
         bundle.putString("USER_ID", userId);
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "Explore Setting Dialog");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_explore);
     }
 
 
