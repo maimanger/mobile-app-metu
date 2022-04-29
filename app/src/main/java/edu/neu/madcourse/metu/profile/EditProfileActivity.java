@@ -27,21 +27,28 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
+import edu.neu.madcourse.metu.service.CountryStateCityService;
 import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Utils;
 
 public class EditProfileActivity extends BaseCalleeActivity {
 
-    EditText etNickname, etLocation, etAge;
-    Spinner genderSpinner;
-    NumberPicker statePicker, cityPicker;
+    private EditText etNickname, etAge;
+    private Spinner genderSpinner;
+    private NumberPicker statePicker, cityPicker;
     private Uri imageFilePath;
     private Uri imageFirebaseUri;
     private Bitmap avatarBitmap;
@@ -49,6 +56,8 @@ public class EditProfileActivity extends BaseCalleeActivity {
     private String profileUserId;
     private ImageView uploadImageView;
     private String gender;
+    private String locationState, locationCity;
+    Lock cityPickerLock = new ReentrantLock();
 
 
     @Override
@@ -57,7 +66,11 @@ public class EditProfileActivity extends BaseCalleeActivity {
         setContentView(R.layout.activity_edit_profile);
 
         profileUserId = getIntent().getExtras().getString("userId");
-        viewInitializations();
+        try {
+            viewInitializations();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         uploadImageView = findViewById(R.id.edit_profile_image);
         String loginUserAvatarUri = ((App) getApplication()).getLoginUser().getAvatarUri();
@@ -81,16 +94,17 @@ public class EditProfileActivity extends BaseCalleeActivity {
                         imageFirebaseUri = Uri.parse(data.getStringExtra("imageFirebaseUri"));
 
                         runOnUiThread(() -> {
-                            Utils.loadImgUri(imageFirebaseUri.toString(), uploadImageView, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                }
+                            Utils.loadImgUri(imageFirebaseUri.toString(), uploadImageView,
+                                    new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                        }
 
-                                @Override
-                                public void onError(Exception e) {
-                                    uploadImageView.setImageResource(R.drawable.user_avatar);
-                                }
-                            });
+                                        @Override
+                                        public void onError(Exception e) {
+                                            uploadImageView.setImageResource(R.drawable.user_avatar);
+                                        }
+                                    });
                         });
 
                         // TODO: Should be implemented in Button(R.id.bt_register) onclickListener
@@ -118,21 +132,18 @@ public class EditProfileActivity extends BaseCalleeActivity {
 
     }
 
-    void viewInitializations() {
+    void viewInitializations() throws JSONException {
         etNickname = findViewById(R.id.et_username);
-//        etLocation = findViewById(R.id.et_location);
         etAge = findViewById(R.id.et_age);
         ImageView uploadImageView = findViewById(R.id.edit_profile_image);
 
         findViewById(R.id.btn_editProfile_back).setOnClickListener(View -> onBackPressed());
 
         initStatePicker();
-//        initCityPicker();
         initGenderSpinner();
 
         FirebaseService.getInstance().fetchUserProfileDataOneTime(profileUserId, user -> {
             etNickname.setText(user.getNickname());
-//            etLocation.setText(user.getLocation());
             etAge.setText(String.valueOf(user.getAge()));
             genderSpinner.setSelection(user.getGender() + 1);
 
@@ -178,7 +189,72 @@ public class EditProfileActivity extends BaseCalleeActivity {
     }
 
     private void initStatePicker() {
-        statePicker = findViewById(R.id.state_picker);
+        new Thread(() -> {
+            statePicker = findViewById(R.id.state_picker);
+            List<String> states = null;
+            try {
+                states = CountryStateCityService.getStates();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            assert states != null;
+
+            Log.e(TAG, "states: " + states.toString());
+            final String[] statesArray = states.toArray(new String[states.size()]);
+            statePicker.setMinValue(0);
+            statePicker.setMaxValue(states.size() - 1);
+            statePicker.setDisplayedValues(statesArray);
+            statePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+            statePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                @Override
+                public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                    if (newVal >= 0 && newVal < statesArray.length) {
+                        locationState = statesArray[newVal];
+                        initCityPicker(locationState);
+                    }
+                }
+            });
+        }).start();
+    }
+
+    private void initCityPicker(String state) {
+        new Thread(() -> {
+            cityPickerLock.lock();
+
+            List<String> cities = null;
+            try {
+                cities = CountryStateCityService.getCities(state);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            assert cities != null;
+            Log.e(TAG, "cities: " + cities.toString());
+
+            if (!cities.isEmpty()) {
+                cityPicker = findViewById(R.id.city_picker);
+                final String[] citiesArray = cities.toArray(new String[cities.size()]);
+                Log.e(TAG, "citiesArray = " + Arrays.toString(citiesArray));
+
+
+                cityPicker.setDisplayedValues(null);
+                cityPicker.setMinValue(0);
+                cityPicker.setMaxValue(Math.max(cities.size() - 1, 0));
+                cityPicker.setDisplayedValues(citiesArray);
+
+                cityPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+                cityPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+                    if (newVal >= 0 && newVal < citiesArray.length) {
+                        locationCity = citiesArray[newVal];
+                    }
+                });
+            } else {
+                cityPicker.setDisplayedValues(null);
+                cityPicker.setMinValue(0);
+                cityPicker.setMaxValue(0);
+            }
+
+            cityPickerLock.unlock();
+        }).start();
     }
 
 
@@ -188,11 +264,6 @@ public class EditProfileActivity extends BaseCalleeActivity {
             etNickname.setError("Please Enter Username");
             return false;
         }
-
-        /*if (etLocation.getText().toString().equals("")) {
-            etLocation.setError("Please Enter Location");
-            return false;
-        }*/
 
         if (etAge.getText().toString().equals("")) {
             etAge.setError("Please Enter Your Age");
@@ -216,7 +287,6 @@ public class EditProfileActivity extends BaseCalleeActivity {
         if (validateInput()) {
             // Input is valid, here send data to your server
             String nickname = etNickname.getText().toString();
-//            String location = etLocation.getText().toString();
             Integer age = Integer.parseInt(etAge.getText().toString());
 
             Integer genderInt = 2;
@@ -229,7 +299,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             // Write user data to firebase
             User loginUser = ((App) getApplication()).getLoginUser();
             loginUser.setNickname(nickname);
-//            loginUser.setLocation(location);
+            loginUser.setLocation(locationCity + ", " + locationState);
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
 
