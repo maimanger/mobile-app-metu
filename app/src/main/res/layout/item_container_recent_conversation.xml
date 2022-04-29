@@ -53,46 +53,45 @@
             android:id="@+id/recentContact"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
+            android:fontFamily="sans-serif-black"
             android:maxLines="1"
+            android:text="Harry Potter"
             android:textColor="#848287"
             android:textSize="18sp"
-            android:text="Harry Potter"
-            android:fontFamily="sans-serif-black"
             app:layout_constraintBottom_toTopOf="@id/viewSupporter"
             app:layout_constraintEnd_toStartOf="@id/messageTimestamp"
-            app:layout_constraintStart_toEndOf="@id/contactAvatar"/>
+            app:layout_constraintStart_toEndOf="@id/contactAvatar" />
 
         <TextView
             android:id="@+id/recentMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="dooooooooooooooooooooooooooooooo you feel better now?"
             android:textColor="@color/gray"
             android:textSize="15sp"
-            android:text="dooooooooooooooooooooooooooooooo you feel better now?"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/contactAvatar"
-            app:layout_constraintTop_toBottomOf="@id/viewSupporter"
-            />
+            app:layout_constraintTop_toBottomOf="@id/viewSupporter" />
 
         <TextView
             android:id="@+id/messageTimestamp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="2022-04-13 2:03 PM"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="13dp"
-            android:textColor="@color/gray"
             android:fontFamily="sans-serif-black"
-            app:layout_constraintTop_toTopOf="@id/recentContact"
+            android:text="2022-04-13 2:03 PM"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/recentContact"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recentContact" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

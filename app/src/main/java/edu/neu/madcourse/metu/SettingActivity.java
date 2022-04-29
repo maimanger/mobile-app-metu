@@ -37,6 +37,9 @@ public class SettingActivity extends BaseCalleeActivity {
         TextView toolbar = findViewById(R.id.toolbartag);
         toolbar.setText("Settings");
 
+        findViewById(R.id.btn_setting_back).setOnClickListener(view -> onBackPressed());
+
+
         message = findViewById(R.id.switch_message);
         video = findViewById(R.id.switch_video);
         vibration = findViewById(R.id.switch_vibration);
@@ -44,6 +47,7 @@ public class SettingActivity extends BaseCalleeActivity {
         message.setChecked(loginUser.getAllowMessageNotif());
         video.setChecked(loginUser.getAllowVideoNotif());
         vibration.setChecked(loginUser.getAllowVibration());
+
 
         String userId = loginUser.getUserId();
 
@@ -133,6 +137,8 @@ public class SettingActivity extends BaseCalleeActivity {
                     @Override
                     public void onFailure(ErrorInfo errorInfo) { }
                 });
+
+                ((App)getApplication()).setLoginUser(null);
 
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="20dp"
+    android:elevation="10dp"
     tools:context=".profile.VideoButtonFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -14,7 +14,7 @@
         android:layout_height="50dp"
         android:clickable="true"
         android:elevation="5dp"
-        android:src="@drawable/video_chat"
+        android:src="@android:drawable/presence_video_online"
         app:backgroundTint="#8c09e0"
         app:elevation="5dp"
         app:fabCustomSize="50dp"

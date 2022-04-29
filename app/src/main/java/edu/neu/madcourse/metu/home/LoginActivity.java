@@ -130,6 +130,10 @@ public class LoginActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
                     .child(userId).child("lastLoginTime").setValue(currentTime);
 
+            boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
+            Log.d("LoginActivity", "isFirstLogin: " + isFirstLogin);
+            Log.d("LoginActivity", "getLoginUser: " + ((App)getApplication()).getLoginUser());
+
             // fetch the user info from the database && bind a long-lived listener to User change in Database
             FirebaseService.getInstance().fetchUserProfileData(userId,
                     (User user) -> {
@@ -138,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Log.d("LoginActivity", "login profile fetched null");
                         }
-                        boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
 
                         // Update Current loginUser
                         ((App)getApplication()).setLoginUser(user);

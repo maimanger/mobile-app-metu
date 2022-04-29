@@ -72,7 +72,6 @@ public class ContactsActivity extends BaseCalleeActivity {
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
-        bottomNavigationView.setSelectedItemId(R.id.menu_contacts);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -208,6 +207,7 @@ public class ContactsActivity extends BaseCalleeActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_contacts);
         initFromFetching();
         /*if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
             contactsViewPager.setAdapter(contactsPagerAdapter);

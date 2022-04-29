@@ -31,6 +31,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -45,6 +46,8 @@ public class UploadActivity extends BaseCalleeActivity {
 
     // Uri indicates, where the image will be picked from
     private Uri filePath;
+
+    private Bitmap bitmap;
 
     // request code
     private final int PICK_IMAGE_REQUEST = 22;
@@ -134,7 +137,7 @@ public class UploadActivity extends BaseCalleeActivity {
             try {
 
                 // Setting image on image view using Bitmap
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
             }
 
@@ -160,8 +163,12 @@ public class UploadActivity extends BaseCalleeActivity {
             String firebaseStoragePath = "images/" + UUID.randomUUID().toString();
             StorageReference ref = storageReference.child(firebaseStoragePath);
 
-            // adding listeners on upload or failure of image
-            UploadTask uploadTask = ref.putFile(filePath);
+            // Compress the image and upload it to Firebase
+            ByteArrayOutputStream byteOutputs = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteOutputs);
+            UploadTask uploadTask = ref.putBytes(byteOutputs.toByteArray());
+
+            //UploadTask uploadTask = ref.putFile(filePath);
             uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,
                     Task<Uri>>() {
                 @Override

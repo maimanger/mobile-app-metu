@@ -119,7 +119,6 @@ public class RecentConversationActivity extends BaseCalleeActivity {
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
-        bottomNavigationView.setSelectedItemId(R.id.menu_chats);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -339,6 +338,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.menu_chats);
         Log.d("Recent Conversation", "onResume");
         if (recentConversationAdapter != null && recentConversation != null) {
             recentConversation.setAdapter(recentConversationAdapter);

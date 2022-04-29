@@ -81,7 +81,7 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
 
                 @Override
                 public void onError(Exception e) {
-                    contactAvatar.setImageResource(R.drawable.ic_default_avatar);
+                    contactAvatar.setImageResource(R.drawable.user_avatar);
                 }
             });
 

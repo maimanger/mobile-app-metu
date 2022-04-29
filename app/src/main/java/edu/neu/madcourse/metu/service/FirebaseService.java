@@ -60,8 +60,6 @@ public class FirebaseService {
 //        childUpdates.put("/users/" + user.getUserId(), userValues);
 //
 //        databaseRef.updateChildren(childUpdates);
-        System.out.println("edit user profile: ");
-        System.out.println(user);
         databaseRef.child("users").child(user.getUserId()).setValue(user);
     }
 
