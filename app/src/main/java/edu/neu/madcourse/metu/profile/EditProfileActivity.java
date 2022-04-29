@@ -309,9 +309,13 @@ public class EditProfileActivity extends BaseCalleeActivity {
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
 
-            if (!imageFirebaseUri.equals(loginUser.getAvatarUri())) {
-                loginUser.setAvatarUri(imageFirebaseUri.toString());
+            if(imageFirebaseUri!=null) {
+                if (!imageFirebaseUri.toString().equals(loginUser.getAvatarUri())) {
+                    loginUser.setAvatarUri(imageFirebaseUri.toString());
+                }
             }
+
+            Log.d(TAG, "loginUser: "+loginUser);
 
             FirebaseService.getInstance().updateUserProfile(loginUser);
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
