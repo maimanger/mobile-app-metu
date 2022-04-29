@@ -44,8 +44,8 @@ public class FirebaseService {
 
     public void updateUserProfile(User user) {
         // Firebase does not allow '.' character in key.
-        String key = user.getEmail().replace(".", "");
-        HashMap<String, Object> userValues = new HashMap<>();
+        /*HashMap<String, Object> userValues = new HashMap<>();
+        userValues.put("email", user.getEmail());
         userValues.put("userId", user.getUserId());
         userValues.put("nickname", user.getNickname());
         userValues.put("password", user.getPassword());
@@ -55,9 +55,10 @@ public class FirebaseService {
         userValues.put("avatarUri", user.getAvatarUri());
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + key, userValues);
+        childUpdates.put("/users/" + user.getUserId(), userValues);
+        databaseRef.updateChildren(childUpdates);*/
 
-        databaseRef.updateChildren(childUpdates);
+        databaseRef.child("users").child(user.getUserId()).setValue(user);
     }
 
     public void updateUserAvatar(String userId, String imageFirebaseUri) {
@@ -148,7 +149,12 @@ public class FirebaseService {
 
     public void fetchContacts(String userId, Map<String, Boolean> connections,
                               DataFetchCallback<List<Contact>> callback) {
-        databaseRef.child("connections").addValueEventListener(new ValueEventListener() {
+        if (connections == null || connections.isEmpty()) {
+            callback.onCallback(new ArrayList<>());
+            return;
+        }
+
+        databaseRef.child("connections").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Contact> fetchedContacts = new ArrayList<>();

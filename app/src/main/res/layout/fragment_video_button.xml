@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="10dp"
     tools:context=".profile.VideoButtonFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -12,14 +13,15 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:clickable="true"
+        android:elevation="5dp"
         android:src="@drawable/video_chat"
         app:backgroundTint="#8c09e0"
         app:elevation="5dp"
+        app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@android:color/white"
-        app:fabCustomSize="50dp"/>
+        app:tint="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
