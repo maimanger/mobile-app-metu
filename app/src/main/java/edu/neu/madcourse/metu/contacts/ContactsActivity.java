@@ -72,7 +72,6 @@ public class ContactsActivity extends BaseCalleeActivity {
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navi);
-        bottomNavigationView.setSelectedItemId(R.id.menu_contacts);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

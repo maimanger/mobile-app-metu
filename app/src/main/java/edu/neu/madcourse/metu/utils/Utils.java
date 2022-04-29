@@ -138,6 +138,7 @@ public class Utils {
 
         public DownloadImageTask(ImageView bmImage) {
             this.bmImage = bmImage;
+            bmImage.setImageResource(R.drawable.ic_loading);
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -166,6 +167,7 @@ public class Utils {
             callback.onError(new Exception());
             return;
         }
+        imageView.setImageResource(R.drawable.ic_loading);
         Picasso.get().load(uri).into(imageView, callback);
 
     }
