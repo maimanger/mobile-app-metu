@@ -29,10 +29,13 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 public class LocatorService extends Service {
@@ -44,9 +47,13 @@ public class LocatorService extends Service {
     private LocationCallback locationCallback;
     private String countryName;
     private String cityName;
+    private String userId;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        userId = intent.getStringExtra("USER_ID");
+
         // Check previous permission
         int coarseLocationPermission = ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -80,7 +87,14 @@ public class LocatorService extends Service {
                         if (addresses != null && addresses.size() > 0) {
                             countryName = addresses.get(0).getCountryName();
                             cityName = addresses.get(0).getLocality();
-                            // TODO: update Firebase latest location
+
+                            // Update Firebase latest location
+                            Map<String, String> locationMap = new HashMap<>();
+                            locationMap.put("country", countryName);
+                            locationMap.put("city", cityName);
+                            FirebaseDatabase.getInstance().getReference().child("latestLocation")
+                                    .child(userId).child("country").setValue(locationMap);
+
                             finished = true;
                             Log.d(TAG, "onStartCommand: Location fetched -- " + countryName + ", " + cityName);
                         }
