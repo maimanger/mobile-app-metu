@@ -65,6 +65,7 @@ public class FirebaseService {
 
     public void updateConnectionUser(User user) {
         Map<String, Boolean> connections = user.getConnections();
+        if (connections == null || connections.isEmpty()) return;
         ConnectionUser connectionUser = user.convertToConnectionUser();
         databaseRef.child("connections").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

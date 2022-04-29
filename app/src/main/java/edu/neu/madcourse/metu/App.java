@@ -75,6 +75,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
+
+
     /*private Map<String, Integer> peersOnlineStatus;*/
 
     class AgoraEventListener implements RtmClientListener, RtmCallEventListener {
@@ -589,6 +591,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
         if (!currActivityName.equals("LoginActivity") && !currActivityName.equals("RegisterActivity")) {
             ((BaseCalleeActivity)currActivity).refreshAppLoginUser();
         }
+    }
+
+    public String getCurrActivityName() {
+        return currActivityName;
     }
 
     public String getFcmToken() {
