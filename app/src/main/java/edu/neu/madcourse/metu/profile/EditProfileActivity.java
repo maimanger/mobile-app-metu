@@ -210,52 +210,52 @@ public class EditProfileActivity extends BaseCalleeActivity {
                 public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                     if (newVal >= 0 && newVal < statesArray.length) {
                         locationState = statesArray[newVal];
-                        initCityPicker(locationState);
+//                        initCityPicker(locationState);
                     }
                 }
             });
         }).start();
     }
 
-    private void initCityPicker(String state) {
-        new Thread(() -> {
-            cityPickerLock.lock();
-
-            List<String> cities = null;
-            try {
-                cities = CountryStateCityService.getCities(state);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            assert cities != null;
-            Log.e(TAG, "cities: " + cities.toString());
-
-            if (!cities.isEmpty()) {
-                cityPicker = findViewById(R.id.city_picker);
-                final String[] citiesArray = cities.toArray(new String[cities.size()]);
-                Log.e(TAG, "citiesArray = " + Arrays.toString(citiesArray));
-
-
-                cityPicker.setDisplayedValues(null);
-                cityPicker.setMinValue(0);
-                cityPicker.setMaxValue(Math.max(cities.size() - 1, 0));
-                cityPicker.setDisplayedValues(citiesArray);
-
-                cityPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-                cityPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-                    if (newVal >= 0 && newVal < citiesArray.length) {
-                        locationCity = citiesArray[newVal];
-                    }
-                });
-            } else {
-                cityPicker.setDisplayedValues(null);
-                cityPicker.setMinValue(0);
-                cityPicker.setMaxValue(0);
-            }
-
-            cityPickerLock.unlock();
-        }).start();
-    }
+//    private void initCityPicker(String state) {
+//        new Thread(() -> {
+//            cityPickerLock.lock();
+//
+//            List<String> cities = null;
+//            try {
+//                cities = CountryStateCityService.getCities(state);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            assert cities != null;
+//            Log.e(TAG, "cities: " + cities.toString());
+//
+//            if (!cities.isEmpty()) {
+//                cityPicker = findViewById(R.id.city_picker);
+//                final String[] citiesArray = cities.toArray(new String[cities.size()]);
+//                Log.e(TAG, "citiesArray = " + Arrays.toString(citiesArray));
+//
+//
+//                cityPicker.setDisplayedValues(null);
+//                cityPicker.setMinValue(0);
+//                cityPicker.setMaxValue(Math.max(cities.size() - 1, 0));
+//                cityPicker.setDisplayedValues(citiesArray);
+//
+//                cityPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+//                cityPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+//                    if (newVal >= 0 && newVal < citiesArray.length) {
+//                        locationCity = citiesArray[newVal];
+//                    }
+//                });
+//            } else {
+//                cityPicker.setDisplayedValues(null);
+//                cityPicker.setMinValue(0);
+//                cityPicker.setMaxValue(0);
+//            }
+//
+//            cityPickerLock.unlock();
+//        }).start();
+//    }
 
 
     // Checking if the input in form is valid
@@ -275,7 +275,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             return false;
         }
 
-        if (locationState == null || locationCity == null) {
+        if (locationState == null) {
             Toast.makeText(getApplicationContext(), "Please select a location", Toast.LENGTH_SHORT).show();
             return false;
 
@@ -305,11 +305,11 @@ public class EditProfileActivity extends BaseCalleeActivity {
             // Write user data to firebase
             User loginUser = ((App) getApplication()).getLoginUser();
             loginUser.setNickname(nickname);
-            loginUser.setLocation(locationCity + ", " + locationState);
+            loginUser.setLocation(locationState);
             loginUser.setAge(age);
             loginUser.setGender(genderInt);
 
-            if (!imageFirebaseUri.equals(loginUser.getAvatarUri())) {
+            if (imageFirebaseUri != null && !imageFirebaseUri.toString().equals(loginUser.getAvatarUri())) {
                 loginUser.setAvatarUri(imageFirebaseUri.toString());
             }
 

@@ -145,34 +145,37 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="50dp"
                         android:text="State"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"></TextView>
-                    <TextView
-                        android:text="City"
-                        android:layout_marginEnd="50dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        >
+                        app:layout_constraintEnd_toEndOf="parent">
                     </TextView>
+<!--                    <TextView-->
+<!--                        android:text="City"-->
+<!--                        android:layout_marginEnd="50dp"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        >-->
+<!--                    </TextView>-->
 
                     <NumberPicker
                         android:id="@+id/state_picker"
                         android:layout_width="128dp"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"></NumberPicker>
-                    <NumberPicker
-                        android:id="@+id/city_picker"
-                        android:layout_width="128dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        >
+                        app:layout_constraintEnd_toEndOf="parent">
                     </NumberPicker>
+<!--                    <NumberPicker-->
+<!--                        android:id="@+id/city_picker"-->
+<!--                        android:layout_width="128dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        >-->
+<!--                    </NumberPicker>-->
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
