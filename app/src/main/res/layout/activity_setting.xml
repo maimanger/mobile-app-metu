@@ -7,6 +7,19 @@
     android:orientation="vertical">
     <include layout="@layout/layout_top" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_setting_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:elevation="10dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_back"
+        android:tint="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

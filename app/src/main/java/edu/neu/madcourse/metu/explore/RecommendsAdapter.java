@@ -1,6 +1,7 @@
 package edu.neu.madcourse.metu.explore;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -22,6 +26,7 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
 import edu.neu.madcourse.metu.models.ConnectionUser;
 import edu.neu.madcourse.metu.models.User;
+import edu.neu.madcourse.metu.profile.UserProfileActivity;
 import edu.neu.madcourse.metu.utils.BitmapUtils;
 import edu.neu.madcourse.metu.utils.Constants;
 
@@ -77,9 +82,10 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView blurredProfileImg;
         TextView recommendUsername;
         ImageView recommendUserGender;
-        AppCompatImageView sendMessage;
+        FloatingActionButton sendMessage;
         //LikeButton toggleButton;
-        Button toggleButton;
+        FloatingActionButton toggleButton;
+        CardView card;
 
         public RecommendProfileLeftViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,16 +96,35 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             recommendUserGender = itemView.findViewById(R.id.recUserGenderLeft);
             sendMessage = itemView.findViewById(R.id.sendMessageLeft);
             toggleButton = itemView.findViewById(R.id.likeToggleLeft);
+            card = itemView.findViewById(R.id.recProfileCardLeft);
         }
 
         public void setData(RecommendedUser recommendedUser) {
+
+            // add click listener for card
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context.getApplicationContext(), UserProfileActivity.class);
+                    intent.putExtra("PROFILE_USER_ID", recommendedUser.getUserId());
+                    intent.putExtra("CONNECTION_POINT", recommendedUser.getConnectionPoint());
+                    intent.putExtra("CONNECTION_ID", recommendedUser.getConnectionId()==null? "":recommendedUser.getConnectionId());
+
+                    context.startActivity(intent);
+                }
+            });
+
             // this.toggleButton.setLiked(profile.isLiked());
             if (recommendedUser.getIsLiked()) {
-                toggleButton.setBackgroundResource(R.drawable.ic_like);
+                //toggleButton.setBackgroundResource(R.drawable.ic_like);
+                toggleButton.setImageResource(R.drawable.ic_like);
+                toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                 toggleButton.setOnClickListener(null);
                 toggleButton.setClickable(false);
             } else {
-                toggleButton.setBackgroundResource(R.drawable.ic_unlike);
+                //toggleButton.setBackgroundResource(R.drawable.ic_unlike);
+                toggleButton.setImageResource(R.drawable.ic_unlike);
+                toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                 // set listener
                 // toggle button listener
                 //toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
@@ -107,7 +132,8 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         , recommendedUser.convertToConnectionUser()) {
                     @Override
                     protected void switchViewToBeLiked() {
-                        toggleButton.setBackgroundResource(R.drawable.ic_like);
+                        toggleButton.setImageResource(R.drawable.ic_like);
+                        toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                         toggleButton.setOnClickListener(null);
                         toggleButton.setClickable(false);
                     }
@@ -151,8 +177,9 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView blurredProfileImg;
         TextView recommendUsername;
         ImageView recommendUserGender;
-        AppCompatImageView sendMessage;
-        Button toggleButton;
+        FloatingActionButton sendMessage;
+        FloatingActionButton toggleButton;
+        CardView card;
 
         public RecommendProfileRightViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -163,25 +190,44 @@ public class RecommendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             recommendUserGender = itemView.findViewById(R.id.recUserGenderRight);
             sendMessage = itemView.findViewById(R.id.sendMessageRight);
             toggleButton = itemView.findViewById(R.id.likeToggleRight);
+            card = itemView.findViewById(R.id.recProfileCardRight);
         }
 
         public void setData(RecommendedUser recommendedUser) {
+            // add click listener for card
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context.getApplicationContext(), UserProfileActivity.class);
+                    intent.putExtra("PROFILE_USER_ID", recommendedUser.getUserId());
+                    intent.putExtra("CONNECTION_POINT", recommendedUser.getConnectionPoint());
+                    intent.putExtra("CONNECTION_ID", recommendedUser.getConnectionId()==null? "":recommendedUser.getConnectionId());
+
+                    context.startActivity(intent);
+                }
+            });
+
 
             // this.toggleButton.setLiked(profile.isLiked());
             if (recommendedUser.getIsLiked()) {
-                toggleButton.setBackgroundResource(R.drawable.ic_like);
+                //toggleButton.setBackgroundResource(R.drawable.ic_like);
+                toggleButton.setImageResource(R.drawable.ic_like);
+                toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                 toggleButton.setOnClickListener(null);
                 toggleButton.setClickable(false);
             } else {
-                toggleButton.setBackgroundResource(R.drawable.ic_unlike);
+                //toggleButton.setBackgroundResource(R.drawable.ic_unlike);
+                toggleButton.setImageResource(R.drawable.ic_unlike);
+                toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                 // set listener
                 // toggle button listener
-                // toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
+                //toggleButton.setOnClickListener(new LikeButtonOnClickListener(toggleButton, recommendedUser, loginUser));
                 toggleButton.setOnClickListener(new AbstractLikeButtonOnClickListener(loginUser.convertToConnectionUser()
                         , recommendedUser.convertToConnectionUser()) {
                     @Override
                     protected void switchViewToBeLiked() {
-                        toggleButton.setBackgroundResource(R.drawable.ic_like);
+                        toggleButton.setImageResource(R.drawable.ic_like);
+                        toggleButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.holo_red_dark)));
                         toggleButton.setOnClickListener(null);
                         toggleButton.setClickable(false);
                     }

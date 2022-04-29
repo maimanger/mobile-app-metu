@@ -1,5 +1,7 @@
 package edu.neu.madcourse.metu.explore.daos;
 
+import edu.neu.madcourse.metu.utils.Constants;
+
 public class PreferenceSetting {
     private String userId;
     private String locationPreference;
@@ -8,8 +10,9 @@ public class PreferenceSetting {
     private float ageMax;
 
     public PreferenceSetting() {
-        ageMax = 25;
-        ageMin = 70;
+        ageMax = 18;
+        ageMin = 100;
+        genderPreference = Constants.EXPLORE_ALL;
     }
 
     public String getUserId() {
@@ -50,5 +53,37 @@ public class PreferenceSetting {
 
     public void setAgeMax(float ageMax) {
         this.ageMax = ageMax;
+    }
+
+    public boolean maleSelected() {
+        return genderPreference == Constants.EXPLORE_ALL
+                || genderPreference == Constants.EXPLORE_MAN_ONLY
+                || genderPreference == Constants.EXPLORE_MAN_WOMAN
+                || genderPreference == Constants.EXPLORE_MAN_OTHER;
+    }
+
+    public boolean femaleSelected() {
+        return genderPreference == Constants.EXPLORE_ALL
+                || genderPreference == Constants.EXPLORE_WOMAN_ONLY
+                || genderPreference == Constants.EXPLORE_MAN_WOMAN
+                || genderPreference == Constants.EXPLORE_WOMAN_OTHER;
+    }
+
+    public boolean otherSelected() {
+        return genderPreference == Constants.EXPLORE_ALL
+                || genderPreference == Constants.EXPLORE_OTHER_ONLY
+                || genderPreference == Constants.EXPLORE_WOMAN_OTHER
+                || genderPreference == Constants.EXPLORE_MAN_OTHER;
+    }
+
+    @Override
+    public String toString() {
+        return "PreferenceSetting{" +
+                "userId='" + userId + '\'' +
+                ", locationPreference='" + locationPreference + '\'' +
+                ", genderPreference=" + genderPreference +
+                ", ageMin=" + ageMin +
+                ", ageMax=" + ageMax +
+                '}';
     }
 }

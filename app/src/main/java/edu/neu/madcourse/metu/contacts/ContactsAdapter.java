@@ -64,8 +64,8 @@ public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.Conta
         Contact currContact = contactsList.get(position);
         holder.contactName.setText(currContact.getContactName());
         holder.onlineStatus.setVisibility(currContact.isOnline() ? View.VISIBLE : View.INVISIBLE);
-        //new Utils.DownloadImageTask(holder.contactAvatar).execute(currContact.getContactAvatarUri());
-        Utils.loadImgUri(currContact.getContactAvatarUri(), holder.contactAvatar, new Callback() {
+        new Utils.DownloadImageTask(holder.contactAvatar).execute(currContact.getContactAvatarUri());
+        /*Utils.loadImgUri(currContact.getContactAvatarUri(), holder.contactAvatar, new Callback() {
             @Override
             public void onSuccess() {
             }
@@ -74,7 +74,9 @@ public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.Conta
             public void onError(Exception e) {
                 holder.contactAvatar.setImageResource(R.drawable.ic_user_avatar);
             }
-        });
+        });*/
+
+       // new Utils.PicassoLoadingTask(holder.contactAvatar).execute(currContact.getContactAvatarUri());
 
         int friendLevel = Utils.calculateFriendLevel(currContact.getConnectionPoint());
         initFriendLevelView(holder, friendLevel);
