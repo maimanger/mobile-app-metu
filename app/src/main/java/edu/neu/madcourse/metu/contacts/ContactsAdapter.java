@@ -76,6 +76,8 @@ public class ContactsAdapter  extends RecyclerView.Adapter<ContactsAdapter.Conta
             }
         });*/
 
+       // new Utils.PicassoLoadingTask(holder.contactAvatar).execute(currContact.getContactAvatarUri());
+
         int friendLevel = Utils.calculateFriendLevel(currContact.getConnectionPoint());
         initFriendLevelView(holder, friendLevel);
     }

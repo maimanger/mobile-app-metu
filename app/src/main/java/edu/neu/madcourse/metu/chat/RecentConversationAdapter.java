@@ -76,11 +76,12 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
             Utils.loadImgUri(src, contactAvatar, new Callback() {
                 @Override
                 public void onSuccess() {
+
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    contactAvatar.setImageResource(R.drawable.ic_default_avatar);
+                    contactAvatar.setImageResource(R.drawable.user_avatar);
                 }
             });
 
