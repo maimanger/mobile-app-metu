@@ -280,8 +280,11 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 initTags(profileUser.getTags());
                 initStories(profileUser.getStories());
                 initUserProfile();
-                FirebaseDatabase.getInstance().getReference().child("connections")
-                        .child(connectionId).addValueEventListener(connectionEventListener);
+                // todo
+                if (connectionId != null && connectionId.length() > 0) {
+                    FirebaseDatabase.getInstance().getReference().child("connections")
+                            .child(connectionId).addValueEventListener(connectionEventListener);
+                }
             }
 
             @Override
