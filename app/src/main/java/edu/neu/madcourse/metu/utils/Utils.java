@@ -144,6 +144,12 @@ public class Utils {
         protected Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];
             Bitmap mIcon11 = null;
+            if (urldisplay == null
+                    || (!urldisplay.startsWith("http://") && !urldisplay.startsWith("https://"))
+                    || (!Patterns.WEB_URL.matcher(urldisplay).matches())) {
+                return mIcon11;
+            }
+
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
@@ -155,19 +161,23 @@ public class Utils {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            if (result == null) {
+                bmImage.setImageResource(R.drawable.user_avatar);
+            } else {
+                bmImage.setImageBitmap(result);
+            }
         }
     }
 
 
     public static void loadImgUri(String uri, ImageView imageView, Callback callback) {
+        imageView.setImageResource(R.drawable.ic_loading);
         if (uri == null
                 || (!uri.startsWith("http://") && !uri.startsWith("https://"))
                 || (!Patterns.WEB_URL.matcher(uri).matches())) {
             callback.onError(new Exception());
             return;
         }
-        imageView.setImageResource(R.drawable.ic_loading);
         Picasso.get().load(uri).into(imageView, callback);
 
     }
