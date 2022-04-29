@@ -275,7 +275,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                 initStories(profileUser.getStories());
                 initUserProfile();
                 // todo
-                if (connectionId != null || connectionId.length() > 0) {
+                if (connectionId != null && connectionId.length() > 0) {
                     FirebaseDatabase.getInstance().getReference().child("connections")
                             .child(connectionId).addValueEventListener(connectionEventListener);
                 }
