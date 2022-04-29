@@ -30,15 +30,10 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setExitTransition(fade);
         setContentView(R.layout.activity_splash);
 
-        /*Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
-        getWindow().setExitTransition(fade);*/
-
-
-
         Animation fadeout = new AlphaAnimation(1,0);
         fadeout.setInterpolator(new AccelerateInterpolator());
         fadeout.setStartOffset(500);
-        fadeout.setDuration(1800);
+        fadeout.setDuration(1500);
         ImageView image = findViewById(R.id.metu_pinkheart);
         image.setAnimation(fadeout);
 
@@ -46,11 +41,9 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this).toBundle());
-                /*startActivity(intent);*/
-                //finish();
+
             }
         },SPLASH_SCREEN_TIMEOUT);
     }

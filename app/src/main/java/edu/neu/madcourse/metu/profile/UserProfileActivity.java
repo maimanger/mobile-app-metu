@@ -211,7 +211,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         }).start();
     }
 
-
     public void refreshLoginUser() {
         loginUser = ((App) getApplication()).getLoginUser();
         initTags(loginUser.getTags());

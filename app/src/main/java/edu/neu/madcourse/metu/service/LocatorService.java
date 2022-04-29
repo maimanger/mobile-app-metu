@@ -47,6 +47,7 @@ public class LocatorService extends Service {
     private LocationCallback locationCallback;
     private String countryName;
     private String cityName;
+    private String stateName;
     private String userId;
 
     @Override
@@ -90,11 +91,14 @@ public class LocatorService extends Service {
                         if (addresses != null && addresses.size() > 0) {
                             countryName = addresses.get(0).getCountryName();
                             cityName = addresses.get(0).getLocality();
+                            stateName = addresses.get(0).getAdminArea();
 
                             // Update Firebase latest location
                             Map<String, String> locationMap = new HashMap<>();
                             locationMap.put("country", countryName);
+                            locationMap.put("state", stateName);
                             locationMap.put("city", cityName);
+
                             FirebaseDatabase.getInstance().getReference().child("latestLocation")
                                     .child(userId).setValue(locationMap);
                             Log.d(TAG, "onStartCommand: Location fetched -- " + countryName + ", " + cityName);
