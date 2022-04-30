@@ -292,8 +292,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
+        Log.d("App", "onActivityDestroyed: " + activity.getClass().getSimpleName());
         isActivityChangingConfigurations = activity.isChangingConfigurations();
-        if (--aliveActivityCount > 0 || isActivityChangingConfigurations) {
+        aliveActivityCount--;
+
+        if (aliveActivityCount > 0 || (aliveActivityCount <= 0 && isActivityChangingConfigurations)) {
             return;
         } else {
             if (loginUser != null) {
