@@ -52,7 +52,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
     private String profileUserId;
     private ImageView uploadImageView;
     private String gender;
-    private String locationState, locationCity;
+    private String locationState;
     Lock cityPickerLock = new ReentrantLock();
 
 
@@ -294,7 +294,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             // Write user data to firebase
             User newLoginUser = ((App) getApplication()).getLoginUser();
             newLoginUser.setNickname(nickname);
-            newLoginUser.setLocation(locationCity + ", " + locationState);
+            newLoginUser.setLocation(locationState);
             newLoginUser.setAge(age);
             newLoginUser.setGender(genderInt);
             if (imageFirebaseUri != null &&

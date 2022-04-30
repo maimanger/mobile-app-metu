@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         Fade fade = new Fade();
-        fade.setDuration(300);
+        fade.setDuration(500);
         getWindow().setExitTransition(fade);
         setContentView(R.layout.activity_main);
 
