@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.ImageView;
+import io.agora.rtc.Constants;
 
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Callback;
@@ -28,6 +29,17 @@ public class Utils {
     public static int CALL_CONNECTION_POINT = 2;
     public static int CALL_CONNECTION_ID = 3;
     public static int CALLER_ID = 4;
+
+
+
+    public static Integer[] VOICES = new Integer[]{
+            Constants.VOICE_CHANGER_EFFECT_UNCLE,
+            Constants.VOICE_CHANGER_EFFECT_OLDMAN,
+            Constants.VOICE_CHANGER_EFFECT_BOY,
+            Constants.VOICE_CHANGER_EFFECT_SISTER,
+            Constants.VOICE_CHANGER_EFFECT_GIRL,
+            Constants.VOICE_CHANGER_EFFECT_HULK
+    };
 
     private static Integer[] filterIdHigh = new Integer[]{
             R.drawable.church_window,

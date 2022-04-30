@@ -69,6 +69,23 @@
         app:srcCompat="@android:drawable/ic_btn_speak_now"
         app:tint="#008a94" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_magicVoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:onClick="onClickChangeVoice"
+        android:src="@drawable/icon_magic"
+        android:tooltipText="Change Voice"
+        app:backgroundTint="@color/browser_actions_bg_grey"
+        app:elevation="10dp"
+        app:fabCustomSize="45dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab_leave"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@null" />
+
     <FrameLayout
         android:id="@+id/remote_video_view_container"
         android:layout_width="0dp"
