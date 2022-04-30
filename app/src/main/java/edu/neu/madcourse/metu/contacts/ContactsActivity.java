@@ -61,11 +61,6 @@ public class ContactsActivity extends BaseCalleeActivity {
         contactsTabs.getTabAt(0).setText("Friends");
         contactsTabs.getTabAt(1).setText("Mets");
 
-        /*if (!initFromBundle(savedInstanceState)) {
-            initFromFetching();
-        }
-        initFromBundle(savedInstanceState);*/
-
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
         toolbar.setText("Contacts");
@@ -112,7 +107,6 @@ public class ContactsActivity extends BaseCalleeActivity {
 
     private void renderContactsPager() {
         runOnUiThread(() -> {
-            loadingProgress.setVisibility(ProgressBar.INVISIBLE);
             if (contactsPagerAdapter == null) {
                 contactsPagerAdapter = new ContactsPagerAdapter(ContactsActivity.this);
                 contactsViewPager.setAdapter(contactsPagerAdapter);
@@ -123,23 +117,10 @@ public class ContactsActivity extends BaseCalleeActivity {
             } else {
                 contactsViewPager.setAdapter(contactsPagerAdapter);
             }
+
+            loadingProgress.setVisibility(ProgressBar.INVISIBLE);
         });
     }
-
-
-/*    private boolean initFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
-            int size = savedInstanceState.getInt("SIZE");
-            contactsList = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                Contact contact = (Contact) savedInstanceState.getParcelable("CONTACT" + i);
-                contactsList.add(contact);
-            }
-            renderContactsPager();
-            return true;
-        }
-        return false;
-    }*/
 
     private void initFromFetching() {
         if (loadingProgress.getVisibility() == View.INVISIBLE) {
@@ -209,9 +190,6 @@ public class ContactsActivity extends BaseCalleeActivity {
         super.onResume();
         bottomNavigationView.setSelectedItemId(R.id.menu_contacts);
         initFromFetching();
-        /*if (contactsPagerAdapter != null && contactsViewPager.getAdapter() == null) {
-            contactsViewPager.setAdapter(contactsPagerAdapter);
-        }*/
     }
 
 
