@@ -135,9 +135,6 @@ public class LoginActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
                     .child(userId).child("lastLoginTime").setValue(currentTime);
 
-            //boolean isFirstLogin = ((App)getApplication()).getLoginUser() == null;
-
-
             // fetch the user info from the database && bind a long-lived listener to User change in Database
             FirebaseService.getInstance().fetchUserProfileData(userId,
                     (User user) -> {
@@ -150,8 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Update Current loginUser
                         ((App)getApplication()).setLoginUser(user);
 
-                        // todo: delete
-                        if (((App) getApplication()).getCurrActivityName().equals("loginActivity")) {
+                        if (((App)getApplication()).getCurrActivityName().equals("LoginActivity")) {
                             // update FCM token and FCM status
                             FCMTokenUtils.updateFCMToken(userId);
                             ((App) getApplication()).setFcmToken(FCMTokenUtils.fcmToken);
@@ -213,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
                     grantResults[1] != PackageManager.PERMISSION_GRANTED) {
                 this.runOnUiThread(() -> {
                     Toast.makeText(getApplicationContext(),
-                            "Without your permission, MetU can't recommend a more precise match for you.",
+                            "Without your permission, MetU can't recommend a precise match for you.",
                             Toast.LENGTH_LONG).show();
                 });
             }

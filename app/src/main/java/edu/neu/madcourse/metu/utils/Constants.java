@@ -84,9 +84,13 @@ public class Constants {
     // }
     public static final String RECOMMENDATIONS_STORE = "recommendations";
 
+    // for user last location
+    public static final String USERS_LATEST_LOCATION_STORES = "latestLocation";
+    public static final String USER_COUNTRY = "country";
+    public static final String USER_STATE = "state";
+    public static final String USER_CITY = "city";
 
     // user gender
-    // todo: add more gender
     public static final int GENDER_MALE_INT = 0;
     public static final int GENDER_FEMALE_INT = 1;
     public static final int GENDER_UNDEFINE_INT = 2;
@@ -108,6 +112,7 @@ public class Constants {
     public static final String EXPLORE_SETTING_GENDER = "genderPreference";
     public static final String EXPLORE_SETTING_AGE_MIN = "ageMin";
     public static final String EXPLORE_SETTING_AGE_MAX = "ageMax";
+    public static final String EXPLORE_SETTING_SHOW_PEOPLE_NEAR_ME = "showPeopleNearMe";
     // 0: only male checked
     // 1: only female checked
     // 2: only other checked
@@ -122,6 +127,15 @@ public class Constants {
     public static final int EXPLORE_MAN_OTHER = 4;
     public static final int EXPLORE_WOMAN_OTHER = 5;
     public static final int EXPLORE_ALL = 6;
+    public static final String[] LOCATION_STATE = new String[]{"Alabama", "Alaska", "Arizona",
+            "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia"
+            , "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana"
+            , "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+            "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New " +
+            "Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+            "Pennsylvania", "Rhode Island", "South " + "Carolina", "South Dakota", "Tennessee",
+            "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin",
+            "Wyoming"};
 
 
     // for user availability
@@ -133,8 +147,10 @@ public class Constants {
             remoteMsgHeaders.put(
                     REMOTE_MSG_AUTH,
                     // todo: update it
-                    "key=AAAA9MOrMTs:APA91bExIh_BrVhWyBNLfIEv5V2uFwgyTV3XIMAKYoQayy-JtJ4dfeNus31bwwZx1P22ln29n0PDgVWZ-Zrtk26RcWvRhHyNvX7U6tcuRgLowAauXAldBbqMg-TzYu38bLuCGIcbU9sh"
-                    );
+                    "key=AAAA9MOrMTs:APA91bExIh_BrVhWyBNLfIEv5V2uFwgyTV3XIMAKYoQayy" +
+                            "-JtJ4dfeNus31bwwZx1P22ln29n0PDgVWZ" +
+                            "-Zrtk26RcWvRhHyNvX7U6tcuRgLowAauXAldBbqMg-TzYu38bLuCGIcbU9sh"
+            );
             remoteMsgHeaders.put(
                     REMOTE_MSG_CONTENT_TYPE,
                     "application/json"

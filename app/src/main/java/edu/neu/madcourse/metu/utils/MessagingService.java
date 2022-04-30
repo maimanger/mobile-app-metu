@@ -3,6 +3,7 @@ package edu.neu.madcourse.metu.utils;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
@@ -19,9 +20,11 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
+import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.chat.RecentConversationActivity;
 import edu.neu.madcourse.metu.models.ConnectionUser;
+import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.utils.network.ApiClient;
 import edu.neu.madcourse.metu.utils.network.ApiService;
 import retrofit2.Call;
@@ -37,6 +40,13 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
+
+        User loginUser = ((App) getApplication()).getLoginUser();
+
+        // not allowed to send the message notification
+        if (loginUser == null || !loginUser.getAllowMessageNotif()) {
+            return;
+        }
         // todo: check the type of notification
         super.onMessageReceived(message);
 
@@ -51,7 +61,7 @@ public class MessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
-        builder.setSmallIcon(R.drawable.ic_new_msg_notification);
+        builder.setSmallIcon(R.drawable.ic_launcher_metu_foreground);
 
         if (notificationType.equals(Constants.NOTIFY_GET_A_LIKE)) {
 

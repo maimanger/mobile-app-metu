@@ -57,7 +57,6 @@ public class ChatActivity extends BaseCalleeActivity {
 
     private ConnectionUser receiver;
 
-    // todo: check if the connectionId is null
     private String connectionId = "";
     private String receiverFcmToken;
     // status of receiver
@@ -73,7 +72,6 @@ public class ChatActivity extends BaseCalleeActivity {
     private EditText inputMessage;
     private AppCompatImageView backButton;
 
-    // todo: connect with video
     private AppCompatImageView startVideoChatButton;
     private TextView receiverName;
     private ImageView onlineStatus;
@@ -171,12 +169,7 @@ public class ChatActivity extends BaseCalleeActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * load the username of current user.
-     */
     private void loadUser() {
-        // todo: update with auth
-        // todo: check if the user is logged in - if not return to the sign in activcity
         this.loginUser = ((App) getApplication()).getLoginUser();
         // if the loginUser is null
         if (this.loginUser == null || loginUser.getUserId() == null || loginUser.getUserId().length() == 0) {
@@ -187,80 +180,76 @@ public class ChatActivity extends BaseCalleeActivity {
 
         this.userId = loginUser.getUserId();
         Log.d("ACTIVITY", "CHAT ACTIVITY: " + userId);
-        Toast.makeText(getApplicationContext(), userId + " is the current user", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * retrieve the current username, receiver and chat history.
-     * @param savedInstanceState
-     */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // save current receiver
+        outState.putParcelable("RECEIVER", this.receiver);
+        // save connectionId
+        outState.putString("CONNECTION_ID", this.connectionId);
+        // save the connection point
+        outState.putLong("CONNECTION_POINT", connectionPoint);
+        // save if they are friends
+        outState.putBoolean("IS_FRIEND", isFriend);
+        // FCM token
+        outState.putString("FCM_TOKEN", receiverFcmToken);
+    }
+
+    private void initFromBundle(Bundle savedInstanceState) {
+        this.receiver = savedInstanceState.getParcelable("RECEIVER");
+        // retrieve the connectionId
+        this.connectionId = savedInstanceState.getString("CONNECTION_ID", "");
+        // connection point
+        this.connectionPoint = savedInstanceState.getLong("CONNECTION_POINT", 0);
+        // get if they are friends
+        this.isFriend = savedInstanceState.getBoolean("IS_FRIEND", false);
+        // FCM token
+        this.receiverFcmToken = savedInstanceState.getString("FCM_TOKEN", "");
+    }
+
+    private void initFromIntent() {
+        // get data from intent
+        Bundle extras = getIntent().getExtras();
+        // get current receiver
+        this.receiver = (ConnectionUser) extras.getParcelable("RECEIVER");
+        // get the connectionId
+        this.connectionId = extras.getString("CONNECTION_ID", "");
+    }
+
+
+
     private void init(Bundle savedInstanceState) {
 
-        if (savedInstanceState != null && savedInstanceState.containsKey("SIZE")) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("RECEIVER")) {
             // retrieve from savedInstanceState
-            // retrieve the current receiver
-            // todo: save status
-            this.receiver = savedInstanceState.getParcelable("RECEIVER");
-
-            // retrieve the connectionId
-            this.connectionId = savedInstanceState.getString("CONNECTION_ID");
+            initFromBundle(savedInstanceState);
 
             receiverName.setText(receiver.getNickname());
-            // get the size of chat items
-            int size = savedInstanceState.getInt("SIZE");
-            // retrieve the chat items
-            ChatItem chatItem;
-
-            for (int i = 0; i < size; i++) {
-                chatItem = (ChatItem) savedInstanceState.getParcelable("CHAT_ITEM" + i);
-                this.chatItemList.add(chatItem);
-            }
-
-            initRecyclerView();
-            // subscribe the user
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    HashSet<String> set = new HashSet<>();
-                    set.add(receiver.getUserId());
-                    ((App)getApplication()).rtmSubscribePeer(set);
-                    Log.d("RMT", "user subscribe: " + receiver.getUserId());
-                }
-            }).start();
-
-            // dismiss the progress bar
-            progressBar.setVisibility(View.GONE);
-
         } else {
-            // get data from intent
-            Bundle extras = getIntent().getExtras();
-            // get current receiver
-            this.receiver = (ConnectionUser) extras.getParcelable("RECEIVER");
-            // subscribe the user
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    HashSet<String> set = new HashSet<>();
-                    set.add(receiver.getUserId());
-                    ((App)getApplication()).rtmSubscribePeer(set);
-                    Log.d("RMT", "user subscribe: " + receiver.getUserId());
-                }
-            }).start();
-            // todo: delete
-            Toast.makeText(getApplicationContext(), receiver.getUserId() + " is the receiver", Toast.LENGTH_SHORT).show();
-            // get the connectionId
-            this.connectionId = extras.getString("CONNECTION_ID");
-            // set the receiver's nickname
-            receiverName.setText(receiver.getNickname());
-            // initialize the recycler view
-            initRecyclerView();
+            initFromIntent();
+        }
 
-            if (connectionId != null && connectionId.length() > 0) {
-                fetchData();
-            } else {
-                progressBar.setVisibility(View.GONE);
+        // subscribe the user
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HashSet<String> set = new HashSet<>();
+                set.add(receiver.getUserId());
+                ((App)getApplication()).rtmSubscribePeer(set);
+                Log.d("RMT", "user subscribe: " + receiver.getUserId());
             }
+        }).start();
+        // set the receiver's nickname
+        receiverName.setText(receiver.getNickname());
+        // initialize the recycler view
+        initRecyclerView();
 
+        if (connectionId != null && connectionId.length() > 0) {
+            fetchData();
+        } else {
+            progressBar.setVisibility(View.GONE);
         }
 
 
@@ -404,7 +393,6 @@ public class ChatActivity extends BaseCalleeActivity {
         });
 
 
-
         // back button
         backButton.setOnClickListener(v -> {
             onBackPressed();
@@ -413,19 +401,17 @@ public class ChatActivity extends BaseCalleeActivity {
         // send message button
         sendButton.setOnClickListener(v -> sendMessage());
 
-        // todo: start video chat button
+        // start video chat button
         startVideoChatButton.setOnClickListener(v -> {
             // check
             if (receiver == null) {
                 return;
             }
-            // todo: edit
+
             if (!isFriend) {
-              showToast("You are not friends yet!");
+              showToast("You and " + receiver.getNickname() + " haven't been friends yet!");
             } else if (!isReceiverOnline) {
-                Toast.makeText(v.getContext(), receiver.getNickname() + "is not online", Toast.LENGTH_SHORT).show();
-            } else if (Utils.calculateFriendLevel((int)connectionPoint) < 1) {
-                Toast.makeText(v.getContext(), "Your connection level is not getting there yet! " + Utils.calculateFriendLevel((int)connectionPoint), Toast.LENGTH_SHORT).show();
+              showToast(receiver.getNickname() + " is offline");
             } else {
                 // open video activity
                 startVideoChat();
@@ -505,27 +491,11 @@ public class ChatActivity extends BaseCalleeActivity {
             }, 200);
 
         } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong! Please check the internet", Toast.LENGTH_SHORT).show();
+            showToast("Something went wrong! Please check the internet");
         }
 
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // get the size of current chat history
-        int size = this.chatItemList == null ? 0 : this.chatItemList.size();
-        // save the size
-        outState.putInt("SIZE", size);
-        // save chat items
-        for (int i = 0; i < size; i++) {
-            outState.putParcelable("CHAT_ITEM" + i, this.chatItemList.get(i));
-        }
-        // save current receiver
-        outState.putParcelable("RECEIVER", this.receiver);
-        // save connectionId
-        outState.putString("CONNECTION_ID", this.connectionId);
-    }
 
     @Override
     protected void onResume() {
@@ -551,12 +521,10 @@ public class ChatActivity extends BaseCalleeActivity {
             runOnUiThread(() -> {
                 switchReceiverStatus();
                 switchVideoButtonStatus();
-                Toast.makeText(getApplicationContext(), "status changed, the status is " + isReceiverOnline, Toast.LENGTH_SHORT).show();
             });
         }
     }
 
-    // todo: check video button
     private void switchReceiverStatus() {
         // see if the user is available
         if (!isReceiverOnline) {
@@ -578,8 +546,10 @@ public class ChatActivity extends BaseCalleeActivity {
 
     private void switchVideoButtonStatus() {
         if (isReceiverOnline && isFriend) {
+            startVideoChatButton.setClickable(true);
             startVideoChatButton.setImageResource(R.drawable.ic_start_chat);
         } else {
+            startVideoChatButton.setClickable(false);
             startVideoChatButton.setImageResource(R.drawable.ic_video_chat_disabled);
         }
     }

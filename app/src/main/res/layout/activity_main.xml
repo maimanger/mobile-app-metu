@@ -3,126 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickContacts"
-        android:text="Contacts"
+    <ImageView
+        android:id="@+id/metu_pinkheart"
+        android:layout_width="268dp"
+        android:layout_height="427dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="66dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/openSetting" />
-
-    <Button
-        android:id="@+id/okButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ok"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/inputUsername"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="488dp" />
-
-    <EditText
-        android:id="@+id/inputUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/okButton"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <Button
-        android:id="@+id/openExploringActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="explore more"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/okButton"/>
-
-    <Button
-        android:id="@+id/openRecentConversation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="recent chats"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/openExploringActivity" />
-    <Button
-        android:id="@+id/openSplash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="splash"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/openRecentConversation" />
-    <Button
-        android:id="@+id/openSetting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="setting"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/openSplash" />
-
-
-    <Button
-        android:id="@+id/button_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile"
-        app:layout_constraintBottom_toTopOf="@+id/button_update_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-
-    <Button
-        android:id="@+id/button_update_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update Profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_profile" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickVideo"
-        android:text="Video"
-        app:layout_constraintBottom_toTopOf="@+id/button_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-
-    <EditText
-        android:id="@+id/editText_fakeUserId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_rtmLogin"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btn_rtmLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:onClick="onClickRtmLogin"
-        android:text="rtmLogin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editText_fakeUserId" />
-
+        app:srcCompat="@drawable/ic_word_art3_trans" />
 </androidx.constraintlayout.widget.ConstraintLayout>

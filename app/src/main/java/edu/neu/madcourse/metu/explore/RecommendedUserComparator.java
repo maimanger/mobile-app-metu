@@ -15,8 +15,11 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
     private String location;
     private float ageMin;
     private float ageMax;
+    private boolean showPeopleNearMe;
 
     public RecommendedUserComparator(PreferenceSetting preferenceSetting) {
+        Log.d("comparator", "the preference is: " + preferenceSetting);
+
         maleSelected = preferenceSetting == null? true:preferenceSetting.maleSelected();
         femaleSelected = preferenceSetting == null? true:preferenceSetting.femaleSelected();
         otherSelected = preferenceSetting == null? true:preferenceSetting.otherSelected();
@@ -25,8 +28,8 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
         ageMax = preferenceSetting == null? 100:preferenceSetting.getAgeMax();
         ageMin = preferenceSetting == null? 100:preferenceSetting.getAgeMin();
 
-        // todo: location
         location = preferenceSetting == null? null: preferenceSetting.getLocationPreference();
+        showPeopleNearMe = preferenceSetting == null? false:preferenceSetting.getShowPeopleNearMe();
 
     }
 
@@ -47,7 +50,7 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
         int score = 0;
         // if the user has been liked
         if (user.getIsLiked()) {
-            Log.d("comparator", user.getNickname() + " has been liked: -100");
+            Log.d("comparator", user.getNickname() + " has been liked: -70");
             score -= 100;
         }
 
@@ -56,30 +59,42 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
                 || (user.getGender() == Constants.GENDER_FEMALE_INT && !femaleSelected)
                 || (user.getGender() == Constants.GENDER_UNDEFINE_INT && !otherSelected)
         ) {
-            score -= 200;
-            Log.d("comparator", user.getNickname() + " gender not matched -70: " + user.getGender());
+            score -= 250;
+            Log.d("comparator", user.getNickname() + " gender not matched -250: " + user.getGender());
         } else {
             Log.d("comparator", user.getNickname() + " gender matched " + user.getGender());
         }
-        // if location matches +20 points
-        if (location != null && location.length() > 0 && location.equals(user.getLocation())) {
-            score += 20;
-            Log.d("comparator", user.getNickname() + " location matched +20: " + user.getLocation() );
-        } else {
-            Log.d("comparator", user.getNickname() + " location not matched" + user.getLocation() );
+        // if location matches
+        // if user wants to match people near +70 otherwise +20
+        if (location != null && location.length() > 0 && user.getLocation() != null && user.getLocation().length() > 0) {
+            // todo: change to equal?
+            if (user.getLocation().toLowerCase().contains(location)) {
+                // location matched
+                if (showPeopleNearMe) {
+                    score += 70;
+                } else {
+                    score += 20;
+                }
+            } else {
+                // location not matched
+                if (showPeopleNearMe) {
+                    score -= 30;
+                }
+            }
         }
+
 
         // if age matches perfectly +15 points
         // if age within 5 years old ranges +5
         if (ageMin <= user.getAge() && user.getAge() <= ageMax) {
-            score += 15;
-            Log.d("comparator", user.getNickname() + " age matched well +15: " + user.getAge());
+            score += 20;
+//            Log.d("comparator", user.getNickname() + " age matched well +15: " + user.getAge());
         } else {
             float diff = Math.min(Math.abs(user.getAge() - ageMin), Math.abs(user.getAge() - ageMax));
 
             if (diff <= 5) {
                 Log.d("comparator", user.getNickname() + " age matched ok +5: " + user.getAge());
-                score += 2;
+                score += 8;
             } else if (diff <= 10) {
                 score -= 5;
             } else if (diff <= 20) {

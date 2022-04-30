@@ -1,8 +1,12 @@
 package edu.neu.madcourse.metu.explore;
 
-import android.util.Log;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
+import android.content.Context;
+import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,9 +17,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.neu.madcourse.metu.explore.daos.PreferenceSetting;
 import edu.neu.madcourse.metu.explore.daos.RecommendedUser;
@@ -30,8 +32,42 @@ public class RecommendationUtils {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         Date date = new Date(ts.getTime());
         return dateFormat.format(date);
-
     }
+
+    public static boolean checkLocationPermission(Context context) {
+        int result = ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void fetchUserLatestLocation(String userId, DataFetchCallback<String> callback) {
+        if (userId == null || userId.length() == 0) {
+            callback.onCallback(null);
+        }
+
+        FirebaseDatabase.getInstance().getReference(Constants.USERS_LATEST_LOCATION_STORES)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists() && snapshot.hasChild(userId)) {
+                            try {
+                                String location = snapshot.child(userId).child(Constants.USER_STATE).getValue(String.class);
+                                callback.onCallback(location);
+                                return;
+                            } catch (Exception e) {
+                                callback.onCallback(null);
+                            }
+                        } else {
+                            callback.onCallback(null);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callback.onCallback(null);
+                    }
+                });
+    }
+
 
     public static void fetchPreference(String userId, DataFetchCallback<PreferenceSetting> callback) {
         if (userId == null || userId.length() == 0) {
@@ -50,7 +86,11 @@ public class RecommendationUtils {
                         if (snapshot.exists()) {
                             for (DataSnapshot setting: snapshot.getChildren()) {
                                 // todo: location
-                                String location = setting.child(Constants.EXPLORE_SETTING_LOCATION).getValue(String.class);
+                                // String location = setting.child(Constants.EXPLORE_SETTING_LOCATION).getValue(String.class);
+                                if (setting.hasChild(Constants.EXPLORE_SETTING_SHOW_PEOPLE_NEAR_ME)) {
+                                    Boolean showPeopleNearMe = setting.child(Constants.EXPLORE_SETTING_SHOW_PEOPLE_NEAR_ME).getValue(boolean.class);
+                                    preferenceSetting.setShowPeopleNearMe(showPeopleNearMe);
+                                }
                                 // 0: only male checked
                                 // 1: only female checked
                                 // 2: only other checked
@@ -106,39 +146,46 @@ public class RecommendationUtils {
                                 if (userId.equals(recommendedUser.getUserId())) {
                                     continue;
                                 }
-                                // fetch the connection
 
-                                updateConnectionUserByConnection(userId, recommendedUser.getUserId(), recommendedUser, updatedUser -> {
-
-                                    recommendedUsers.add(updatedUser);
-                                    if (recommendedUsers.size() == childrenCount - 1) {
-                                        // sort the recommends
-                                        recommendedUsers.sort(new RecommendedUserComparator(preferenceSetting));
-                                        System.out.println(recommendedUsers);
-                                        if (recommendedUsers.size() > 5) {
-                                            callback.onCallback(recommendedUsers.subList(0, 5));
-                                        } else {
-                                            callback.onCallback(recommendedUsers);
-                                        }
+                                // System.out.println("get recommend by preference: " + recommendedUser);
+                                // fetch the precise location of this recommended user
+                                fetchUserLatestLocation(recommendedUser.getUserId(), location -> {
+                                    if (location != null && location.length() > 0) {
+                                        recommendedUser.setLocation(location);
                                     }
-                                });
 
+
+                                    updateRecommendedUserByConnection(userId, recommendedUser.getUserId(), recommendedUser, updatedUser -> {
+                                        recommendedUsers.add(updatedUser);
+                                        System.out.println("size: " + recommendedUsers.size());
+                                        if (recommendedUsers.size() == childrenCount - 1) {
+                                            // sort the recommends
+                                            recommendedUsers.sort(new RecommendedUserComparator(preferenceSetting));
+                                            System.out.println(recommendedUsers);
+                                            if (recommendedUsers.size() > 5) {
+                                                callback.onCallback(recommendedUsers.subList(0, 5));
+                                            } else {
+                                                callback.onCallback(recommendedUsers);
+                                            }
+                                        }
+                                    });
+                                });
                             }
 
+                        } else {
+                            callback.onCallback(recommendedUsers);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        callback.onCallback(recommendedUsers);
                     }
                 });
 
     }
 
     public static void getSingleRecommendedUserById(String senderId, String receiverId, DataFetchCallback<RecommendedUser> callback) {
-        Log.d("recommended utils", "getSingleUserById is being called");
-
         FirebaseDatabase.getInstance().getReference(Constants.USERS_STORE)
                 .child(receiverId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -148,8 +195,7 @@ public class RecommendationUtils {
                             try {
                                 RecommendedUser recommendedUser = snapshot.getValue(RecommendedUser.class);
                                 // fetch the connection
-                                updateConnectionUserByConnection(senderId, receiverId, recommendedUser, (updatedUser) -> {
-                                    System.out.println("inside after updating connection: " + updatedUser);
+                                updateRecommendedUserByConnection(senderId, receiverId, recommendedUser, (updatedUser) -> {
                                     callback.onCallback(updatedUser);
                                 });
                             } catch (Exception e) {
@@ -169,13 +215,14 @@ public class RecommendationUtils {
     }
 
 
-    public static void updateConnectionUserByConnection(String senderId, String receiverId, RecommendedUser recommendedUser, DataFetchCallback<RecommendedUser> callback) {
+    public static void updateRecommendedUserByConnection(String senderId, String receiverId, RecommendedUser recommendedUser, DataFetchCallback<RecommendedUser> callback) {
         if (senderId == null || senderId.length() == 0 || receiverId == null || receiverId.length() == 0) {
             callback.onCallback(recommendedUser);
             return;
         }
 
         FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
+//                .addValueEventListener(new ValueEventListener() {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     String connectionId;
                     Connection connection;
@@ -208,6 +255,8 @@ public class RecommendationUtils {
                                 callback.onCallback(recommendedUser);
                                 return;
                             }
+                        } else {
+                            callback.onCallback(recommendedUser);
                         }
                     }
 
@@ -244,6 +293,7 @@ public class RecommendationUtils {
         FirebaseDatabase.getInstance().getReference(Constants.RECOMMENDATIONS_STORE)
                 .child(userId)
                 .child(date)
+                .orderByValue()
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

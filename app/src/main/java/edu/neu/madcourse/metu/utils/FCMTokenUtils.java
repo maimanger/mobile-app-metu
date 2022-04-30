@@ -2,8 +2,13 @@ package edu.neu.madcourse.metu.utils;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 /**
@@ -33,6 +38,30 @@ public class FCMTokenUtils {
             return;
         }
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
+            // remove all the records with token == s
+            FirebaseDatabase.getInstance()
+                    .getReference(Constants.FCM_TOKENS_STORE)
+                    .orderByValue()
+                    .equalTo(s)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                    if (!dataSnapshot.getKey().equals(userId)) {
+                                        // remove this record
+                                        dataSnapshot.getRef().removeValue();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
             // update and save the token if success
             FirebaseDatabase.getInstance()
                     .getReference(Constants.FCM_TOKENS_STORE)

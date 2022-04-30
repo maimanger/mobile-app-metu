@@ -63,6 +63,32 @@ public class FirebaseService {
         databaseRef.child("users").child(user.getUserId()).setValue(user);
     }
 
+    public void updateConnectionUser(User user) {
+        Map<String, Boolean> connections = user.getConnections();
+        if (connections == null || connections.isEmpty()) return;
+        ConnectionUser connectionUser = user.convertToConnectionUser();
+        databaseRef.child("connections").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    String connectionId = child.getKey();
+                    if (connections.containsKey(connectionId)) {
+                        Connection connection = child.getValue(Connection.class);
+                        boolean isUser1 = connection.getUser1().getUserId().equals(user.getUserId());
+                        if (isUser1) {
+                            databaseRef.child("connections").child(connectionId).child("user1").setValue(connectionUser);
+                        } else {
+                            databaseRef.child("connections").child(connectionId).child("user2").setValue(connectionUser);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     public void updateUserAvatar(String userId, String imageFirebaseUri) {
         databaseRef.child("users").child(userId).child("avatarUri").setValue(imageFirebaseUri);
     }

@@ -373,14 +373,14 @@ public class MessageSendingUtils {
                             String notification;
                             boolean isFriend = false;
                             if (storedSender.getIsLiked()) {
-                                message = "[" + sender.getNickname() + " liked you back!!]";
-                                notification = sender.getNickname() + "liked you back!! You are matched now!";
+                                message = "[" + sender.getNickname() + " liked you back ❤❤❤!! Tab to unlock video chatting!!]";
+                                notification = sender.getNickname() + " liked you back!! You are matched now!";
                                 // increase the connectionPoint
                                 connection.setConnectionPoint(connection.getConnectionPoint() + 2);
                                 isFriend = true;
                             } else {
-                                message = "[" + sender.getNickname() + "liked you!]";
-                                notification = sender.getNickname() + "liked you!";
+                                message = "[" + sender.getNickname() + " liked you ❤! Like back and unlock video chatting!]";
+                                notification = sender.getNickname() + " liked you! Tab to start chatting!!";
                             }
 
                             // update the connection

@@ -88,7 +88,7 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
         preferenceSetting = findViewById(R.id.imageSetting);
 
         // initialize the executor service
-        executorService = Executors.newFixedThreadPool(1);
+        executorService = Executors.newFixedThreadPool(10);
         recommends = new ArrayList<>();
 
         // init the user
@@ -133,7 +133,6 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
     }
 
     private void loadUser() {
-        // todo: load from App
         loginUser = ((App) getApplicationContext()).getLoginUser();
         if (loginUser == null || loginUser.getUserId() == null || loginUser.getUserId().length() == 0) {
             Log.d("ACTIVITY", "USER HAS LOGGED OUT");
@@ -145,7 +144,6 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
     }
 
     private void init(Bundle savedInstanceState) {
-        // todo: deal with the direction change
         try {
             fetchData();
         } catch (Exception e) {
@@ -162,8 +160,6 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
     }
 
     private void fetchData() throws Exception {
-
-        // todo: matching algorithm
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -171,15 +167,21 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
                 // fetch the preference
                 RecommendationUtils.fetchPreference(userId, preference -> {
                     if (preference == null) {
+                        // the first time open the exploring page
                         openSettingDialog(true);
                     } else {
+                        // not the first time
                         setting = preference;
+                        // still need to check the location permission
+                        boolean locationPermission = RecommendationUtils.checkLocationPermission(ExploringActivity.this);
+                        setting.setShowPeopleNearMe(setting.getShowPeopleNearMe() && locationPermission);
 
                         // try to fetch saved ids from firebase
                         RecommendationUtils.fetchRecommendUserIdsFromDatabase(userId, ids -> {
                             if (ids == null || ids.size() == 0) {
-                                // initialize for the first time
-                                initRecommendUsers();
+                                // initialize for the first time today
+                                applyPreference(setting);
+                                //initRecommendUsers();
                                 return;
                             }
 
@@ -189,7 +191,7 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
                                     recommends.add(u);
 
                                     if (recommends.size() == ids.size()) {
-                                        recommends.sort(new RecommendedUserComparator(setting));
+                                        //recommends.sort(new RecommendedUserComparator(setting));
                                         initRecyclerView();
                                         progressBar.setVisibility(View.GONE);
                                     }
@@ -234,21 +236,52 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
     protected void onResume() {
         super.onResume();
         bottomNavigationView.setSelectedItemId(R.id.menu_explore);
+
+        // refresh the data
+        for (RecommendedUser u: recommends) {
+            RecommendationUtils.updateRecommendedUserByConnection(userId, u.getUserId(), u, updated -> {
+                System.out.println("refreshing...." + u);
+                if (u.getIsLiked()) {
+                    recommendsAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+
     }
 
 
     @Override
     public void applyPreference(PreferenceSetting setting) {
         this.setting = setting;
-        initRecommendUsers();
+        if (setting != null && setting.getShowPeopleNearMe()) {
+            // fetch the precise location
+            RecommendationUtils.fetchUserLatestLocation(userId, location -> {
+                if (location != null && location.length() > 0) {
+                    setting.setLocationPreference(location);
+                } else {
+                    setting.setLocationPreference(loginUser.getLocation());
+                }
+
+                initRecommendUsers();
+            });
+        } else if (setting != null) {
+            setting.setLocationPreference(loginUser.getLocation());
+            initRecommendUsers();
+        } else {
+            initRecommendUsers();
+        }
+
     }
 
 
     private void initRecommendUsers() {
         String key = RecommendationUtils.getDateKey();
         if (setting != null) {
+            System.out.println("initRecommendedUsers...");
             RecommendationUtils.getRecommendedUsersByPreference(userId, setting, users -> {
-                for (RecommendedUser u: users){
+                System.out.println("size of users recommended list" + users.size());
+                for (int i = 0; i < users.size(); i++){
+                    RecommendedUser u = users.get(i);
                     recommends.add(u);
                     System.out.println(u);
                     // add it to the database
@@ -256,7 +289,7 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
                             .child(userId)
                             .child(key)
                             .child(u.getUserId())
-                            .setValue(true);
+                            .setValue(i);
                 }
 
                 progressBar.setVisibility(View.GONE);

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,15 +16,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.slider.RangeSlider;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -37,15 +36,21 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
     private String userId;
     private User loginUser;
     private boolean isFirstTime;
-    // todo: location
+
+    private boolean isLocationPermitted;
     private ProgressBar progressBar;
     private RangeSlider ageRangeSlider;
     private CheckBox womanSelected;
     private CheckBox manSelected;
     private CheckBox otherSelected;
     private TextView title;
+    private SwitchMaterial showPeopleNearMe;
     // activity
     private ExploringSettingDialogListener listener;
+
+    private void checkPermission() {
+        this.isLocationPermitted = RecommendationUtils.checkLocationPermission(getActivity().getApplicationContext());
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -61,17 +66,19 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
         // load username
         loadUser(savedInstanceState);
         loadStyle(savedInstanceState);
+        checkPermission();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.explore_setting_dialog, null);
 
-        progressBar = view.findViewById(R.id.progressBarExploreSetting);
+        progressBar = new ProgressBar(getActivity().getApplicationContext());
         progressBar.setVisibility(View.VISIBLE);
         ageRangeSlider = view.findViewById(R.id.ageRangeSlider);
         womanSelected = view.findViewById(R.id.genderWoman);
         manSelected = view.findViewById(R.id.genderMan);
         otherSelected = view.findViewById(R.id.genderMore);
         title = view.findViewById(R.id.exploringSettingTitle);
+        showPeopleNearMe = view.findViewById(R.id.isShowPeopleNearMe);
 
         if (isFirstTime) {
             title.setText("Set your preference and meet new friends!");
@@ -83,6 +90,9 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             PreferenceSetting setting = saveSettings(view);
                             listener.applyPreference(setting);
+                            dialogInterface.cancel();
+                            //getActivity().finish();
+                            return;
                         }
                     });
         } else {
@@ -99,41 +109,52 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             PreferenceSetting setting = saveSettings(view);
-                            //listener.applyPreference(setting);
                         }
                     });
         }
 
-//        progressBar = view.findViewById(R.id.progressBarExploreSetting);
-//        progressBar.setVisibility(View.VISIBLE);
-//        ageRangeSlider = view.findViewById(R.id.ageRangeSlider);
-//        womanSelected = view.findViewById(R.id.genderWoman);
-//        manSelected = view.findViewById(R.id.genderMan);
-//        otherSelected = view.findViewById(R.id.genderMore);
-
-        
         // read previous setting
         fetchCurrentSetting();
 
         return builder.create();
     }
+
+    private void showToast(String s) {
+        Toast.makeText(getActivity().getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+    }
     
     private void fetchCurrentSetting() {
-        if (isFirstTime) {
-            // todo: location
+        if (!isLocationPermitted) {
+            showPeopleNearMe.setChecked(false);
+            showPeopleNearMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (compoundButton.isChecked()) {
+                        showToast("Please grant METU permission to user your location");
+                        compoundButton.setChecked(false);
+                    }
+                }
+            });
+        }
 
+        if (isFirstTime) {
+            // location
+            showPeopleNearMe.setChecked(isLocationPermitted);
+
+            // gender preference
             otherSelected.setChecked(true);
             manSelected.setChecked(true);
             womanSelected.setChecked(true);
-
+            // age
             int age = loginUser.getAge();
-
             ageRangeSlider.setValues((float) Math.max(18, age-10), (float) Math.min(100, age+10));
 
             progressBar.setVisibility(View.GONE);
         } else {
             RecommendationUtils.fetchPreference(userId, (setting) -> {
                 if (setting == null) {
+                    showPeopleNearMe.setChecked(isLocationPermitted);
+
                     otherSelected.setChecked(true);
                     manSelected.setChecked(true);
                     womanSelected.setChecked(true);
@@ -144,6 +165,8 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
 
                     progressBar.setVisibility(View.GONE);
                 } else {
+                    showPeopleNearMe.setChecked(isLocationPermitted && setting.getShowPeopleNearMe());
+
                     otherSelected.setChecked(setting.otherSelected());
                     manSelected.setChecked(setting.maleSelected());
                     womanSelected.setChecked(setting.femaleSelected());
@@ -158,99 +181,9 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
                         ageRangeSlider.setValues((float) Math.max(18, age-10), (float) Math.max(100, age+10));
                     }
                     progressBar.setVisibility(View.GONE);
-
                 }
-
-
             });
         }
-//        FirebaseDatabase.getInstance().getReference(Constants.EXPLORE_SETTINGS_STORE)
-//                .orderByChild(Constants.USER_USER_ID)
-//                .equalTo(userId)
-//                .limitToFirst(1)
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if (snapshot.exists()) {
-//                            for (DataSnapshot setting: snapshot.getChildren()) {
-//                                // todo: location
-//                                String location = setting.child(Constants.EXPLORE_SETTING_LOCATION).getValue(String.class);
-//                                // 0: only male checked
-//                                // 1: only female checked
-//                                // 2: only other checked
-//                                // 3: male and female
-//                                // 4: male and other
-//                                // 5: female and other
-//                                // 6: all
-//                                if (setting.hasChild(Constants.EXPLORE_SETTING_GENDER)) {
-//                                    int gender = setting.child(Constants.EXPLORE_SETTING_GENDER).getValue(int.class);
-//                                    switch (gender) {
-//                                        case 0:
-//                                            womanSelected.setChecked(false);
-//                                            manSelected.setChecked(true);
-//                                            otherSelected.setChecked(false);
-//                                            break;
-//                                        case 1:
-//                                            womanSelected.setChecked(true);
-//                                            manSelected.setChecked(false);
-//                                            otherSelected.setChecked(false);
-//                                            break;
-//                                        case 2:
-//                                            womanSelected.setChecked(false);
-//                                            manSelected.setChecked(false);
-//                                            otherSelected.setChecked(true);
-//                                            break;
-//                                        case 3:
-//                                            womanSelected.setChecked(true);
-//                                            manSelected.setChecked(true);
-//                                            otherSelected.setChecked(false);
-//                                            break;
-//                                        case 4:
-//                                            womanSelected.setChecked(false);
-//                                            manSelected.setChecked(true);
-//                                            otherSelected.setChecked(true);
-//                                            break;
-//                                        case 5:
-//                                            womanSelected.setChecked(true);
-//                                            manSelected.setChecked(false);
-//                                            otherSelected.setChecked(true);
-//                                            break;
-//                                        case 6:
-//                                            womanSelected.setChecked(true);
-//                                            manSelected.setChecked(true);
-//                                            otherSelected.setChecked(true);
-//                                            break;
-//                                        default:
-//                                            womanSelected.setChecked(false);
-//                                            manSelected.setChecked(false);
-//                                            otherSelected.setChecked(false);
-//                                            break;
-//                                    }
-//                                }
-//
-//                                if (setting.hasChild(Constants.EXPLORE_SETTING_AGE_MIN)
-//                                        && setting.hasChild(Constants.EXPLORE_SETTING_AGE_MAX)) {
-//                                    float ageMin = setting.child(Constants.EXPLORE_SETTING_AGE_MIN).getValue(float.class);
-//                                    float ageMax = setting.child(Constants.EXPLORE_SETTING_AGE_MAX).getValue(float.class);
-//
-//                                    if (ageMin >= 18 && ageMax <= 100 && ageMin <= ageMax) {
-//                                        ageRangeSlider.setValues(ageMin, ageMax);
-//                                    }
-//
-//
-//                                }
-//
-//                                progressBar.setVisibility(View.GONE);
-//
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
     }
 
     private void loadUser(Bundle bundle) {
@@ -268,9 +201,12 @@ public class ExploreSettingDialog extends AppCompatDialogFragment {
             return null;
         }
         progressBar.setVisibility(View.VISIBLE);
-        // todo: location
+
         PreferenceSetting setting = new PreferenceSetting();
         setting.setUserId(userId);
+
+        setting.setShowPeopleNearMe(showPeopleNearMe.isChecked());
+
         List<Float> values = ageRangeSlider.getValues();
         if (values.size() == 2) {
             float ageMin = values.get(0);

@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -106,9 +105,6 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         // initialize the recent conversation list
         conversationList = new ArrayList<>();
         usernameToConversation = new HashMap<>();
-
-        // todo: initialize the recycler view
-        // initRecyclerView();
 
         // initialize data view
         init(savedInstanceState);
@@ -220,8 +216,6 @@ public class RecentConversationActivity extends BaseCalleeActivity {
         }
         this.userId = loginUser.getUserId();
         Log.d("ACTIVITY", "RECENT CONVERSATION ACTIVITY: " + userId);
-        // todo: delete
-        Toast.makeText(getApplicationContext(), this.userId + " logs in", Toast.LENGTH_SHORT).show();
     }
 
     // listener
@@ -238,8 +232,6 @@ public class RecentConversationActivity extends BaseCalleeActivity {
             if (snapshot.exists()) {
                 // fetch the connectionId
                 String connectionId = snapshot.getKey();
-                // todo: delete
-                System.out.println("Connection id: " + connectionId);
 
                 // fetch it from the Connections store
                 FirebaseDatabase.getInstance().getReference(Constants.CONNECTIONS_STORE)
@@ -273,10 +265,7 @@ public class RecentConversationActivity extends BaseCalleeActivity {
                                             return;
                                         }
 
-                                        // todo: delete
-                                        System.out.println("the receiver id: " + contact.getUserId());
                                         if (usernameToConversation.containsKey(contact.getUserId())) {
-                                            System.out.println("it is in the map");
                                             conversation = usernameToConversation.get(contact.getUserId());
                                         } else {
                                             conversation = new RecentConversation();

@@ -75,6 +75,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
+
+
     /*private Map<String, Integer> peersOnlineStatus;*/
 
     class AgoraEventListener implements RtmClientListener, RtmCallEventListener {
@@ -346,6 +348,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         contentIntent.putExtra("PROFILE_USER_ID", callerId);
         contentIntent.putExtra("CONNECTION_ID", connectionId);
         contentIntent.putExtra("CONNECTION_POINT", connectionPoint);
+        contentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingContentIntent =PendingIntent.getActivity(
                 this, notifId * 2, contentIntent, 0);
@@ -590,6 +593,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
         }
     }
 
+    public String getCurrActivityName() {
+        return currActivityName;
+    }
+
     public String getFcmToken() {
         return this.fcmToken;
     }
@@ -598,7 +605,4 @@ public class App extends Application implements Application.ActivityLifecycleCal
         this.fcmToken = s;
     }
 
-    public String getCurrActivityName() {
-        return currActivityName;
-    }
 }

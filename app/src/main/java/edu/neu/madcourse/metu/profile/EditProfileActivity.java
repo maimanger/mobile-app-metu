@@ -1,5 +1,7 @@
 package edu.neu.madcourse.metu.profile;
 
+import static edu.neu.madcourse.metu.utils.Constants.LOCATION_STATE;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -11,8 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +29,6 @@ import com.squareup.picasso.Callback;
 
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,7 +37,6 @@ import edu.neu.madcourse.metu.BaseCalleeActivity;
 import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.models.User;
 import edu.neu.madcourse.metu.profile.imageUpload.UploadActivity;
-import edu.neu.madcourse.metu.service.CountryStateCityService;
 import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Utils;
 
@@ -191,18 +187,11 @@ public class EditProfileActivity extends BaseCalleeActivity {
     private void initStatePicker() {
         new Thread(() -> {
             statePicker = findViewById(R.id.state_picker);
-            List<String> states = null;
-            try {
-                states = CountryStateCityService.getStates();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            assert states != null;
+            String[] statesArray = LOCATION_STATE;
+            assert statesArray != null;
 
-            Log.e(TAG, "states: " + states.toString());
-            final String[] statesArray = states.toArray(new String[states.size()]);
             statePicker.setMinValue(0);
-            statePicker.setMaxValue(states.size() - 1);
+            statePicker.setMaxValue(statesArray.length - 1);
             statePicker.setDisplayedValues(statesArray);
             statePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
             statePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -210,52 +199,52 @@ public class EditProfileActivity extends BaseCalleeActivity {
                 public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                     if (newVal >= 0 && newVal < statesArray.length) {
                         locationState = statesArray[newVal];
-                        initCityPicker(locationState);
+//                        initCityPicker(locationState);
                     }
                 }
             });
         }).start();
     }
 
-    private void initCityPicker(String state) {
-        new Thread(() -> {
-            cityPickerLock.lock();
-
-            List<String> cities = null;
-            try {
-                cities = CountryStateCityService.getCities(state);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            assert cities != null;
-            Log.e(TAG, "cities: " + cities.toString());
-
-            if (!cities.isEmpty()) {
-                cityPicker = findViewById(R.id.city_picker);
-                final String[] citiesArray = cities.toArray(new String[cities.size()]);
-                Log.e(TAG, "citiesArray = " + Arrays.toString(citiesArray));
-
-
-                cityPicker.setDisplayedValues(null);
-                cityPicker.setMinValue(0);
-                cityPicker.setMaxValue(Math.max(cities.size() - 1, 0));
-                cityPicker.setDisplayedValues(citiesArray);
-
-                cityPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-                cityPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-                    if (newVal >= 0 && newVal < citiesArray.length) {
-                        locationCity = citiesArray[newVal];
-                    }
-                });
-            } else {
-                cityPicker.setDisplayedValues(null);
-                cityPicker.setMinValue(0);
-                cityPicker.setMaxValue(0);
-            }
-
-            cityPickerLock.unlock();
-        }).start();
-    }
+//    private void initCityPicker(String state) {
+//        new Thread(() -> {
+//            cityPickerLock.lock();
+//
+//            List<String> cities = null;
+//            try {
+//                cities = CountryStateCityService.getCities(state);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            assert cities != null;
+//            Log.e(TAG, "cities: " + cities.toString());
+//
+//            if (!cities.isEmpty()) {
+//                cityPicker = findViewById(R.id.city_picker);
+//                final String[] citiesArray = cities.toArray(new String[cities.size()]);
+//                Log.e(TAG, "citiesArray = " + Arrays.toString(citiesArray));
+//
+//
+//                cityPicker.setDisplayedValues(null);
+//                cityPicker.setMinValue(0);
+//                cityPicker.setMaxValue(Math.max(cities.size() - 1, 0));
+//                cityPicker.setDisplayedValues(citiesArray);
+//
+//                cityPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+//                cityPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+//                    if (newVal >= 0 && newVal < citiesArray.length) {
+//                        locationCity = citiesArray[newVal];
+//                    }
+//                });
+//            } else {
+//                cityPicker.setDisplayedValues(null);
+//                cityPicker.setMinValue(0);
+//                cityPicker.setMaxValue(0);
+//            }
+//
+//            cityPickerLock.unlock();
+//        }).start();
+//    }
 
 
     // Checking if the input in form is valid
@@ -275,7 +264,7 @@ public class EditProfileActivity extends BaseCalleeActivity {
             return false;
         }
 
-        if (locationState == null || locationCity == null) {
+        if (locationState == null) {
             Toast.makeText(getApplicationContext(), "Please select a location", Toast.LENGTH_SHORT).show();
             return false;
 
@@ -303,20 +292,24 @@ public class EditProfileActivity extends BaseCalleeActivity {
             }
 
             // Write user data to firebase
-            User loginUser = ((App) getApplication()).getLoginUser();
-            loginUser.setNickname(nickname);
-            loginUser.setLocation(locationCity + ", " + locationState);
-            loginUser.setAge(age);
-            loginUser.setGender(genderInt);
-
-            if (imageFirebaseUri != null) {
-                if (!imageFirebaseUri.toString().equals(loginUser.getAvatarUri())) {
-                    loginUser.setAvatarUri(imageFirebaseUri.toString());
-                }
-
+            User newLoginUser = ((App) getApplication()).getLoginUser();
+            newLoginUser.setNickname(nickname);
+            newLoginUser.setLocation(locationCity + ", " + locationState);
+            newLoginUser.setAge(age);
+            newLoginUser.setGender(genderInt);
+            if (imageFirebaseUri != null &&
+                    !imageFirebaseUri.toString().equals(newLoginUser.getAvatarUri())) {
+                newLoginUser.setAvatarUri(imageFirebaseUri.toString());
             }
 
-            FirebaseService.getInstance().updateUserProfile(loginUser);
+            new Thread(() -> {
+                FirebaseService.getInstance().updateUserProfile(newLoginUser);
+            }).start();
+
+            new Thread(() -> {
+                FirebaseService.getInstance().updateConnectionUser(newLoginUser);
+            }).start();
+
             Toast.makeText(this, "Profile Update Successfully", Toast.LENGTH_SHORT).show();
             finish();
         }
