@@ -50,7 +50,7 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
         int score = 0;
         // if the user has been liked
         if (user.getIsLiked()) {
-            Log.d("comparator", user.getNickname() + " has been liked: -70");
+//            Log.d("comparator", user.getNickname() + " has been liked: -70");
             score -= 100;
         }
 
@@ -60,9 +60,9 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
                 || (user.getGender() == Constants.GENDER_UNDEFINE_INT && !otherSelected)
         ) {
             score -= 250;
-            Log.d("comparator", user.getNickname() + " gender not matched -250: " + user.getGender());
+//            Log.d("comparator", user.getNickname() + " gender not matched -250: " + user.getGender());
         } else {
-            Log.d("comparator", user.getNickname() + " gender matched " + user.getGender());
+//            Log.d("comparator", user.getNickname() + " gender matched " + user.getGender());
         }
         // if location matches
         // if user wants to match people near +70 otherwise +20
@@ -93,7 +93,7 @@ public class RecommendedUserComparator implements Comparator<RecommendedUser> {
             float diff = Math.min(Math.abs(user.getAge() - ageMin), Math.abs(user.getAge() - ageMax));
 
             if (diff <= 5) {
-                Log.d("comparator", user.getNickname() + " age matched ok +5: " + user.getAge());
+//                Log.d("comparator", user.getNickname() + " age matched ok +5: " + user.getAge());
                 score += 8;
             } else if (diff <= 10) {
                 score -= 5;

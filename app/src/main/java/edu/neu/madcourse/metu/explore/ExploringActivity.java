@@ -240,7 +240,6 @@ public class ExploringActivity extends BaseCalleeActivity implements ExploreSett
         // refresh the data
         for (RecommendedUser u: recommends) {
             RecommendationUtils.updateRecommendedUserByConnection(userId, u.getUserId(), u, updated -> {
-                System.out.println("refreshing...." + u);
                 if (u.getIsLiked()) {
                     recommendsAdapter.notifyDataSetChanged();
                 }
