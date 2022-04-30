@@ -29,7 +29,6 @@ import java.util.Random;
 
 import edu.neu.madcourse.metu.App;
 import edu.neu.madcourse.metu.R;
-import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.service.UpdateVideoHistoryService;
 import edu.neu.madcourse.metu.utils.Utils;
 import io.agora.rtc.Constants;
@@ -61,10 +60,10 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
 
     private boolean isPeerJoined = false;
     private boolean isCaller = false;
+    private boolean isVoiceChanged = false;
     private Integer currentFilterIdx;
+    private Integer currentVoiceIdx = 0;
 
-    // TODO: channelName should be the Connection Id,
-    //  and connectionPoint, nickname, avatarUrl should be fetched from database
     private String connectionId;
     private int connectionPoint;
     private int connectionLevel;
@@ -137,6 +136,7 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
                         VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
                         VideoEncoderConfiguration.STANDARD_BITRATE,
                         VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
+        mRtcEngine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD_STEREO, Constants.AUDIO_SCENARIO_GAME_STREAMING);
         mRtcEngine.enableVideo();
     }
 
@@ -245,6 +245,17 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         }
     }
 
+
+    public void onClickChangeVoice(View view) {
+        if (!isVoiceChanged) {
+            mRtcEngine.setAudioEffectPreset(Utils.VOICES[createRandomVoiceIdx()]);
+        } else {
+            mRtcEngine.setAudioEffectPreset(Constants.AUDIO_EFFECT_OFF);
+        }
+        isVoiceChanged = !isVoiceChanged;
+    }
+
+
 /*    private void removeVideo(int containerID) {
         FrameLayout videoContainer = findViewById(containerID);
         videoContainer.removeAllViews();
@@ -288,6 +299,10 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
         } else {
             currentFilterIdx = new Random().nextInt(Utils.getFiltersSize(connectionLevel));
         }
+    }
+
+    private int createRandomVoiceIdx() {
+        return new Random().nextInt(Utils.VOICES.length);
     }
 
 
@@ -350,6 +365,10 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
             //videoAvatar.setImageResource(R.drawable.user_avatar);
         });
     }
+
+
+
+
 
     @Override
     protected void onDestroy() {
