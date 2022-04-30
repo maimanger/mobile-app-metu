@@ -351,7 +351,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
         contentIntent.putExtra("PROFILE_USER_ID", callerId);
         contentIntent.putExtra("CONNECTION_ID", connectionId);
         contentIntent.putExtra("CONNECTION_POINT", connectionPoint);
-        contentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingContentIntent =PendingIntent.getActivity(
                 this, notifId * 2, contentIntent, 0);
@@ -361,13 +360,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 "CanceledVideoCallNotification")
                 .setContentTitle("Missed video call")
                 .setContentText("You have a missed video invitation")
-                .setSmallIcon(R.drawable.ic_launcher_metu_foreground)
+                .setSmallIcon(R.drawable.ic_new_msg_notification)
                 .setLargeIcon(bitmap)
                 .setAutoCancel(true)
                 .setGroup("CanceledVideoCallNotification")
                 .setGroupSummary(canceledCallNotificationIds.isEmpty())
                 .setContentIntent(pendingContentIntent)
-                .addAction(R.drawable.ic_launcher_metu_foreground, "Dismiss", pendingDismissIntent);
+                .addAction(R.drawable.ic_new_msg_notification, "Dismiss", pendingDismissIntent);
 
         Notification notif = builder.build();
         NotificationManagerCompat.from(this).notify("CanceledVideoCall" + notifId, notifId, notif);
@@ -417,7 +416,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                     "VideoCallNotification")
                     .setContentTitle(callerName)
                     .setContentText("is inviting you for a video chat")
-                    .setSmallIcon(R.drawable.ic_launcher_metu_foreground)
+                    .setSmallIcon(R.drawable.ic_new_msg_notification)
                     .setLargeIcon(bitmap)
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -425,8 +424,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
                     .setDefaults(loginUser.getAllowVibration() ?
                             NotificationCompat.DEFAULT_SOUND :
                             NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE)
-                    .addAction(R.drawable.ic_launcher_metu_foreground, "Refuse", pendingRefuseIntent)
-                    .addAction(R.drawable.ic_launcher_metu_foreground, "Accept", pendingAcceptIntent);
+                    .addAction(R.drawable.ic_new_msg_notification, "Refuse", pendingRefuseIntent)
+                    .addAction(R.drawable.ic_new_msg_notification, "Accept", pendingAcceptIntent);
 
             Notification notif = builder.build();
             Log.d("App", "sent notification: " + channel.toString());

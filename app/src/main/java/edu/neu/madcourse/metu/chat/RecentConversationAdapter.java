@@ -76,7 +76,6 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
             Utils.loadImgUri(src, contactAvatar, new Callback() {
                 @Override
                 public void onSuccess() {
-
                 }
 
                 @Override

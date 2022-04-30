@@ -19,7 +19,7 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.home.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private static int SPLASH_SCREEN_TIMEOUT = 2200;
+    private static int SPLASH_SCREEN_TIMEOUT = 2500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
