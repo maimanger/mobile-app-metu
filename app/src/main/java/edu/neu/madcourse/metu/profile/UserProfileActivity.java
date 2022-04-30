@@ -90,12 +90,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        /*initItemData(savedInstanceState);
-        initTagPager();
-        initStoryPager();
-        initFragments();
-        initOnlineStatus();*/
-
         // actionbar
         TextView toolbar = findViewById(R.id.toolbartag);
         toolbar.setText("Profile");
@@ -188,28 +182,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         Log.e("story", String.valueOf(storyList.size()));
     }
 
-
-    private void initUserProfileDataFromBundle(Bundle savedInstanceState) {
-        new Thread(() -> {
-            profileUser = savedInstanceState.getParcelable("PROFILE_USER");
-            loginUser = ((App) getApplication()).getLoginUser();
-            loginUserId = loginUser.getUserId();
-            profileUserId = profileUser.getUserId();
-            isSelf = profileUserId.equals(loginUserId);
-            isFriend = connectionPoint > 0;
-            connectionId = savedInstanceState.getString("CONNECTION_ID");
-
-            if (!isSelf) {
-                initTags(profileUser.getTags());
-                initStories(profileUser.getStories());
-                initUserProfile();
-            } else {
-                initTags(loginUser.getTags());
-                initStories(loginUser.getStories());
-                initPrivateProfile();
-            }
-        }).start();
-    }
 
     public void refreshLoginUser() {
         loginUser = ((App) getApplication()).getLoginUser();

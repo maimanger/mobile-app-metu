@@ -47,7 +47,7 @@ public class MessagingService extends FirebaseMessagingService {
         if (loginUser == null || !loginUser.getAllowMessageNotif()) {
             return;
         }
-        // todo: check the type of notification
+        // check the type of notification
         super.onMessageReceived(message);
 
         // check the notification type
@@ -61,7 +61,7 @@ public class MessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
-        builder.setSmallIcon(R.drawable.ic_launcher_metu_foreground);
+        builder.setSmallIcon(R.drawable.ic_new_msg_notification);
 
         if (notificationType.equals(Constants.NOTIFY_GET_A_LIKE)) {
 

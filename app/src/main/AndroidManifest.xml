@@ -18,9 +18,9 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher_metu"
+        android:icon="@mipmap/ic_launcher_metu_purple_heart"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_metu_round"
+        android:roundIcon="@mipmap/ic_launcher_metu_purple_heart_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MetU"
         android:usesCleartextTraffic="true">
