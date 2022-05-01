@@ -77,7 +77,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private ValueEventListener connectionEventListener;
 
 
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable("PROFILE_USER", profileUser);
@@ -185,7 +184,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
     public void refreshLoginUser() {
         loginUser = ((App) getApplication()).getLoginUser();
-        Log.d(TAG, "refreshLoginUser: "+loginUser);
+        Log.d(TAG, "refreshLoginUser: " + loginUser);
         initTags(loginUser.getTags());
         initStories(loginUser.getStories());
         initPrivateProfile();
@@ -260,6 +259,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
                     FirebaseDatabase.getInstance().getReference().child("connections")
                             .child(connectionId).addValueEventListener(connectionEventListener);
                 }
+
             }
 
             @Override

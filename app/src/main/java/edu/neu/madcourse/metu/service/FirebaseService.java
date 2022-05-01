@@ -15,6 +15,7 @@ import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class FirebaseService {
     private static FirebaseService singleton_instance = null;
     private final DatabaseReference databaseRef;
     private final StorageReference storageRef;
+    private ValueEventListener loginUserListener;
 
     private FirebaseService() {
         databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -110,7 +112,11 @@ public class FirebaseService {
 
 
     public void fetchUserProfileData(String userId, DataFetchCallback<User> callback) {
-        databaseRef.child("users").child(userId).addValueEventListener(new ValueEventListener() {
+        if (loginUserListener != null) {
+            databaseRef.child("users").child(userId).removeEventListener(loginUserListener);
+        }
+
+        loginUserListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 callback.onCallback(snapshot.getValue(User.class));
@@ -120,8 +126,17 @@ public class FirebaseService {
             public void onCancelled(@NonNull DatabaseError error) {
                 throw error.toException();
             }
-        });
+        };
+
+        databaseRef.child("users").child(userId).addValueEventListener(loginUserListener);
     }
+
+    public void logoutUserProfile(String userId) {
+        if (loginUserListener != null) {
+            databaseRef.child("users").child(userId).removeEventListener(loginUserListener);
+        }
+    }
+
 
     public void fetchTagList(String userId, DataFetchCallback<Map<String, Boolean>> callback) {
         databaseRef.child("users").child(userId).child("tags").addValueEventListener(new ValueEventListener() {
