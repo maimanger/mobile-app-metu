@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView linkSignUp;
     private FirebaseAuth mAuth;
     private String inputUserId;
+    private String inputEmail;
+    private String inputPassword;
     //private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
     @Override
@@ -92,8 +94,8 @@ public class LoginActivity extends AppCompatActivity {
                     //Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_LONG).show();
                 } else {
                     inputUserId = email.replaceAll("\\.", "");
-                    /*updateLatestLocation(inputUserId);
-                    authLogin(email, password);*/
+                    inputEmail = email;
+                    inputPassword = password;
                     startLogin(email, password);
                 }
             }
@@ -102,9 +104,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void startLogin(String email, String password) {
-        while(!updateLatestLocation(inputUserId)) {
+        if (updateLatestLocation(inputUserId)) {
+            authLogin(email, password);
         }
-        authLogin(email, password);
     }
 
 
@@ -196,8 +198,9 @@ public class LoginActivity extends AppCompatActivity {
             Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
             locatingServiceIntent.putExtra("USER_ID", inputUserId);
             startService(locatingServiceIntent);
+            return true;
         }
-       return true;
+       return false;
     }
 
 
@@ -231,6 +234,7 @@ public class LoginActivity extends AppCompatActivity {
                 locatingServiceIntent.putExtra("USER_ID", inputUserId);
                 startService(locatingServiceIntent);
             }
+            authLogin(inputEmail, inputPassword);
         }
     }
 

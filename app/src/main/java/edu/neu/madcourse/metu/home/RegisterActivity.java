@@ -56,6 +56,9 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String inputUserId;
+    private String inputUserName;
+    private String inputEmail;
+    private String inputPassword;
     private Boolean isAgreedPrivatePolicy = false;
 
     //private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
@@ -103,7 +106,9 @@ public class RegisterActivity extends AppCompatActivity {
                     else {
                         showDialog();
                     }*/
-
+                    inputEmail = email;
+                    inputUserName = username;
+                    inputPassword = password;
                     startRegister(inputUserId, username, email, password);
                 }
             }
@@ -112,12 +117,13 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void startRegister(String inputUserId, String username, String email, String password) {
-        while (!updateLatestLocation(inputUserId)) {}
-        if (isAgreedPrivatePolicy == true) {
-            autoRegister(username, email, password);
-        }
-        else {
-            showDialog();
+        if (updateLatestLocation(inputUserId)) {
+            if (isAgreedPrivatePolicy == true) {
+                autoRegister(username, email, password);
+            }
+            else {
+                showDialog();
+            }
         }
     }
 
@@ -227,8 +233,9 @@ public class RegisterActivity extends AppCompatActivity {
             Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
             locatingServiceIntent.putExtra("USER_ID", inputUserId);
             startService(locatingServiceIntent);
+            return true;
         }
-        return true;
+        return false;
     }
 
     private boolean checkLocatingPermission(String permission, int requestCode) {
@@ -260,6 +267,13 @@ public class RegisterActivity extends AppCompatActivity {
                 Intent locatingServiceIntent = new Intent(getApplicationContext(), LocatorService.class);
                 locatingServiceIntent.putExtra("USER_ID", inputUserId);
                 startService(locatingServiceIntent);
+            }
+
+            if (isAgreedPrivatePolicy == true) {
+                autoRegister(inputUserName, inputEmail, inputPassword);
+            }
+            else {
+                showDialog();
             }
         }
     }

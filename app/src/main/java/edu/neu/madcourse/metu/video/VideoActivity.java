@@ -193,18 +193,18 @@ public class VideoActivity extends AppCompatActivity implements RtmCallEventList
                 // if user is a callee, cancel the notification and refuse the call invitation
                 calleeRoleInit(false);
                 finish();
+            } else {
+                // Here we continue only if all permissions are granted.
+                // The permissions can also be granted in the system settings manually.
+                new Thread(() -> {
+                    initRtcEngine();
+                    calleeRoleInit(true);
+                    callerRoleInit();
+                    initFriendUI();
+                    createRandomFilterIdx();
+                    joinRtcChannel();
+                }).start();
             }
-
-            // Here we continue only if all permissions are granted.
-            // The permissions can also be granted in the system settings manually.
-            new Thread(() -> {
-                initRtcEngine();
-                calleeRoleInit(true);
-                callerRoleInit();
-                initFriendUI();
-                createRandomFilterIdx();
-                joinRtcChannel();
-            }).start();
         }
     }
     /*******************************End Dealing with Permissions**********************************/
