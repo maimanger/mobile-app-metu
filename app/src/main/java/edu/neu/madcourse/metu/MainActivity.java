@@ -19,7 +19,7 @@ import edu.neu.madcourse.metu.R;
 import edu.neu.madcourse.metu.home.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private static int SPLASH_SCREEN_TIMEOUT = 2500;
+    private static int SPLASH_SCREEN_TIMEOUT = 2200;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         Fade fade = new Fade();
-        fade.setDuration(500);
+        fade.setDuration(300);
         getWindow().setExitTransition(fade);
         setContentView(R.layout.activity_main);
 
