@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.neu.madcourse.metu.home.HomeActivity;
 import edu.neu.madcourse.metu.home.LoginActivity;
+import edu.neu.madcourse.metu.service.FirebaseService;
 import edu.neu.madcourse.metu.utils.Constants;
 import edu.neu.madcourse.metu.utils.FCMTokenUtils;
 import io.agora.rtm.ErrorInfo;
@@ -126,6 +127,9 @@ public class SettingActivity extends BaseCalleeActivity {
 
                 // logout firebase auth
                 mAuth.signOut();
+
+                // Remove Firebase database listener
+                FirebaseService.getInstance().logoutUserProfile(userId);
 
                 // logout Agora Rtm
                 ((App)getApplication()).getRtmClient().logout(new ResultCallback<Void>() {

@@ -250,15 +250,19 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         profileUserEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                profileUser = snapshot.getValue(User.class);
-                assert profileUser != null;
-                initTags(profileUser.getTags());
-                initStories(profileUser.getStories());
-                initUserProfile();
+                User databaseUser = snapshot.getValue(User.class);
+                User loginUser = ((App)getApplication()).getLoginUser();
+                if (databaseUser.getUserId().equals(loginUser.getUserId())) {
+                    profileUser = snapshot.getValue(User.class);
+                    assert profileUser != null;
+                    initTags(profileUser.getTags());
+                    initStories(profileUser.getStories());
+                    initUserProfile();
 
-                if (connectionId != null && connectionId.length() > 0) {
-                    FirebaseDatabase.getInstance().getReference().child("connections")
-                            .child(connectionId).addValueEventListener(connectionEventListener);
+                    if (connectionId != null && connectionId.length() > 0) {
+                        FirebaseDatabase.getInstance().getReference().child("connections")
+                                .child(connectionId).addValueEventListener(connectionEventListener);
+                    }
                 }
             }
 
