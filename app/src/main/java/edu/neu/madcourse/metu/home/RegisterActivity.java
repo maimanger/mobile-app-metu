@@ -96,18 +96,31 @@ public class RegisterActivity extends AppCompatActivity {
                     //Toast.makeText(RegisterActivity.this, "Please enter username, email and password.", Toast.LENGTH_LONG).show();
                 } else {
                     inputUserId = email.replaceAll("\\.", "");
-                    updateLatestLocation(inputUserId);
-
+                    /*updateLatestLocation(inputUserId);
                     if (isAgreedPrivatePolicy == true) {
                         autoRegister(username, email, password);
                     }
                     else {
                         showDialog();
-                    }
+                    }*/
+
+                    startRegister(inputUserId, username, email, password);
                 }
             }
         });
     }
+
+
+    private void startRegister(String inputUserId, String username, String email, String password) {
+        while (!updateLatestLocation(inputUserId)) {}
+        if (isAgreedPrivatePolicy == true) {
+            autoRegister(username, email, password);
+        }
+        else {
+            showDialog();
+        }
+    }
+
 
     public void showDialog() {
         String username = mUsername.getText().toString();
@@ -207,7 +220,7 @@ public class RegisterActivity extends AppCompatActivity {
         //mAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
 
-    private void updateLatestLocation(String inputUserId) {
+    private boolean updateLatestLocation(String inputUserId) {
         if (checkLocatingPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkLocatingPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
             // start locating service
@@ -215,6 +228,7 @@ public class RegisterActivity extends AppCompatActivity {
             locatingServiceIntent.putExtra("USER_ID", inputUserId);
             startService(locatingServiceIntent);
         }
+        return true;
     }
 
     private boolean checkLocatingPermission(String permission, int requestCode) {

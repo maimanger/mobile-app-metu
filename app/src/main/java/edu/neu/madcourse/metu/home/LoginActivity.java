@@ -92,12 +92,22 @@ public class LoginActivity extends AppCompatActivity {
                     //Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_LONG).show();
                 } else {
                     inputUserId = email.replaceAll("\\.", "");
-                    updateLatestLocation(inputUserId);
-                    authLogin(email, password);
+                    /*updateLatestLocation(inputUserId);
+                    authLogin(email, password);*/
+                    startLogin(email, password);
                 }
             }
         });
     }
+
+
+    private void startLogin(String email, String password) {
+        while(!updateLatestLocation(inputUserId)) {
+        }
+        authLogin(email, password);
+    }
+
+
 
     private void authLogin(String email, String password) {
         new Thread(() -> {
@@ -179,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private void updateLatestLocation(String inputUserId) {
+    private boolean updateLatestLocation(String inputUserId) {
         if (checkLocatingPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkLocatingPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
             // start locating service
@@ -187,6 +197,7 @@ public class LoginActivity extends AppCompatActivity {
             locatingServiceIntent.putExtra("USER_ID", inputUserId);
             startService(locatingServiceIntent);
         }
+       return true;
     }
 
 
