@@ -207,6 +207,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         if (getIntent().hasExtra("PROFILE_USER_ID")) {
             profileUserId = getIntent().getStringExtra("PROFILE_USER_ID");
             connectionPoint = getIntent().getIntExtra("CONNECTION_POINT", 0);
+            Log.d(TAG, "initUserProfileData: connectionPoint from intent = " + connectionPoint);
             connectionId = getIntent().getStringExtra("CONNECTION_ID");
             Log.d(TAG, "initUserProfileData: " + profileUserId);
         } else {
@@ -229,6 +230,8 @@ public class UserProfileActivity extends BaseCalleeActivity implements
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Connection connection = snapshot.getValue(Connection.class);
                 connectionPoint = connection.getConnectionPoint();
+                isFriend = connectionPoint > 0;
+                Log.d(TAG, "connectionEventListener: connectionPoint from Firebase = " + connectionPoint);
                 ConnectionUser connectionUser =
                         connection.getUser1().getUserId().equals(loginUserId) ?
                                 connection.getUser2() : connection.getUser1();
