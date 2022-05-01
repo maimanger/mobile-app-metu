@@ -77,7 +77,6 @@ public class UserProfileActivity extends BaseCalleeActivity implements
     private ValueEventListener connectionEventListener;
 
 
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable("PROFILE_USER", profileUser);
@@ -185,7 +184,7 @@ public class UserProfileActivity extends BaseCalleeActivity implements
 
     public void refreshLoginUser() {
         loginUser = ((App) getApplication()).getLoginUser();
-        Log.d(TAG, "refreshLoginUser: "+loginUser);
+        Log.d(TAG, "refreshLoginUser: " + loginUser);
         initTags(loginUser.getTags());
         initStories(loginUser.getStories());
         initPrivateProfile();
@@ -250,20 +249,17 @@ public class UserProfileActivity extends BaseCalleeActivity implements
         profileUserEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User databaseUser = snapshot.getValue(User.class);
-                User loginUser = ((App)getApplication()).getLoginUser();
-                if (databaseUser.getUserId().equals(loginUser.getUserId())) {
-                    profileUser = snapshot.getValue(User.class);
-                    assert profileUser != null;
-                    initTags(profileUser.getTags());
-                    initStories(profileUser.getStories());
-                    initUserProfile();
+                profileUser = snapshot.getValue(User.class);
+                assert profileUser != null;
+                initTags(profileUser.getTags());
+                initStories(profileUser.getStories());
+                initUserProfile();
 
-                    if (connectionId != null && connectionId.length() > 0) {
-                        FirebaseDatabase.getInstance().getReference().child("connections")
-                                .child(connectionId).addValueEventListener(connectionEventListener);
-                    }
+                if (connectionId != null && connectionId.length() > 0) {
+                    FirebaseDatabase.getInstance().getReference().child("connections")
+                            .child(connectionId).addValueEventListener(connectionEventListener);
                 }
+
             }
 
             @Override
