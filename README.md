@@ -1,5 +1,10 @@
 # MetU - Android App
 
+<img width="250px" src="./screenshots/homeScreen.png">  <img width="250px" src="./screenshots/profileScreen.png"> <img width="250px" src="./screenshots/exploreScreen.png"> 
+
+<img width="250px" src="./screenshots/chatsDetailScreen.png"> <img width="250px" src="./screenshots/callingScreen.png"> <img width="250px" src="./screenshots/videoScreen.png">
+
+
 ## About the App
 MetU is a social app that allows you to record and share your own life stories, use
 videos chatting to explore and connect with strangers and make new friends locally or
@@ -11,6 +16,7 @@ relationship increased, we have more funny filters for you to pick. Explore our
 community where you can feel free to be yourself and find a real relationship.
 
 ### What We Have
+
 - Secure and safe dating with real profiles
 - Find singles that are just your type
 - Chat with new people and have fun
